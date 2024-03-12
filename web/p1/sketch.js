@@ -1,21 +1,21 @@
 // Define all image arrays with example image paths. Replace these with your actual image paths.
 document.addEventListener('DOMContentLoaded', function() {
 var imagesArray = ['data/large/billy_narrow.png', 'data/large/billy.png', 'data/large/coffeetable.png', 'data/large/ikealatanchairtable.png', 'data/large/ikeasofa.png', 'data/large/millerchair.png', 'data/large/sidetable.png', 'data/large/swivelgreenchair.png', 'data/large/walnutsofa.png', 'data/large/redcart.png'];
-var imagesArray1 = ['data/medium/checkchair.png', 'data/medium/aproan.png', 'data/medium/ledlampsmall.png', 'data/medium/cushion.png', 'data/medium/stringlightyellow.png', 'data/medium/watercan.png', 'data/medium/basket.png', 'data/medium/shogun.png'];
+var imagesArray1 = ['data/medium/checkchair.png', 'data/medium/aproan.png', 'data/medium/boots.png','data/medium/ledlampsmall.png', 'data/medium/cushion.png', 'data/medium/stringlightyellow.png', 'data/medium/watercan.png', 'data/medium/basket.png', 'data/medium/shogun.png'];
 var imagesArray2 = ['data/small/vegetablebrush.png', 'data/small/bag.png', 'data/small/mesh.png', 'data/small/stainhook.png', 'data/small/dishbrush.png', 'data/small/plantvase.png', 'data/small/mitt.png', 'data/small/gardentool.png', 'data/small/container.png', 'data/small/funnel.png', 'data/small/battery.png', 'data/small/toiletbrush.png'];
-var imagesArray3 = ['data/Subject 6.png', 'data/Subject 7.png', 'data/Subject 5.png']; // For inactivity timeout
+var imagesArray3 = ['data/Subject 6.png', 'data/Subject 7.png']; // For inactivity timeout
 
 
 let lastScrollTop = 0;
 let lastTimestamp = 0;
 let scrollSpeed = 0;
 
-    var inactivityTime = 10000; // Time in milliseconds
+    var inactivityTime = 7000;
     var inactivityTimeout;
 
     function displayImagesRandomly() {
-        clearImages(); // Clear existing images before displaying new ones
-        var selectedImagesArray = selectImageArray(); // Select the appropriate image array based on current screen width
+        clearImages(); 
+        var selectedImagesArray = selectImageArray();
         selectedImagesArray.forEach(function(imageSource) {
             var imgElement = document.createElement('img');
             imgElement.src = imageSource;
@@ -26,7 +26,7 @@ let scrollSpeed = 0;
             imgElement.style.top = `${position.y}px`;
             imgElement.style.width = '20vw';
             imgElement.style.height = 'auto';
-            imgElement.title = "Click and drag to move"; // Set title for tooltip
+            imgElement.title = "Click and drag to move";
 
             imgElement.addEventListener('mousedown', mouseDownHandler);
             document.body.appendChild(imgElement);
@@ -97,7 +97,7 @@ let scrollSpeed = 0;
         const windowWidth = window.innerWidth;
     
         images.forEach(img => {
-            // Calculate the current top position or initialize it if not set
+
             let currentTop = parseFloat(img.style.top, 10) || windowHeight * 0.75;
             let currentLeft = parseFloat(img.style.left, 10) || windowWidth / 2;
     
@@ -121,7 +121,7 @@ let scrollSpeed = 0;
             if (newTop > document.body.scrollHeight - 100 || newTop < window.scrollY) {
                 img.style.visibility = 'hidden'; // Hide when out of viewport
             } else {
-                img.style.visibility = 'visible'; // Ensure visibility when in viewport
+                img.style.visibility = 'visible'; 
             }
         });
     }
