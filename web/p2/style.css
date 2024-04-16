@@ -52,6 +52,7 @@ a {
     display: block; 
     /*text-decoration: none;*/
     color: white;
+    font-family: sans-serif;
 }
 
 .filter-buttons {
@@ -195,12 +196,6 @@ form{
     margin-right: 3vw;
 }
 
-hr {
-    border: 0;
-    height: 1px;
-    background-color: white;
-    margin: 1px 0;
-    }
 
 .marquee {
     position: absolute;
