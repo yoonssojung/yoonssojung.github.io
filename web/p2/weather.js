@@ -34,8 +34,8 @@ function updateBackground(sunrise, sunset, selector) {
     let container = document.querySelector(selector);
     if (now >= sunrise && now < sunset) {
         container.style.backgroundImage = selector === '.right' ?
-            'linear-gradient(to bottom, #82B2E8,20%, #FFF8EF, #F4E8D4, #A7C492,#F37C5A, #FEE140)' : // Daytime colors for Providence
-            'linear-gradient(to bottom, #82B2E8,20%, #FFF8EF, #F4E8D4, #A7C492,#F37C5A, #FEE140)' ;  // Daytime colors for Seoul
+            'linear-gradient(to bottom, #82B2E8,20%, #FFF8EF, #F4E8D4, #A7C492, #F37C5A, #FEE140)' : // Daytime colors for Providence
+            'linear-gradient(to bottom, #82B2E8,20%, #FFF8EF, #F4E8D4, #A7C492, #F37C5A, #FEE140)' ;  // Daytime colors for Seoul
     } else {
         container.style.backgroundImage = selector === '.right' ?
             'linear-gradient(to top, #bea9de, #87889c, #546bab, #2e4482, #131862)': // Nighttime colors for Providence
