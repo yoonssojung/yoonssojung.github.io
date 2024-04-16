@@ -1,0 +1,251 @@
+/*body{
+text-decoration: none;
+}
+
+main {
+    display : grid; 
+    margin-left: 10%;
+    margin-right: 15%;
+    margin-top: 2vh;
+    margin-bottom: 3vh;
+    color: rgba(158, 0, 255, 1);
+}*/
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.split {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 40px;
+}
+
+.left {
+    left: 0;
+    background-color:  #9e00ff;
+    background-image: linear-gradient(to bottom, #514C73, #F37C5A, #FB5A33);
+    color: white;
+}
+
+.right {
+    right: 0;
+    background-image: linear-gradient(to bottom, #2C4169, #28B5D2, #E2C499, #CF8561);
+    color: white;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 20px;
+    max-width: 100%;
+    margin-bottom: 30px;
+}
+
+a {
+    position: relative;
+    overflow: hidden;
+    display: block; 
+    /*text-decoration: none;*/
+    color: white;
+}
+
+.filter-buttons {
+    text-align: left;
+    margin: 20px;
+    margin-left: 2vw;
+    margin-bottom: 5px;
+}
+
+button {
+    background: white;
+    color: #9e00ff;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: MapoGoldenPier;
+    font-weight: bolder;
+    width: auto;
+    font-size: small;
+    margin-bottom: 0.5vh;
+}
+
+.image-item {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.image-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.image-caption {
+    position: absolute;
+    top: 0; /* Align to the top of the image */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #9e00ff;
+    color: white; /* Text color */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    opacity: 0;
+    font-family: MapoGoldenPier;
+    font-weight: lighter;
+    text-align: left;
+    font-size: 1vw;
+    line-height: 1.7vw;
+   /* transition: opacity 0.5s ease; */
+}
+
+.image-item:hover .image-caption {
+    opacity: 100;
+}
+
+
+.contentwithimage {
+    display: flex;
+    align-items: top;
+    margin-top: 1.5vh;
+}
+
+.alignimage {
+    width: auto;
+    max-width: 20vw;
+    align-content: center;
+    margin-left: 3vw;
+    margin-bottom: 5px;
+}
+
+/* Optional: Add styles for content inside the divs */
+.split h1 {
+    margin-left: 3vw;
+    margin-right: 3vw;
+}
+
+.split h2 {
+    margin-left: 3vw;
+    margin-right: 3vw;
+}
+
+.split h3 {
+    margin-left: 3vw;
+    margin-right: 3vw;
+}
+
+.split h4 {
+    margin-left: 3vw;
+    margin-right: 3vw;
+}
+
+.split p {
+    margin-left: 3vw;
+    margin-right: 3vw;
+}
+
+h1 {
+        font-size: 5vw;
+        font-family: Junicode;
+        font-style: italic;
+        font-weight: lighter;
+        text-align: left;
+        line-height: 0.5vw;
+    	/*-webkit-text-stroke-width: 0.001px;
+        -webkit-text-stroke-color: gray;*/
+    }
+
+h2 {
+    font-family: Orienta-Regular;
+    font-size: 1vw;
+    line-height: 1.5vw;
+    margin-bottom: 3vh;
+    font-weight: lighter;
+    }
+
+h3 {
+    font-family: MapoGoldenPier;
+    font-weight: lighter;
+    font-size: 1vw;
+    line-height: 1.5vw;
+        }
+
+h4 {
+    font-size: 3vw;
+    font-family: MapoGoldenPier;
+    font-weight: lighter;
+    text-align: left;
+    line-height: 0.5vw;
+    margin-bottom: 5.5vh;
+
+        }
+
+form{
+    margin-left: 3vw;
+    margin-right: 3vw;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: white;
+    margin: 1px 0;
+    }
+
+.marquee {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    margin: 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    line-height: 15px; 
+    z-index: 99999999;
+    background: rgba(158, 0, 255, 1);
+    color: white;
+    position: fixed;
+}
+
+.marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    will-change: transform;
+    animation: marquee 60s linear infinite;
+    font-family: Junicode;
+    font-weight: lighter;
+}
+
+.marquee span a {
+    text-decoration: none;
+}
+
+.marquee span:hover {
+    animation-play-state: paused;
+    cursor: pointer;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translate(-50%, 0);
+    }
+
+    100% {
+        transform: translate(-90%, 0);
+    }
+}
