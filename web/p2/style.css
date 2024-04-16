@@ -30,13 +30,11 @@ body, html {
 .left {
     left: 0;
     background-color:  #9e00ff;
-    background-image: linear-gradient(to bottom, #514C73, #F37C5A, #FB5A33);
     color: white;
 }
 
 .right {
     right: 0;
-    background-image: linear-gradient(to bottom, #2C4169, #28B5D2, #E2C499, #CF8561);
     color: white;
 }
 
