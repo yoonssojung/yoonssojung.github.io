@@ -14,7 +14,6 @@ function fetchWeatherAndUpdateBackground() {
     fetchWeather(coords.seoul, updateBackground, '.left');
 }
 
-// Helper function to fetch weather and apply background change
 function fetchWeather(coord, callback, selector) {
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${coord.lat}&lon=${coord.lon}&units=imperial&appid=${apiKey}`;
 
@@ -28,22 +27,20 @@ function fetchWeather(coord, callback, selector) {
         .catch(error => console.error('Error fetching weather data:', error));
 }
 
-// Function to update the background of a given split
 function updateBackground(sunrise, sunset, selector) {
     let now = new Date().getTime() / 1000; // current time in seconds
     let container = document.querySelector(selector);
     if (now >= sunrise && now < sunset) {
         container.style.backgroundImage = selector === '.right' ?
-            'linear-gradient(to bottom, #82B2E8,20%, #FFF8EF, #F4E8D4, #A7C492, #F37C5A, #FEE140)' : // Daytime colors for Providence
-            'linear-gradient(to bottom, #82B2E8,20%, #FFF8EF, #F4E8D4, #A7C492, #F37C5A, #FEE140)' ;  // Daytime colors for Seoul
+            'linear-gradient(to bottom, #82B2E8,20%, #FFF8EF, #F4E8D4, #A7C492)' : // Daytime colors for Providence
+            'linear-gradient(to bottom, #82B2E8,20%, #FFF8EF, #F4E8D4, #A7C492)' ;  // Daytime colors for Seoul
     } else {
         container.style.backgroundImage = selector === '.right' ?
             'linear-gradient(to top, #bea9de, #87889c, #546bab, #2e4482, #131862)': // Nighttime colors for Providence
-            'linear-gradient(to top, #bea9de, #87889c, #546bab, #2e4482, #131862)';  // Nighttime colors for Seoul
+            'linear-gradient(to top, #bea9de, #87889c, #546bab, #131862)';  // Nighttime colors for Seoul
     }
 }
 
-// Function to toggle the visibility of content
 function setupToggleButtons() {
     const toggleButtons = document.querySelectorAll('.toggleButton');
     toggleButtons.forEach(button => {
@@ -54,11 +51,9 @@ function setupToggleButtons() {
     });
 }
 
-// Initial setup function to set up everything
 function initialize() {
     fetchWeatherAndUpdateBackground();
     setupToggleButtons();
 }
 
-// Run the initialize function when the window loads
 window.onload = initialize;

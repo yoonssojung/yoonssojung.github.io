@@ -16,7 +16,7 @@ function toggleSort(split) {
     const isLatest = sortButton.getAttribute('data-latest') === 'true';
 
     sortButton.setAttribute('data-latest', !isLatest);
-    sortButton.textContent = isLatest ? 'Latest' : 'Oldest';
+    sortButton.textContent = isLatest ? '최신순' : '오래된순';
     sortImages(isLatest ? 'oldest' : 'latest', split);  // Pass the current state and split
 }
 

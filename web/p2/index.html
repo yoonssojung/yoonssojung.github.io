@@ -13,16 +13,14 @@
 <body>
     <p class="marquee">
             <span>
-                <a href="time.html">* This is for my dad and me * This is a way to keep in touch and preserve dialogue and memories with my dad * The background color changes based on the sunset/sunrise API of Seoul, South Korea and Providence, RI, USA * This is a space for my dad, hopefully this becomes a space where we can talk, exchange, collect our conversations, and be an archive *</a></span>
+                <a href="time.html">***** ***** ***** ***** *****</a></span>
     <main>
         <div class="split left">
-            <div class="filter-buttons">
-                <button id="sortToggleLeft" data-latest="true" onclick="toggleSort('Left')">Oldest</button>
-    </div>
             <h1>Dear So Jung ,</h1>
             <h4>소정에게,</h4>
             
           <div class="filter-buttons">
+                <button id="sortToggleLeft" data-latest="true" onclick="toggleSort('Left')">오래된순</button>
                 <button onclick="filterImages('all', 'left')">All</button>
                 <button onclick="filterImages('category1', 'left')">압구정</button>
                 <button onclick="filterImages('category2', 'left')">경복궁</button>
@@ -169,12 +167,10 @@
     </div>
     
         <div class="split right">
-            <div class="filter-buttons">
-               <button id="sortToggleRight" data-latest="true" onclick="toggleSort('Right')">Oldest</button>
-            </div>
             <h1>Dear Dad,</h1>
             <h4>아빠에게,</h4>
             <div class="filter-buttons">
+                <button id="sortToggleRight" data-latest="true" onclick="toggleSort('Right')">최신순</button>
                 <button onclick="filterImages('all', 'right')">All</button>
                 <button onclick="filterImages('category31', 'right')">후야</button>
                 <button onclick="filterImages('category32', 'right')">Providence</button>

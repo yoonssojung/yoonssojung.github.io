@@ -52,6 +52,7 @@ a {
     display: block; 
     /*text-decoration: none;*/
     color: white;
+    text-align: center;
 }
 
 .filter-buttons {
@@ -73,6 +74,7 @@ button {
     width: auto;
     font-size: small;
     margin-bottom: 0.5vh;
+
 }
 
 .image-item {
@@ -105,8 +107,8 @@ button {
     font-family: MapoGoldenPier;
     font-weight: lighter;
     text-align: left;
-    font-size: 1vw;
-    line-height: 1.7vw;
+    font-size: 0.7vw;
+    line-height: 1vw;
    /* transition: opacity 0.5s ease; */
 }
 
