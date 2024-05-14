@@ -81,7 +81,6 @@ function restartGenerating() {
 
 function printDocument() {
     document.getElementById("urlSpan").textContent = window.location.href;
-    // Ensure the time is current
     updateTime();
 
     // Print the current sentence
@@ -96,7 +95,9 @@ function printDocument() {
 
     // Hide the image again after printing
     printImage.style.display = 'none';
+
 }
+
 
 
 // Initialize the sentence generation when the page loads
