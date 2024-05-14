@@ -1,33 +1,33 @@
 /* Global Styles */
 body, html {
-    height: 100%; /* Full height for the body and html */
-    margin: 0; /* Remove default margin */
+    height: 100%;
+    margin: 0;
     display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    font-size: 2vw; /* Larger text size */
-    flex-direction: column; /* Aligns content vertically in a column */
+    justify-content: center;
+    align-items: center; 
+    font-size: 2vw;
+    flex-direction: column; 
 }
 
 
 .gridlayout {
-    display: flex; /* Use flexbox to arrange child elements */
-    flex-direction: column; /* Stack child elements vertically */
-    align-items: center; /* Center-align the flex items */
-    margin-bottom: 20px; /* Space below the layout for buttons */
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    margin-bottom: 20px; 
 }
 
 #sentenceOutput1, #sentenceOutput2 {
-    text-align: center; /* Center-align text */
-    margin-bottom: 20px; /* Space below the divs */
-    text-transform: lowercase; /* All text in lowercase */
+    text-align: center; 
+    margin-bottom: 20px; 
+    text-transform: lowercase; 
 }
 
 
 .button-container {
-    display: flex; /* Flexbox to layout buttons */
-    justify-content: center; /* Center horizontally */
-    gap: 10px; /* Space between buttons */
+    display: flex; 
+    justify-content: center; 
+    gap: 10px; 
 }
 
 #printImage {
@@ -38,37 +38,37 @@ body, html {
 /* Print Media Query */
 @media print {
     body * {
-        visibility: hidden; /* Hide all elements by default */
+        visibility: hidden; 
         background-color: #f0f0f0;
     }
     #printImage {
-        display: block; /* Show the image */
-        width: 80%; /* Scale image to 80% of the printable area */
-        margin: 45px auto; /* Center the image horizontally with a margin */
+        display: block; 
+        width: 80%; 
+        margin: 45px auto; 
     }
     #printArea, #printImage {
-        visibility: visible; /* Make specific elements visible */
+        visibility: visible; 
     }
     #sentenceOutput1, #sentenceOutput2, .gridlayout {
-        visibility: visible; /* Only make specific elements visible */
+        visibility: visible; 
         font-size: 15px;
     }
     .gridlayout, .button-container {
         position: absolute;
         left: 0;
-        top: 30px; /* Adjust top position during print */
-        width: 100%; /* Full width to utilize all horizontal space */
+        top: 30px; 
+        width: 100%; 
     }
     .button-container {
-        display: none; /* Hide buttons during print */
+        display: none;
     }
     #printUrl {
-        display: block; /* Ensure it's treated as a block element for layout */
-        font-size: 9px; /* Smaller font size for the URL */
-        color: #666; /* Gray color for the URL text */
+        display: block; 
+        font-size: 9px; 
+        color: #666; 
         position: absolute;
-        bottom: 10px; /* Position URL at the bottom of the page */
-        width: 100%; /* Full width to align center */
-        text-align: center; /* Center the URL text */
+        bottom: 10px; 
+        width: 100%; 
+        text-align: center; 
     }
 }

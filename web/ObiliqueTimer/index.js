@@ -1,14 +1,12 @@
 var sentenceInterval;
-var currentSentence = ''; // To store the current sentence displayed
+var currentSentence = ''; 
 
-// Function to update time every second
 function updateTime() {
     var now = new Date();
     var currentTime = now.toLocaleTimeString();
     document.getElementById("sentenceOutput1").innerHTML = currentTime;
 }
 
-// Start updating the time when the page loads
 setInterval(updateTime, 1000);
 
 var one = "It's time to ";
@@ -47,7 +45,6 @@ function getImageUrlsForCombination(two, three) {
     return imageMapping[key] || [];
 }
 
-// Function to generate and update the sentence
 function generateSentence() {
     var two = twoOptions[Math.floor(Math.random() * twoOptions.length)];
     var three = threeOptions[Math.floor(Math.random() * threeOptions.length)];
@@ -59,7 +56,6 @@ function generateSentence() {
     console.log(imageUrls);
 }
 
-// Start the sentence generation interval
 function startSentenceGeneration() {
     if (!sentenceInterval) {
         generateSentence();
@@ -67,13 +63,11 @@ function startSentenceGeneration() {
     }
 }
 
-// Stop the sentence generation interval
 function stopGenerating() {
     clearInterval(sentenceInterval);
     sentenceInterval = null;
 }
 
-// Restart the sentence generation interval
 function restartGenerating() {
     stopGenerating();
     startSentenceGeneration();
@@ -86,7 +80,7 @@ function printDocument() {
     // Print the current sentence
     document.getElementById("sentenceOutput2").innerHTML = currentSentence;
 
-    // Temporarily make the image visible for printing
+    //visible for printing
     var printImage = document.getElementById("printImage");
     printImage.src = imageUrls[Math.floor(Math.random() * imageUrls.length)];
     printImage.style.display = 'block';
