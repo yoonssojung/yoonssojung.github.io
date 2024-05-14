@@ -39,6 +39,7 @@ body, html {
 @media print {
     body * {
         visibility: hidden; /* Hide all elements by default */
+        background-color: #f0f0f0;
     }
     #printImage {
         display: block; /* Show the image */
