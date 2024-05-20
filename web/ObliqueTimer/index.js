@@ -9,6 +9,26 @@ function updateTime() {
 
 setInterval(updateTime, 1000);
 
+// Initialize the time update when the page loads
+window.onload = function() {
+    startTime(); // Start updating time on page load
+};
+
+// Function to start the time update
+function startTime() {
+    if (!timeInterval) {
+        updateTime(); // Update time immediately before setting the interval
+        timeInterval = setInterval(updateTime, 1000); // Update time every second
+    }
+}
+
+// Function to stop the time update
+function stopTime() {
+    clearInterval(timeInterval);
+    timeInterval = null;
+}
+
+
 var one = "It's time to ";
 var twoOptions = ["deny", "dis", "allow", "forget", "hold", "ignore", "keep", "neglect", "refuse", "reject", "halt", "stop", "exclude", "kill", "lack", "need", "want"];
 var threeOptions = ["your own", "people's", "my", "your friend's"];
