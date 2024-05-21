@@ -3,8 +3,6 @@
 @font-face {
   font-family: 'Routed Gothic';
   src: url('data/RoutedGothic/routed-gothic.ttf') format('ttf');
-  font-weight: normal;
-  font-style: normal;
 }
 
 main {
