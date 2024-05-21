@@ -32,4 +32,3 @@ function sortImages(order, split) {
     images.forEach(image => imageGrid.appendChild(image));
 }
 
-// Make sure to set IDs and data attributes accordingly in your HTML for these functions to work correctly.
