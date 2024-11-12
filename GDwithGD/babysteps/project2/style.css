@@ -126,7 +126,7 @@ h6 {
 
 @font-face {
   font-family: "cutout";
-  src: local("cutout");
+  src: url("common/cutoutVF.woff");
   /* Uncomment the following if you have the font files available */
   /* url("cutoutVF.ttf") format("truetype"),
      url("cutoutVF.woff") format("woff"),
