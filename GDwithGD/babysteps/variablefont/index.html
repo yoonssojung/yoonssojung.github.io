@@ -15,7 +15,6 @@
     <div class="menu-grid">
         <a href="#design-concept"><h4>design<br>concept</h4></a>
         <a href="#typeface"><h4>type<br>face</h4></a>
-        <a href="#typefacetester"><h4>typeface<br>tester</h4></a>
         <a href="#contact"><h4>con<br>tact</h4></a>
         <a href="#download"><h4>down<br>load</h4></a>
     </div>
@@ -34,16 +33,12 @@
     </div>
 
     <h1 id="typeface">typeface</h1>
-<div class="two-grid" id="random-letter-container">
-    <div class="grid-item random-letter">a</div>
-    <div class="grid-item random-letter">b</div>
-    <div class="grid-item random-letter">c</div>
-    <div class="grid-item random-letter">d</div>
-    <div class="grid-item random-letter">e</div>
-    <div class="grid-item random-letter">f</div>
+<div class="two-grid">
+
+    
 </div>
 
-    <div class="body-grid"><h8 id="typefacetester">typeface<br>tester</h8>
+    <div class="body-grid"><h8 id="typeface">typeface<br>.tester</h8>
     <div class="scroll-bar">
 
         <p class="cutout" contenteditable="plaintext-only">type whatever you want hereeee</p>
@@ -80,22 +75,6 @@
     <div class="body-grid"><h8 id="download"><a href="common/cutoutVF.ttf" download="cutoutfontfile">download</a></h8></div>
 
     <script src="sketch.js"></script>
-    <script>
-        window.onload = function() {
-            // List of colors to choose from
-            const colors = ['#FF6347', '#4682B4', '#32CD32', '#FFD700', '#6A5ACD', '#FF69B4', '#00BFFF'];
-        
-            // Function to get a random color from the list
-            function getRandomColor() {
-                const randomIndex = Math.floor(Math.random() * colors.length);
-                return colors[randomIndex];
-            }
-        
-            // Set the random color as the background color of the body
-            document.body.style.backgroundColor = getRandomColor();
-        };
-        </script>
-        
 </body>
 
 </html>
