@@ -1,0 +1,136 @@
+body {
+  background-color: rgb(225,255,100);
+  color: #fff;
+  font-family: "Xanh Mono", monospace;
+  font-weight: 400;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  padding: 20px; /* Adds padding to ensure nothing overlaps edges */
+  max-height: calc(100% - 5vh);
+}
+
+.typing-container {
+  width: calc(100% - 40px); /* Ensure 20px margin on left and right */
+  height: calc(100% - 50px); /* Ensure 20px margin on top and bottom */
+  position: absolute;
+  z-index: 10;
+}
+
+.typing-text {
+  font-size: 1.5rem;
+  white-space: pre-wrap;
+  overflow-wrap: break-word; /* Allows text to break to the next line */
+  animation: fadeIn 1s ease-in-out forwards;
+  margin: 0;
+  position: absolute;
+  z-index: 11;
+  max-width: calc(100% - 40px); /* Prevent overflow to the right */
+  max-height: calc(100% - 40px); /* Prevent overflow vertically */
+}
+
+.typing-text a {
+  color: inherit; /* Match text color */
+  text-decoration: none; /* Remove underline */
+  font-weight: bold;
+  word-wrap: break-word; /* Break long words to prevent overflow */
+}
+
+.typing-text a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Random styles for text */
+.style-1 {
+  color: #ff6347;
+  font-weight: bold;
+  background-color: rgb(225,255,100);
+}
+
+.style-2 {
+  color: #1e90ff;
+  font-style: italic;
+  background-color: rgb(225,255,100);
+}
+
+.style-3 {
+  color: #32cd32;
+  text-decoration: underline;
+  background-color: rgb(225,255,100);
+}
+
+.style-4 {
+  color: #ffa500;
+  background-color: rgb(225,255,100);
+}
+
+.style-5 {
+  color: #9370db;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background-color: rgb(225,255,100);
+}
+
+.style-6 {
+  color: black;
+  background-color: rgb(225,255,100);
+}
+
+.style-7 {
+  color: #ff1493;
+  padding: 5px;
+  border-radius: 4px;
+  background-color: rgb(225,255,100);
+}
+
+.split {
+  height: 100%;
+  width: 100%;
+  /* position: fixed; */
+  z-index: 1;
+  top: 0;
+  bottom: 5vh;
+  overflow-x: hidden;
+  /* padding: 40px 0;  */
+}
+
+.left {
+  left: 0;
+  color: rgb(225,255,100);
+}
+
+h1 {
+  font-size: 11.5vw;
+  font-weight: normal;
+  text-align: left;
+  line-height: 0.92;
+  font-family: Tartuffo_Trial;
+  margin: 5vw;
+  margin-top: 0vw;
+}
+
+h2 {
+  font-size: 1vw;
+  line-height: 1.8vw;
+  margin-bottom: 3vh;
+  font-weight: lighter;
+  margin: 5vw;
+  padding-right: 3vw;
+}
+
+@font-face {
+  font-family: Tartuffo_Trial;
+  src: url("common/Tartuffo_Trial");
+}

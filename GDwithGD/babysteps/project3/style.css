@@ -1,0 +1,209 @@
+
+body, html {
+    height: 100%;
+    /* margin: 0;
+    padding: 0; */
+    font-family: "Xanh Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
+    margin: 10px;
+    margin-bottom: 50vh;
+}
+
+@font-face {
+    font-family: Tartuffo_Trial;
+    src: url("common/Tartuffo_Trial");
+}
+
+
+
+#background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.split.left .content {
+    position: relative;
+    z-index: 1; /* Ensures content is displayed over the video */
+    padding: 20px;
+    color: white; /* Adjust text color for readability */
+}
+
+
+.split {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 40px;
+}
+
+.left {
+    left: 0;
+    color: rgb(225,255,100);
+    /* background-color: rgb(54, 0,95); */
+    background-color: black;
+}
+
+.right {
+    right: 0;
+    color: black;
+    background-color: white;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 15vw);
+    gap: 1vw;
+    padding:1vw;
+    /* grid-auto-rows: minmax(100px, auto); */
+    margin: 10px;
+    margin-bottom: 50px;
+}
+
+
+a {
+    position: relative;
+    overflow: hidden;
+    display: block; 
+    /*text-decoration: none;*/
+    color: black;
+    text-align: left;
+    text-shadow: 5px 5px 5px rgb(225,255,100);
+    font-size: 1vw;
+}
+
+p {
+    position: relative;
+    overflow: hidden;
+    display: block; 
+    font-size: 1vw;
+    /*text-decoration: none;*/
+    color: black;
+    text-align: left;
+    text-shadow: 5px 5px 5px rgb(225,255,100);
+}
+
+
+/* #ffffba; */
+
+.filter-buttons {
+    text-align: left;
+    margin: 20px;
+    margin-left: 2vw;
+    margin-bottom: 5px;
+}
+
+button {
+    /* background: rgb(54, 0,95); */
+    background: black;
+    color: white;
+    padding: 0.5vw;
+    border: none;
+    /* border-radius: 20px; */
+    cursor: pointer;
+    width: auto;
+    font-size: small;
+    margin-bottom: 0.5vw;
+    font-family: "Xanh Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
+    text-shadow:  2px 2px 5px rgb(225,255,100);
+
+}
+
+h1 {
+        font-size: 8vw;
+        font-weight: normal;
+        text-align: left;
+        line-height: 1;
+        font-family: Tartuffo_Trial;
+        margin: 2vw;
+        margin-top: 0vw;
+    }
+
+h2 {
+    font-size: 1vw;
+    line-height: 1.8vw;
+    margin-bottom: 3vh;
+    font-weight: lighter;
+    margin: 2vw;
+    padding-right: 3vw;;
+    }
+
+h3 {
+    font-weight: lighter;
+    font-size: 1vw;
+    line-height: 1.5vw;
+        }
+
+h4 {
+    font-size: 3vw;
+    font-weight: lighter;
+    text-align: left;
+    line-height: 0.5vw;
+    margin-bottom: 5.5vh;
+
+        }
+
+
+.marquee {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    margin: 50vh auto;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    line-height: 15px; 
+    z-index: 10;
+    /* background: #ffffba;
+    color: black; */
+    position: fixed;
+}
+
+.marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    will-change: transform;
+    animation: marquee 30s linear infinite;
+    font-weight: lighter;
+    color: rgb(225,255,100);
+    text-shadow:  2px 2px 5px black;
+
+}
+
+.marquee span a {
+    text-decoration: none;
+}
+
+.marquee span:hover {
+    animation-play-state: paused;
+    cursor: pointer;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translate(-50%, 0);
+    }
+
+    100% {
+        transform: translate(-90%, 0);
+    }
+}
+
+.text-item {
+    display: block;
+    transition: all 0.3s ease;
+}
+.hidden {
+    display: none !important;
+}

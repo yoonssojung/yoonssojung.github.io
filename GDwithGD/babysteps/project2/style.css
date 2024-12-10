@@ -1,11 +1,11 @@
 * {
-    text-decoration: none;
-    color:black !important;
+  text-decoration: none;
+  color: black !important;
 }
-  
-  body {
+
+body {
   font-family: "cutoutVF", "cutout", sans-serif;
-      background-color: black;
+  background-color: black;
   color: white;
 }
 
@@ -27,8 +27,8 @@ h8 {
   color: white;
 }
 
-a{
-    color: white;
+a {
+  color: white;
 }
 
 h1 {
@@ -56,24 +56,30 @@ h1 {
 #img-1 {
   position: absolute;
   display: none;
-  width: 30vw; /* Adjust size as needed */
-  pointer-events: none; /* Ensures the image doesn't block mouse events */
-  z-index: 1000; /* Brings the image above other content */
+  width: 30vw;
+  /* Adjust size as needed */
+  pointer-events: none;
+  /* Ensures the image doesn't block mouse events */
+  z-index: 1000;
+  /* Brings the image above other content */
 }
 
-.hover-target:hover + #img-1 {
+.hover-target:hover+#img-1 {
   display: block;
 }
 
 #img-2 {
   position: absolute;
   display: none;
-  width: 30vw; /* Adjust size as needed */
-  pointer-events: none; /* Ensures the image doesn't block mouse events */
-  z-index: 1000; /* Brings the image above other content */
+  width: 30vw;
+  /* Adjust size as needed */
+  pointer-events: none;
+  /* Ensures the image doesn't block mouse events */
+  z-index: 1000;
+  /* Brings the image above other content */
 }
 
-.hover-target:hover + #img-2 {
+.hover-target:hover+#img-2 {
   display: block;
 }
 
@@ -105,6 +111,11 @@ h5 {
   color: white;
 }
 
+h3 {
+  font-size: 2vw;
+  font-variation-settings: "wght" 0;
+}
+
 h2 {
   font-size: 5vw;
   line-height: 5vw;
@@ -125,7 +136,7 @@ h6 {
 }
 
 @font-face {
-  font-family: "cutout";
+  font-family: "cutoutVF";
   src: url("common/cutoutVF.woff");
   /* Uncomment the following if you have the font files available */
   /* url("cutoutVF.ttf") format("truetype"),
@@ -168,19 +179,25 @@ h6 {
 }
 
 .random-letter {
-    font-size: 20vw; /* Adjust as necessary */
-    font-variation-settings: "wght" 0; /* Initial weight */
-    transition: font-variation-settings 0.001s ease; /* Smooth transition for font variation */
-    opacity: 1; /* Ensure full visibility */
-    visibility: visible; /* Ensure it is not hidden */
+  font-size: 20vw;
+  /* Adjust as necessary */
+  font-variation-settings: "wght" 0;
+  /* Initial weight */
+  transition: font-variation-settings 0.001s ease;
+  /* Smooth transition for font variation */
+  opacity: 1;
+  /* Ensure full visibility */
+  visibility: visible;
+  /* Ensure it is not hidden */
 }
 
 #random-letter-container .grid-item {
-    transition: opacity 0.5s ease; /* Smooth transition for visibility */
+  transition: opacity 0.5s ease;
+  /* Smooth transition for visibility */
 }
 
 /* Ensure there's no hidden state initially */
 #random-letter-container .grid-item {
-    opacity: 1;
-    visibility: visible;
+  opacity: 1;
+  visibility: visible;
 }
