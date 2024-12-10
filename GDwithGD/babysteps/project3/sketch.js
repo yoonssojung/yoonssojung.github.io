@@ -1,36 +1,3 @@
-function filterImages(category, split) {
-    // Select only the image items within the specified split
-    const elements = document.querySelectorAll(`.${split} .image-item`);
-    if (category === 'all') {
-        elements.forEach(el => el.style.display = 'flex');
-    } else {
-        elements.forEach(el => {
-            el.style.display = el.classList.contains(category) ? 'block' : 'none';
-        });
-    }
-}
-
-function toggleSort(split) {
-    const sortButton = document.getElementById(`sortToggle${split}`);
-    const isLatest = sortButton.getAttribute('data-latest') === 'true';
-
-    sortButton.setAttribute('data-latest', !isLatest);
-    sortButton.textContent = isLatest ? 'latest' : 'oldest';
-    sortImages(isLatest ? 'oldest' : 'latest', split);
-}
-
-function sortImages(order, split) {
-    const imageGrid = document.getElementById(`imageGrid${split}`);
-    let images = Array.from(imageGrid.getElementsByClassName('image-item'));
-    images.sort((a, b) => {
-        let dateA = parseInt(a.dataset.date, 10);
-        let dateB = parseInt(b.dataset.date, 10);
-        return order === 'latest' ? dateB - dateA : dateA - dateB;
-    });
-    imageGrid.innerHTML = '';
-    images.forEach(image => imageGrid.appendChild(image));
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     const textCategories = [
         { text: "🛟 Garden as a metaphor 🛤️", category: "phrase" },
@@ -180,7 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterContainer = document.querySelector(".filter-buttons");
     const textContainer = document.querySelector(".grid");
 
-    // Create filter buttons dynamically
     const uniqueCategories = Array.from(new Set(textCategories.map(item => item.category)));
     uniqueCategories.forEach(category => {
         const button = document.createElement("button");
@@ -190,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
         filterContainer.appendChild(button);
     });
 
-    // Create "Show All" button
     const allButton = document.createElement("button");
     allButton.textContent = "*all*";
     allButton.classList.add("filter-button");
@@ -200,12 +165,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     filterContainer.appendChild(allButton);
 
-    // Populate grid dynamically with text items
     textCategories.forEach(item => {
         const textElement = document.createElement("a");
         textElement.textContent = item.text;
 
-        // Safely handle empty or missing links
         if (item.link && item.link.trim() !== "") {
             textElement.href = item.link;
             textElement.target = "_blank"; // Open link in a new tab
@@ -217,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
         textContainer.appendChild(textElement);
     });
 
-    // Filter function
     function filterText(category) {
         const allTextItems = document.querySelectorAll(".text-item");
         allTextItems.forEach(item => {

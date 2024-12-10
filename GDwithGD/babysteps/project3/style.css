@@ -29,9 +29,9 @@ body, html {
 
 .split.left .content {
     position: relative;
-    z-index: 1; /* Ensures content is displayed over the video */
+    z-index: 1;
     padding: 20px;
-    color: white; /* Adjust text color for readability */
+    color: white;
 }
 
 
@@ -102,7 +102,6 @@ p {
 }
 
 button {
-    /* background: rgb(54, 0,95); */
     background: black;
     color: white;
     padding: 0.5vw;
@@ -176,8 +175,8 @@ h4 {
     will-change: transform;
     animation: marquee 30s linear infinite;
     font-weight: lighter;
-    color: rgb(225,255,100);
-    text-shadow:  2px 2px 5px black;
+    color: black;
+    text-shadow:  2px 2px 5px rgb(225,255,100);
 
 }
 
