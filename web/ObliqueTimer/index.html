@@ -10,22 +10,59 @@
 </head>
 
 <body>
-    <div class="gridlayout">
-        <div id="sentenceOutput1"></div>
+        <div class="gridlayout">
+        <!-- <div id="sentenceOutput1"></div> -->
         <div id="sentenceOutput2"></div><br>
         <div class="button-container">
-            <button type="button" onclick="stopGenerating()" onclick="stopTime()">Stop</button>
-            <button type="button" onclick="restartGenerating()" onclick="startTime()">Keep Searching</button>
-            <button type="button" onclick="printDocument()">I'm Ready</button>
+            <!-- <button type="button" onclick="stopGenerating()" onclick="stopTime()">Stop</button> -->
+            <!-- <button type="button" onclick="restartGenerating()" onclick="startTime()">Shuffle</button> -->
+            <button type="button" onclick="printDocument()">Take Action Now</button>
         </div>
 
     </div>
-    <div id="printArea" class="print-area">     
-        <img id="printImage" src="common/image_1.jpg" alt="image1" style="display:none;">
-        <div id="printTime"></div>
-        <div id="printSentence"></div>
-        <div id="printUrl" style="display:none;">URL: <span id="urlSpan"></span></div>
+
+<div class="about-wrapper">
+  <button class="info-button" id="aboutButton">about</button>
+  <div class="about-overlay" id="aboutOverlay">
+    <div class="about-content">
+      <h1>Oblique Act</h1>
+      <br>
+      <p>
+        Each sentence may seem simple, but it acts as a mirror—<br>
+        challenging your beliefs, sparking reflection,<br>
+        and nudging you toward unexpected insight.
+      </p>
+      <p>
+        When you click the Take Action Now,<br>
+        you'll also receive a related action prompt—<br>
+        a small, intentional step you can take to respond to the question in real life.
+      </p>
+      <p><strong>These prompts invite you not just to think—<br>but to do.</strong></p>
     </div>
+  </div>
+</div>
+
+
+<!-- Oblique Act Button (Bottom Center) -->
+<div class="oblique-container">
+    <button class="info-button">oblique act</button>
+</div>
+
+    <!-- <div id="printArea" class="print-area">     
+        <img id="printImage" src="common/ObliqueAct-03.png" alt="image1" style="display:none;">
+        <div id="printTime"></div>
+        <div id="printUrl" style="display:none;">URL: <span id="urlSpan"></span></div>
+        <div id="printSentenceBottom" style="display: none;"></div>
+
+        <div id="printSentence"></div>
+    </div> -->
+    
+    <div id="printArea" class="print-area">
+  <div id="printTime" style="display: none;"></div>
+  <img id="printImage" src="" alt="image1" style="display: none;">
+  <div id="printSentence" style="display: none;"></div>
+</div>
+
     <!-- <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script> -->
     <script type="text/javascript" src="index.js"></script>
 </body>

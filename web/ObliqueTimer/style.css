@@ -1,73 +1,339 @@
-body, html {
+body,
+html {
     height: 100%;
     margin: 0;
     display: flex;
     justify-content: center;
-    align-items: center; 
-    font-size: 2vw;
-    flex-direction: column; 
+    align-items: center;
+    font-size: 4vw;
+    flex-direction: column;
+    font-family: 'HALTimezoneMono', monospace;
 }
 
+@font-face {
+    font-family: 'HALTimezoneMono';
+    src: url('./common/HALTimezoneUnlicensed-MonoRegular.otf') format('woff2'),
+        url('./common/HALTimezoneUnlicensed-MonoRegular\ 2.otf') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body,
+button,
+.info-button,
+.about-content {
+    font-family: 'HALTimezoneMono', monospace;
+}
 
 .gridlayout {
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    margin-bottom: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 5vw;
+    margin-right: 5vw;
 }
 
-#sentenceOutput1, #sentenceOutput2 {
+/* #sentenceOutput1{
     text-align: center; 
     margin-bottom: 20px; 
-    text-transform: lowercase; 
+    color: white;
+} */
+
+/* #sentenceOutput1 {
+    text-align: center;
+    margin-bottom: 5px;
+    min-height: 5em;
+    color: white;
+} */
+
+/* #sentenceOutput2 {
+    text-align: center; 
+    margin-bottom: 20px; 
+} */
+
+#sentenceOutput2 {
+    text-align: center;
+    margin-bottom: 5px;
+    min-height: 3em;
+    width: 100%;
+    max-width: 80vw;
+    overflow-wrap: break-word;
 }
 
 
+button {
+    border: none;
+    background-color: white;
+    font-size: 3.5vw;
+    font-family: 'HALTimezoneMono', monospace;
+}
+
 .button-container {
-    display: flex; 
-    justify-content: center; 
-    gap: 10px; 
+    display: flex;
+    justify-content: center;
+    gap: 5vw;
+
 }
 
 #printImage {
     display: none;
-    visibility: hidden; 
+    visibility: hidden;
 }
 
-
+/* 
 @media print {
     body * {
-        visibility: hidden; 
+        visibility: hidden;
         background-color: #f0f0f0;
     }
+
     #printImage {
-        display: block; 
-        width: 80%; 
-        margin: 45px auto; 
+        display: block;
+        width: 100%;
+        margin: 45px auto;
     }
-    #printArea, #printImage {
-        visibility: visible; 
+
+    #printArea,
+    #printImage {
+        visibility: visible;
     }
-    #sentenceOutput1, #sentenceOutput2, .gridlayout {
-        visibility: visible; 
+
+    #sentenceOutput1,
+    #sentenceOutput2,
+    .gridlayout {
+        visibility: visible;
         font-size: 15px;
     }
-    .gridlayout, .button-container {
+
+    .gridlayout,
+    .button-container {
         position: absolute;
         left: 0;
-        top: 30px; 
-        width: 100%; 
+        top: 30px;
+        width: 100%;
     }
+
     .button-container {
         display: none;
     }
+
     #printUrl {
-        display: block; 
-        font-size: 9px; 
-        color: #666; 
+        display: block;
+        font-size: 9px;
+        color: 000000;
         position: absolute;
-        bottom: 10px; 
-        width: 100%; 
-        text-align: center; 
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
     }
+
+      #printSentenceBottom {
+        display: block;
+        position: absolute;
+        bottom: 30px;
+        width: 100%;
+        text-align: center;
+        font-size: 12pt;
+        color: 000000;
+    }
+
+    
+} */
+
+/* @media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printArea,
+  #printArea * {
+    visibility: visible;
+  }
+
+  #printArea {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    font-family: 'HALTimezoneMono', monospace;
+  }
+
+  #printTime {
+    display: block;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  #printImage {
+    display: block;
+    width: 60vw;
+    margin: 0 auto 20px;
+  }
+
+  #printSentence {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .button-container {
+    display: none;
+  }
+} */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printArea,
+  #printArea * {
+    visibility: visible;
+  }
+
+  #printArea {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 95%;
+    text-align: center;
+    font-size: 14pt;
+    font-family: 'HALTimezoneMono', monospace;
+  }
+
+  #printTime {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    font-style: italic;
+  }
+
+  #printImage {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  #printSentence {
+    display: block;
+    margin-bottom: 10px; /* matches time's top margin */
+  }
+
+  .button-container {
+    display: none;
+  }
+}
+
+
+
+/* Shared button style */
+.info-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10pt;
+    padding: 5px 10px;
+    color: black;
+}
+
+/* About container at top center */
+.about-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 1000;
+}
+
+/* Hover box centered under the button */
+.about-hover-text {
+    visibility: hidden;
+    width: 320px;
+    background-color: black;
+    color: white;
+    padding: 12px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 9pt;
+    line-height: 1.5;
+    position: absolute;
+    top: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+.about-container:hover .about-hover-text {
+    visibility: visible;
+}
+
+/* Oblique act container at bottom center */
+.oblique-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 1000;
+}
+
+/* About button */
+#aboutButton {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10pt;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* Full-screen overlay hidden by default */
+.about-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* Centered text block */
+.about-content {
+    max-width: 600px;
+    font-size: 10pt;
+    line-height: 1.6;
+}
+
+.about-content h1 {
+    font-size: 30pt;
+    margin-bottom: 20px;
+}
+
+/* Show overlay on hover */
+#aboutButton:hover+#aboutOverlay,
+#aboutOverlay:hover {
+    display: flex;
+}
+
+p {
+    font-size: 13pt;
+}
+
+h1 {
+    font-size: 30pt;
 }

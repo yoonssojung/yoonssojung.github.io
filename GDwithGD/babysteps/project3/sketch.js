@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { text: "📕 Intimacy and the Machine:", category: "readings", link: "https://various-artists.com/godposting/" },
         { text: "〰️ Debbie Chen : As an architect, I’m really interested in the slippery boundary between architecture and infrastructure,", category: "references", link: "hhttps://dc-dba.com/" },
         { text: "📕 Mutual Aid: Building Solidarity During This Crisis (and the Next)", category: "readings", link: "https://www.google.com/search?q=mutual+aid+dean+spade&sca_esv=a450ec3222e383cb&ei=DKBYZ5OeD5e8ptQPif622AM&gs_ssp=eJzj4tVP1zc0zErOKSw2sMgxYPQSzS0tKU3MUUjMTFFISU3MUyguSExJBQDpXQyL&oq=mutual+aid&gs_lp=Egxnd3Mtd2l6LXNlcnAiCm11dHVhbCBhaWQqAggPMgoQABiwAxjWBBhHMg0QABiwAxjWBBhHGMkDMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMg4QABiABBiwAxiSAxiKBTINEAAYgAQYsAMYQxiKBTINEAAYgAQYsAMYQxiKBTINEAAYgAQYsAMYQxiKBTIOEAAYsAMY5AIY1gTYAQEyDhAAGLADGOQCGNYE2AEBMg4QABiwAxjkAhjWBNgBATITEC4YgAQYsAMYQxjIAxiKBdgBATITEC4YgAQYsAMYQxjIAxiKBdgBATITEC4YgAQYsAMYQxjIAxiKBdgBATITEC4YgAQYsAMYQxjIAxiKBdgBAUiRD1AAWABwAXgBkAEAmAEAoAEAqgEAuAEByAEAmAIBoAIGmAMAiAYBkAYTugYGCAEQARgJkgcBMaAHAA&sclient=gws-wiz-serp#wptab=si:ACC90nyLlcElEvb2bNLvGYvz3qiAav5yCbCPJktjpzs_m80LkJZmIsZvcgiNxa_zrWCTdK-S5qARHIri2x07aP1fCb3OAWtkZoYgwNeVmgqnNaAUf8GjCIJuQWG2R-jibQAV0MOWYVE6mhl-v4o1yK9-TXE7KTDp0g%3D%3D" },
-        { text: "", category: "", link: "" },
+        { text: "Simplified Chinese, Traditional Chinese, Japanese, and Korean", category: "references", link: "https://source.typekit.com/source-han-serif/" },
         { text: "", category: "", link: "" },
         { text: "", category: "", link: "" },
         { text: "", category: "", link: "" },

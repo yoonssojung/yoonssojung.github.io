@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GARDEN CATALOGUE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1 class="clickable-title" onclick="toggleInfo()">GARDEN CATALOGUE</h1>
+        <div class="button-container4">
+            <button class="view-mode-button" onclick="location.href='info-page.html'">
+                <img src="arrow2.png" alt="View Mode">
+            </button>
+        </div>
+        <div id="info" class="hidden">
+            <div class="info-container"></div>
+        </div>
+
+        <div class="button-container1">
+            <button class="filter-button" onclick="toggleSort('AZ', this)">A-Z</button>
+            <button class="filter-button" onclick="toggleSort('oldest', this)">OLDEST</button>
+            <button class="filter-button" onclick="toggleSort('newest', this)">LATEST</button>
+        </div>
+        <div class="button-container2">
+            <!-- Filter buttons for categories -->
+            <button class="filter-button" onclick="toggleFilter('category', 'SUPERSTITION', this)">SUPERSTITION</button>
+            <!-- Additional filter buttons here -->
+        </div>
+        <div class="button-container3">
+            <!-- Filter buttons for years -->
+            <button class="filter-button" onclick="toggleFilter('year', 'pre-1900', this)">PRE 1900</button>
+            <!-- Additional year buttons here -->
+        </div>
+    
+        <div id="gallery-container" class="container">
+            <!-- Dynamic content such as image cards or other related content will be generated here -->
+        </div>
+        <div class="button-container1">
+            <button class="filter-button" onclick="toggleSort('AZ', this)">
+                <img src="common/1.png" alt="A-Z Sort">
+                <img src="common/2.png" alt="A-Z Sort">
+                <img src="common/3.png" alt="A-Z Sort">
+            </button>
+            <button class="filter-button" onclick="toggleSort('oldest', this)">
+                <img src="common/2.png" alt="Sort by Oldest">
+            </button>
+            <button class="filter-button" onclick="toggleSort('newest', this)">
+                <img src="common/3.png" alt="Sort by Newest">
+            </button>
+        </div>
+        <div class="button-container2">
+            <button class="filter-button" onclick="toggleFilter('category', '1', this)">
+                <img src="common/1.png" alt="Category 1">
+            </button>
+            <button class="filter-button" onclick="toggleFilter('category', '2', this)">
+                <img src="common/2.png" alt="Category 2">
+            </button>
+            <button class="filter-button" onclick="toggleFilter('category', '3', this)">
+                <img src="common/3.png" alt="Category 3">
+            </button>
+        </div>
+        <div class="button-container3">
+            <button class="filter-button" onclick="toggleFilter('year', '1900s', this)">
+                <img src="common/1.png" alt="1900s Filter">
+            </button>
+            <button class="filter-button" onclick="toggleFilter('year', '1910s', this)">
+                <img src="common/2.png" alt="1910s Filter">
+            </button>
+        </div>
+    </div>
+    <div id="gallery-container" class="container"></div>
+    <script src="sketch.js"></script>
+</body>
+</html>
