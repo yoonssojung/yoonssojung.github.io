@@ -64,8 +64,10 @@
           // Tap with no drag = open lightbox
           if (Math.abs(dragDelta) < 5 && e && e.type === 'pointerup') {
             const activeSlide = slideEls[current];
+            const vid = activeSlide ? activeSlide.querySelector('video') : null;
+            if (vid) return; // no zoom for videos
             const img = activeSlide ? activeSlide.querySelector('img') : null;
-            if (img) openLightbox(img.src, img.alt);
+            if (img) openLightbox(img.src);
           }
         }
       };
@@ -77,11 +79,10 @@
   document.addEventListener('DOMContentLoaded', initSliders);
 
   // ── LIGHTBOX ──
-  function openLightbox(src, alt) {
+  function openLightbox(src) {
     const lb = document.getElementById('lightbox');
-    const img = document.getElementById('lightbox-img');
-    img.src = src;
-    img.alt = alt || '';
+    const lbImg = document.getElementById('lightbox-img');
+    lbImg.src = src;
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -275,6 +276,7 @@
 
   .slider-wrap { cursor: zoom-in; }
   .slider-wrap:active { cursor: grabbing; }
+  .slide video { cursor: default; pointer-events: auto; }
 
   .slide.placeholder {
     display: flex; align-items: center; justify-content: center;
