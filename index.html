@@ -54,12 +54,20 @@
         dragDelta = e.clientX - startX;
         slides.style.transform = `translateX(calc(-${current * 100}% + ${dragDelta}px))`;
       });
-      const endDrag = () => {
+      const endDrag = (e) => {
         if (!isDragging) return;
         isDragging = false; slides.style.transition = '';
         if (dragDelta < -50) goTo(current + 1);
         else if (dragDelta > 50) goTo(current - 1);
-        else goTo(current);
+        else {
+          goTo(current);
+          // Tap with no drag = open lightbox
+          if (Math.abs(dragDelta) < 5 && e && e.type === 'pointerup') {
+            const activeSlide = slideEls[current];
+            const img = activeSlide ? activeSlide.querySelector('img') : null;
+            if (img) openLightbox(img.src, img.alt);
+          }
+        }
       };
       slides.addEventListener('pointerup', endDrag);
       slides.addEventListener('pointercancel', endDrag);
@@ -67,6 +75,32 @@
   }
 
   document.addEventListener('DOMContentLoaded', initSliders);
+
+  // ── LIGHTBOX ──
+  function openLightbox(src, alt) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    img.alt = alt || '';
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Close lightbox on backdrop or X button
+    const lb = document.getElementById('lightbox');
+    lb.addEventListener('click', e => {
+      if (e.target === lb || e.target.id === 'lightbox-close') closeLightbox();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  });
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -218,7 +252,6 @@
     border-radius: 2px;
     background: #d8d4cc;
     aspect-ratio: 16/9;
-    cursor: grab;
     user-select: none;
   }
 
@@ -239,6 +272,9 @@
     object-position: center center;
     pointer-events: none; display: block;
   }
+
+  .slider-wrap { cursor: zoom-in; }
+  .slider-wrap:active { cursor: grabbing; }
 
   .slide.placeholder {
     display: flex; align-items: center; justify-content: center;
@@ -276,6 +312,47 @@
     background: #ccc; cursor: pointer; transition: background 0.2s; flex-shrink: 0;
   }
   .dot.active { background: var(--text); }
+
+  /* ── LIGHTBOX ── */
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+  }
+  #lightbox.active { display: flex; }
+
+  #lightbox-img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 2px;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+    cursor: default;
+    animation: lb-in 0.2s ease;
+  }
+
+  @keyframes lb-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  #lightbox-close {
+    position: fixed;
+    top: 20px; right: 24px;
+    background: none; border: none;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    transition: color 0.15s;
+  }
+  #lightbox-close:hover { color: #fff; }
 
   /* Project info — two columns: title/tags left, desc right */
   .project-info {
@@ -486,6 +563,12 @@
 <body>
 
 <!-- SIDEBAR -->
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lightbox-close" aria-label="Close">&#x2715;</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
 <aside class="sidebar">
   <a class="sidebar-logo" onclick="navigate('index')">So Jung Yoon</a>
   <!-- <p class="sidebar-role">Brand &amp; Product Designer</p> -->
@@ -496,7 +579,7 @@
   </ul>
   <div class="sidebar-footer">
     [New York, USA] ⇆ [Seoul, Korea]<br>
-    <a href="mailto:sojungyoon.works@gmail.com">sojungyoon.works@gmail.com</a> | © So Jung Yoon 2026
+    <a href="/cdn-cgi/l/email-protection#493a26233c272e30262627673e263b223a092e24282025672a2624"><span class="__cf_email__" data-cfemail="e2918d88978c859b8d8d8ccc958d908991a2858f838b8ecc818d8f">[email&#160;protected]</span></a> | © So Jung Yoon 2026
   </div>
 </aside>
 
@@ -776,7 +859,7 @@
       <p class="info-bio">Please reach out for full resume.</p>
       <div class="info-links">
         / <a href="https://www.linkedin.com/in/so-jung-yoon" target="_blank">LinkedIn</a><br>
-        / <a href="mailto:sojungyoon.works@gmail.com">sojungyoon.works@gmail.com</a>
+        / <a href="/cdn-cgi/l/email-protection#85f6eaeff0ebe2fceaeaebabf2eaf7eef6c5e2e8e4ece9abe6eae8"><span class="__cf_email__" data-cfemail="ee9d81849b808997818180c099819c859dae89838f8782c08d8183">[email&#160;protected]</span></a>
       </div>
     </div>
 
@@ -883,12 +966,4 @@
       <div class="misc-item"><div class="misc-placeholder tall" style="background:#c5bdb5">VIDEO / IMAGE 05</div></div>
       <div class="misc-item"><div class="misc-placeholder" style="background:#b5c2be">VIDEO / IMAGE 06</div></div>
       <div class="misc-item"><div class="misc-placeholder" style="background:#c0bdc5">VIDEO / IMAGE 07</div></div>
-      <div class="misc-item"><div class="misc-placeholder" style="background:#c5c0b5">VIDEO / IMAGE 08</div></div>
-      <div class="misc-item"><div class="misc-placeholder" style="background:#c5c0b5">VIDEO / IMAGE 09</div></div>
-      </div>
-              <footer class="site-footer">Designed&Coded with love from New York City</footer>
-      </div><!-- /page-misc -->
-
-      </main>
-</body>
-</html>
+      <div class="misc-item"><div class="misc-placeholder" style="background:#c5c0b5">VIDEO / IMAGE 08
