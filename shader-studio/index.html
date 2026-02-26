@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader Studio</title>
+  <script src="p5.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #0a0a0a;
+      --surface:      #111;
+      --border:       rgba(255,255,255,0.07);
+      --border-hi:    rgba(255,255,255,0.15);
+      --text:         #f0f0f0;
+      --muted:        #666;
+      --accent:       #e8e0d0;
+      --input-bg:     #1a1a1a;
+      --panel-w:      300px;
+      --bar-h:        48px;
+      --mono:         'DM Mono', monospace;
+      --display:      'Syne', sans-serif;
+    }
+
+    html, body { height: 100%; background: var(--bg); color: var(--text); overflow: hidden; font-family: var(--mono); font-size: 12px; }
+
+    /* ── Layout ── */
+    .app {
+      display: grid;
+      grid-template-columns: 1fr var(--panel-w);
+      grid-template-rows: var(--bar-h) 1fr;
+      height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .logo {
+      font-family: var(--display);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .sep { width: 1px; height: 18px; background: var(--border-hi); flex-shrink: 0; }
+
+    /* speed */
+    .speed-row { display: flex; align-items: center; gap: 8px; }
+    .lbl { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+    #speed-display { font-size: 11px; color: var(--accent); min-width: 22px; }
+
+    /* color swatches */
+    .swatches { display: flex; align-items: center; gap: 5px; }
+    .swatch-wrap {
+      position: relative; width: 22px; height: 22px; border-radius: 50%;
+      border: 1px solid var(--border-hi); overflow: hidden; cursor: pointer;
+      transition: transform .15s;
+    }
+    .swatch-wrap:hover { transform: scale(1.18); }
+    .swatch-dot { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; }
+    .swatch-wrap input[type="color"] {
+      position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px);
+      opacity: 0; cursor: pointer; border: none;
+    }
+
+    /* ── Canvas area ── */
+    .canvas-wrap {
+      background: #000;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Canvas keeps its native resolution — JS scales it via transform */
+    .canvas-wrap canvas {
+      display: block;
+      transform-origin: center center;
+    }
+
+    /* ── Right panel ── */
+    .panel {
+      border-left: 1px solid var(--border);
+      background: var(--surface);
+      overflow-y: auto;
+      display: flex; flex-direction: column;
+    }
+    .panel::-webkit-scrollbar { width: 3px; }
+    .panel::-webkit-scrollbar-thumb { background: var(--border-hi); }
+
+    .section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .section:last-child { border-bottom: none; }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: 9px; font-weight: 800;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+
+    /* fields */
+    .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .field:last-child { margin-bottom: 0; }
+    .field > label { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+
+    .field input[type="text"],
+    .field select,
+    .field input[type="number"] {
+      background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--mono); font-size: 12px;
+      padding: 6px 8px; border-radius: 3px; outline: none; width: 100%;
+      transition: border-color .12s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--border-hi); }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .row2 .field { margin-bottom: 0; }
+
+    /* slider */
+    .slider-field { margin-bottom: 10px; }
+    .slider-field:last-child { margin-bottom: 0; }
+    .slider-head { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .slider-head label { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+    .slider-val { font-size: 11px; color: var(--accent); }
+
+    input[type="range"] {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 2px; background: var(--border-hi);
+      border-radius: 2px; outline: none; cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 10px; height: 10px;
+      border-radius: 50%; background: var(--accent); cursor: pointer;
+    }
+
+    /* checkbox */
+    .check-row { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; cursor: pointer; }
+    .check-row input { width: 13px; height: 13px; accent-color: var(--accent); cursor: pointer; }
+    .check-row span { font-size: 11px; color: var(--text); }
+
+    /* file upload */
+    .file-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 8px; background: var(--input-bg);
+      border: 1px solid var(--border); border-radius: 3px;
+      font-size: 11px; color: var(--muted); cursor: pointer;
+      position: relative; transition: border-color .12s;
+    }
+    .file-btn:hover { border-color: var(--border-hi); color: var(--text); }
+    .file-btn input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    #file-name { font-size: 10px; color: var(--muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* buttons */
+    .btn {
+      width: 100%; padding: 8px; border-radius: 3px; cursor: pointer;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+      border: 1px solid var(--border-hi); background: transparent;
+      color: var(--text); transition: background .12s;
+    }
+    .btn:hover { background: rgba(255,255,255,0.06); }
+    .btn:disabled { opacity: 0.35; cursor: default; }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #0a0a0a; font-weight: 500; }
+    .btn-primary:hover { background: #fff; border-color: #fff; }
+
+    /* export status */
+    #anim-status { font-size: 10px; color: var(--muted); margin-top: 6px; min-height: 14px; }
+    #anim-preview-link { display: none; font-size: 11px; color: #6af; margin-top: 5px; cursor: pointer; }
+    #anim-preview-link:hover { color: #9cf; }
+    #anim-restart-btn { display: none; margin-top: 6px; }
+
+    /* progress bar */
+    #anim-progress-wrap {
+      display: none;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    #anim-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.2s ease;
+    }
+  </style>
+  <link rel="icon" type="image/png" href="data:image/png;base64,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">
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAM+ElEQVR4nMWbW6htyVWGv1E1196nD30hYCc+ttAgvuQt+KIvIgERCfaTipcICpIEDYIo+pBACET0wQuCJD4YhEDaCxiCEoKJGDSESCPxoROQhhgkbRK7+9z2Za1ZNXyoqlmjatZce59zdtLzUGve9lqr/n/8469RNdeBN3nTF5/XN/P75XvxJfr5Z5XgaJuvx7Nn676879+/q338rny4fvnJAeAO9CYBPRntufzOF260zzf6YfqV0+sBn7vr84iMK4j4wOdupO838iH6VafEEfCtSBcSOgJW94+oJjiIDvnwZx4Lw2O9ef8y6j045NHAW+D9teuSUIj4w08/Ehb3qOAf/CcaFaICouAGTUqj7jc3c1MFtOxzi4Nm7un73/VIo8kjEfD6S2iIEHMLCkg0gDvQC3jtiOj6XIDbY0tC3zpC9L0vPDQJDyWbb34xSd478D61yewlynZez75r5V5/fXR/4Bs2JaKDICw+FB3ysU9eC9u1FfD1f0lRDwFCTC2afYxk2WcluDhQQ6+Q/OE6aoNoqzORd7mNz/WXf+5aargWAf/1OTQa8DFCDOk8WkKUNv8bL6AFvdryzaHMXSt5dSv5E6WqIBOhP/8LV5JwJQEvfwZtgHcqCJmMRgUudiZo2soHMvgSebgi310X8VGTJRX0Z959lITpKgJCMFZlPyoDEMkt5L0Df3REMIbYbwtgBibXgzPXwxj8cv/IdvTuS58yeV+iHjbOY00JLR5QmsQ2FRh5gLQkxD7yWwqw8peWjJDMUV/41U0VbBLwpb9N0p8zwDmm49lcWxFh0mLlBUMFjIbBgfHFDtSo6lxdk+Y9+lO/NiRhSMAXPpnzvoAfgJ3Nvbk7D1YFPra+0CjBgs8ERDp5b6XABvgtcqJDf+K9KxKGHpAApL56Bc1v03ysfm0HQvUDJ2nI3rkIzmXwrjND1p+wDH+D4S3IJrBUG3TyX6WL1DQ7poDPfnwd/TnAPLfnYU7X5u5vmhSBNvLDVDDRb8D3ubwxS2xmj6N1hbbpj72/YX+lgDnkvkrtc1GBKji/VoGaj7QqcAJ+ZyqmPg2sjpS12W0CGUyjm9HARr+rIzoVNAr41Edr9OdBO9goz3DIbQ55P5t9eV8k+UBpS4WIUUBnfMcAj6bOzSyy/F2vHKOCH/mthflGASGk7y8pG7N3qcup7HI1qmZv2lAFDvxJRPwgFRoF9DnfgVkBXK8NtAoYRN7OIHsFvPgn6MrZTXRthIftkNq+2x8O6T4+5GbTYAC+z+/ZAJ49HLYmT9YDrvYDfcfvaqOAOeR6xeXoxbwv0Y+pf87lstfX8lfjESXk9/hbip9iyolSHJXRYBkCuwjPHuYpNw+HqV08WY0InfP3UY92pBFWBDhJgArwhQhX5eyK2mKeEpc5gpo9lQghm6EHv+tUsBBgo+8r2MOUIn7wsJ+6aBsStoa8kfRtqW0JKPm/1PYxdbwhIxNhlRDKPqb+xKKGWDO8vNd7ZbfLbupjmwIhFw8F8MGQsJ9M9Lv8t3WCrR+OATcLLxPARz+c8t8WM9bIigIKkJDPfU6ZEFKEg6edJRqfE0kLKbvbM0xTHREgO3+W+2GC/S63CS53lYiR/I+Z3hbwvNcf+pBOS/5b8AMiRkpwIYFK0c0YTBG1TJMzCc4l7LdOZphywQGp47OvgEu7OKnRP0xHwA9kvxn1QQrMcwucYyQYRTiz9zk43ufRYqqjSTHKQsLu6Rl/Mic/gASmgL84Se38NJ338g9G8keBrw1vRUIhIIQqUwxwe9wTsiKiKMHVNcLDISm5DKEhkzB5eObWHnb5iw8+gT47Te3BrXS+yN9vy76fPm9Eer03BMyFgOWlgrZqaAixRHRqcIaE3QSX+9T2h/pdp8/O3Do9pJPLE7j/BNy7DXdvw9mtGv0+8qtcp416E+ke8Pp4SYHCQDFme7yAL9c31LF4hHRqmBIRZ+dwdgH7fXr/c289Swd3b8NrT8H/PZ2IKLnfu/0o0ldEeDUDtET0CjDYV/N16Q6sOhaSRqlSRoysiJMdvH4H3rgHMPMcwH+/Fb7+tkREkb2N+BBw7oB2Hetn2oMpcIPrA78+Wpz73m0f/MSfvplfn2j7vfe0JOjy0l0zB+VvmilxPrdlcRkGyxxjf4Dzi6SCr74Cz33red59+sP8oH8bb5Hb3JYdO5mYcHgcDsEhiEieQJY9+YzuqBev9GJu/q5NAW2B9vP9BXS/QkQFq1rL4mX5LE+YLvfJB964B69+G179n4nndvC18C0Avt89zTPyBLflhFMmTsQbIhw+w3d53xKSgYolZU2AdK+NCdrIF2A2qg1orWBtpO2zg2UmecjgL+D+A3jtTiLgLXIbgNf0jFfjPQAuZeYpucUTsksk4JmoRHgk05FU4Rbw+Z+OVdKQIfW4UUAPchTlBngHuol6B/78MkX/7v0kf/YTT7gdAOe6546ec6oegJnInhNusatKUEOCZCK0qqGmiSXFEmDOzURtKYQsyFEubwJX2qdFZi1hn9cFLi4TAQ/O4N79pIJn5IQTSYD3GjjTPff0Ek+6FlFmIgcCp0zs8OzweHFMWpXgRapPqE2PDFzG6bJKgQbwFvi4lnvoJB/MAsr+kMb8i8sk/wdn8OAcdjpxKhMTNeIXzJzrgRP2+NzBiBKIBCInTMwSqhIkq0FrSjhLRlGG0hKC5DqmS4Et4DbiC3jj7L3sZ7NCtD/ARSbg/CKp4HIPT8vETrwBGjlo4JKZcw5MGRCAihJVCaLM6tkRmcRnFRQiIg7Bq6spIWuzdOVYqwYmgL94EfmlF9BjBtcMaSbqMbYPRZblsTlHPxNwcQmXlxhjS3EDCCgzgT0ze2YuiuNrS0IkEsUTVAnikhIWIoSALgpo/MGkgSXlB17/oLQLIiO5D8zOEhAizfrhXKI/1zlAaTEIt6S6elmQVJSAciCy18COwETAydwsGimZCFGiOiIeL4onZiJiotWkQu8NztQT0C2JrYB3ku+dvpe+VUDJ//2+LpAWI5skdVLypCJqzfVZAoesBq/5b0w5qwKqShRPRPGalBBFiQgOxamk2mEZFQwBxhPWBMRt2Y8i3z9DKNPeZWV4Tu1wSD2fcE1hUzqhxvCK80+a8tstw1omQBUVn9celUm0KgOHE8XjiJkIa462iHI9AX/zj8i7fjz5QAGsXc6Por8yP6MAuyx+imcS35a3JgUsAbNGZonMBA7qcBKScdU3LCmRCEnvL4qIok3BZImI+bvf/sbvS0OA9YEm+vE4Ab38m6dDee9z5CcEL5I7J4aCSkLUSJCsBI04CTgVJJNQWFAFRGsZLjQkKIITrSQYIqL5XmcJ+PTnkZt+NBYiy7hd/9nyNEdyUUH2A82eoEkJs6bUmDVwoKgj38vX09/me+W9GvK12t5x5w8WBoYPR3vTs5Ffih4z0elHgeVp8oyp4WstX6qzQkHyABaHDyYdPJEZwRGreSmDdCh1jKLi8CiayfYKKoKSmt0aBQD8079VFTzu43FVljHam/HYjsU2BZIKYh0VsgpCjnQ6D9UnqNcXJSyRT/cbX9HIj975o4aBzR9IhF4BYZz/IZPR/5JkDiX60hjfFvjyGgsJ2cnT8JgMbSam2Z5UJZQPUnXNQoCayPt83kd/qACAf31prYKH/YmMK8CXocxtEpA6nMDXIbGoIB8XNaDMy3FRh/WLet6oiMg77/7ZioEhAQBf/koi4VF/JFXAFsdfxuJlwaIfBcywtozrSQ3hSJs7kEHLuTbE/OTdPx8uDG0SAPAfLyOP8jO5Ev1S8FTn72dkBrzaFKijgm1hqRhbRSRVGNU0pCg/fe9jmyuj1/qh5NADNo6jwq6Lel+F2Vq83YoV0oJXJUia8QUVnCRfEFVEIoGU/mGJaXoCk3whHsV3VAEAX3sl+8HIEEuRFOq9Pt/7UtQ6QFsG1aGsKEB1rYK4RH2QEo0qkpX+7L2/PLoufiUBAK98A7nOj6VR1jnfRN08R1h9izb/etDRkqGxSYtqmm1q/OL9vzr+UOC6BAB845vGD+zEKG5F36qg5H2rgAq9a8o2EbTmWEmI9b4qv3L/E1eCh2t4gN3+9zup5888lX8+b8CnxQa3in5b/GDaVv9aH0hT324tIIMWScAFCOpAlN948NfXAl62ayvAbnfuJTXYtYJV3oMBbff2AUavBOsFavYjL8jmaM5/88HfPRT4RyYA4PwCKf9pqqnypDU76UhIwNdbgsvyWsCPQI/I+O2zv39o8PCQKdBv85ywOETtULeYnwxWZIHtQTC92sjXCU5Lisv7D539wyMBL9tjEVC2QJRA5ElOVVZEZLhi6r+uy7ocqFnoMIseXW3gUD5y/tnHAl62GyGgbPe5FBS+T55siBgb3xUjgVUALMD/+OKfbwR42W6UgLJ9R+/XiT7wvHtWR7XAeCuQ0+vHL790o4D77f8BxI11q4n1lsYAAAAASUVORK5CYII=">
+</head>
+<body>
+<div class="app">
+
+  <!-- ── TOP BAR ─────────────────────────────────────────────── -->
+  <header class="topbar">
+    <span class="logo">Shader Studio</span>
+    <div class="sep"></div>
+
+    <!-- Speed -->
+    <div class="speed-row">
+      <span class="lbl">Speed</span>
+      <input id="speed-slider" type="range" min="0.1" max="2.2" step="0.1" value="0.5" style="width:80px;">
+      <span id="speed-display">0.5</span>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Colour swatches — id="color1"…"color6" are read directly by script.js -->
+    <div class="swatches">
+      <span class="lbl" style="margin-right:4px;">Colours</span>
+
+      <div class="swatch-wrap"><div class="swatch-dot" id="dot1" style="background:#ff6600;"></div><input type="color" id="color1" value="#ff6600"></div>
+      <div class="swatch-wrap"><div class="swatch-dot" id="dot2" style="background:#008000;"></div><input type="color" id="color2" value="#008000"></div>
+      <div class="swatch-wrap"><div class="swatch-dot" id="dot3" style="background:#000000;"></div><input type="color" id="color3" value="#000000"></div>
+      <div class="swatch-wrap"><div class="swatch-dot" id="dot4" style="background:#9900ff;"></div><input type="color" id="color4" value="#9900ff"></div>
+      <div class="swatch-wrap"><div class="swatch-dot" id="dot5" style="background:#ccff00;"></div><input type="color" id="color5" value="#ccff00"></div>
+      <div class="swatch-wrap"><div class="swatch-dot" id="dot6" style="background:#cccccc;"></div><input type="color" id="color6" value="#cccccc"></div>
+    </div>
+  </header>
+
+  <!-- ── CANVAS ──────────────────────────────────────────────── -->
+  <main class="canvas-wrap" id="canvas-wrap"></main>
+
+  <!-- ── RIGHT PANEL ─────────────────────────────────────────── -->
+  <aside class="panel">
+
+    <!-- Source -->
+    <div class="section">
+      <div class="section-title">Source</div>
+
+      <div class="field">
+        <label for="text-input">Text</label>
+        <input id="text-input" type="text" placeholder="Type something…">
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <label class="file-btn" style="flex:1; margin-right:6px;">
+          <span>↑ Upload image</span>
+          <input id="image-input" type="file" accept="image/png,image/jpeg">
+        </label>
+        <button id="clear-btn" class="btn" style="width:auto; padding:6px 10px; font-size:10px; flex-shrink:0;">↺ Clear</button>
+      </div>
+      <div id="file-name">No file selected</div>
+    </div>
+
+    <!-- Typography -->
+    <div class="section">
+      <div class="section-title">Typography</div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="font-select">Font</label>
+          <select id="font-select">
+            <option value="Arial">Arial</option>
+            <option value="Helvetica">Helvetica</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Verdana">Verdana</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="weight-select">Weight</label>
+          <select id="weight-select">
+            <option value="normal">Normal</option>
+            <option value="bold">Bold</option>
+          </select>
+        </div>
+      </div>
+
+
+      <div class="slider-field">
+        <div class="slider-head">
+          <label>Font Size</label>
+          <span class="slider-val" id="font-size-display">auto</span>
+        </div>
+        <input id="font-size-range" type="range" min="0" max="300" step="1" value="0">
+      </div>
+
+      <div class="slider-field">
+        <div class="slider-head">
+          <label>Line Height</label>
+          <span class="slider-val" id="line-height-display">1.2</span>
+        </div>
+        <input id="line-height-range" type="range" min="0.5" max="3.0" step="0.1" value="1.2">
+      </div>
+
+      <div class="slider-field">
+        <div class="slider-head">
+          <label>V Offset</label>
+          <span class="slider-val" id="voffset-display">0</span>
+        </div>
+        <input id="voffset-range" type="range" min="-280" max="280" step="1" value="0">
+      </div>
+    </div>
+
+    <!-- Shader -->
+    <div class="section">
+      <div class="section-title">Shader</div>
+
+      <div class="slider-field">
+        <div class="slider-head">
+          <label>Blur</label>
+          <span class="slider-val" id="blur-display">8</span>
+        </div>
+        <input id="blur-range" type="range" min="0" max="30" step="1" value="8">
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="section">
+      <div class="section-title">Export</div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="anim-duration">Duration (s)</label>
+          <input id="anim-duration" type="number" min="0.2" step="0.1" value="2">
+        </div>
+        <div class="field">
+          <label for="anim-fps">FPS</label>
+          <input id="anim-fps" type="number" min="1" max="60" step="1" value="15">
+        </div>
+      </div>
+
+      <div class="row2" style="margin-bottom:0;">
+        <button id="export-gif-btn" class="btn btn-primary">Export GIF</button>
+        <button id="export-png-btn" class="btn btn-primary">Export PNG</button>
+      </div>
+      <div id="anim-progress-wrap"><div id="anim-progress-bar"></div></div>
+      <div id="anim-status"></div>
+      <a id="anim-preview-link">Preview / Save GIF</a>
+      <button id="anim-restart-btn" class="btn">New Export</button>
+    </div>
+
+  </aside>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,1 +1,0 @@
-# yoonssojung.github.io

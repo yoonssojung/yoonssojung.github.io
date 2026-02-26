@@ -1,36 +1,895 @@
-<html>
-    
-    <head>
-        <title>Web as Medium Spring 2024</title>
-        <link rel="stylesheet" href="common/Nitti Grotesk">
-        <style type="text/css">
-        html,
-        body {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>So Yoon — Portfolio</title>
+<script>
+  function navigate(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    const target = document.getElementById('page-' + page);
+    if (target) target.classList.add('active');
+    const navEl = document.getElementById('nav-' + page);
+    if (navEl) navEl.classList.add('active');
+    window.scrollTo(0, 0);
+    if (page === 'index') initSliders();
+  }
 
-            height: 100%;
-            font-size: 14px;
-            text-align: left;
-            margin: 30px;
-            position: fixed;
-            
-        }
+  function initSliders() {
+    document.querySelectorAll('.slider-wrap').forEach(wrap => {
+      if (wrap.dataset.init) return;
+      wrap.dataset.init = '1';
 
-        h1{
-            font-family: Nitti Grotesk, sans-serif;
-            font-size: small;
-            font-weight: normal;
+      const slides = wrap.querySelector('.slides');
+      const slideEls = wrap.querySelectorAll('.slide');
+      const count = slideEls.length;
+      const dotsContainer = wrap.nextElementSibling;
+      let current = 0, startX = 0, isDragging = false, dragDelta = 0;
 
-        }
-     </style>
-    </head>
-    <body>
-        <h1>💻 Web as Medium Spring 2024</h1>
-        <a href="web/7waystodeclutter/index.html"><h1>📁 P1 = 7 Ways to Declutter</h1></a>
-        <!--<a href="web/DearDad/index.html"><h1>📁 P2 = Dear Dad,</h1></a> -->
-        <a href="web/ObliqueTimer/index.html"><h1>📁 P3 = Oblique Timer</h1></a>
-        <a href="common/WebasMedium_Materiality.pdf"><h1>📄 Materiality on the Web.pdf</h1></a>
-<br>
-        <a href="GDwithGD/index.html"><h1>💻 Type+Code Fall 2024</h1></a>
-        <a href="GDwithGD/babysteps/index.html"><h1>📁 Babysteps </h1></a>
-    </body>
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+      }
+
+      function goTo(i) {
+        current = ((i % count) + count) % count;
+        slides.style.transform = `translateX(-${current * 100}%)`;
+        dotsContainer.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', idx === current));
+      }
+
+      wrap.querySelector('.prev').addEventListener('click', e => { e.stopPropagation(); goTo(current - 1); });
+      wrap.querySelector('.next').addEventListener('click', e => { e.stopPropagation(); goTo(current + 1); });
+
+      slides.addEventListener('pointerdown', e => {
+        isDragging = true; startX = e.clientX; dragDelta = 0;
+        slides.style.transition = 'none';
+        slides.setPointerCapture(e.pointerId);
+      });
+      slides.addEventListener('pointermove', e => {
+        if (!isDragging) return;
+        dragDelta = e.clientX - startX;
+        slides.style.transform = `translateX(calc(-${current * 100}% + ${dragDelta}px))`;
+      });
+      const endDrag = () => {
+        if (!isDragging) return;
+        isDragging = false; slides.style.transition = '';
+        if (dragDelta < -50) goTo(current + 1);
+        else if (dragDelta > 50) goTo(current - 1);
+        else goTo(current);
+      };
+      slides.addEventListener('pointerup', endDrag);
+      slides.addEventListener('pointercancel', endDrag);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initSliders);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f3ee;
+    --text: #1a1a1a;
+    --muted: #888;
+    --accent: #1731f1;
+    --sidebar-w: 38%;
+  }
+
+  html { font-size: 15px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    padding: 32px 40px;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    text-decoration: none;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .sidebar-role {
+    font-size: 0.68rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 32px;
+    letter-spacing: 0.01em;
+  }
+
+  /* .sidebar-role::before {
+    content: '⚙︎';
+    font-size: 0.55rem;
+  } */
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+  }
+
+  .sidebar-nav a {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 400;
+    transition: opacity 0.15s;
+    cursor: pointer;
+  }
+
+  .sidebar-nav a:hover { opacity: 0.45; }
+  .sidebar-nav a.active { text-decoration: underline; text-underline-offset: 3px; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    font-size: 0.62rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .sidebar-footer a { color: var(--muted); text-decoration: none; }
+  .sidebar-footer a:hover { color: var(--text); }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 32px 48px 80px 40px;
+    min-width: 0;
+  }
+
+  /* ── PAGE VIEWS ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ══════════════ INDEX PAGE ══════════════ */
+
+  /* Hero — two columns: greeting left, bio right */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+    align-items: start;
+  }
+
+  .hero-greeting {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    font-style: normal;
+  }
+
+  .hero-text {
+    font-size: 0.74rem;
+    line-height: 1.9;
+    color: #333;
+  }
+
+  .hero-text a { color: var(--text); }
+
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  /* ── PROJECT ── */
+  .project { margin-bottom: 64px; }
+
+  /* ── SLIDER ── */
+  .slider-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    background: #d8d4cc;
+    aspect-ratio: 16/9;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .slider-wrap:active { cursor: grabbing; }
+
+  .slides {
+    display: flex;
+    height: 100%;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+  }
+
+  .slide { flex: 0 0 100%; height: 100%; }
+
+  .slide img, .slide video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    pointer-events: none; display: block;
+  }
+
+  .slide.placeholder {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem; color: rgba(255,255,255,0.45); letter-spacing: 0.06em;
+  }
+
+  .slide.placeholder:nth-child(1)  { background: #c8c2b8; }
+  .slide.placeholder:nth-child(2)  { background: #b8c2c0; }
+  .slide.placeholder:nth-child(3)  { background: #c2b8c0; }
+  .slide.placeholder:nth-child(4)  { background: #bec5b5; }
+  .slide.placeholder:nth-child(5)  { background: #c5bdb5; }
+  .slide.placeholder:nth-child(6)  { background: #b5c2be; }
+  .slide.placeholder:nth-child(7)  { background: #c0bdc5; }
+  .slide.placeholder:nth-child(8)  { background: #c5c0b5; }
+  .slide.placeholder:nth-child(9)  { background: #b8c0c5; }
+  .slide.placeholder:nth-child(10) { background: #c2c5b8; }
+
+  .slider-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; padding: 10px;
+    z-index: 10; opacity: 0; transition: opacity 0.2s;
+  }
+
+  .slider-wrap:hover .slider-btn { opacity: 1; }
+  .slider-btn.prev { left: 10px; }
+  .slider-btn.next { right: 10px; }
+  .slider-btn svg { width: 26px; height: 26px; filter: drop-shadow(0 1px 4px rgba(0,0,0,0.35)); }
+
+  .slider-dots {
+    display: flex; gap: 5px; justify-content: center; margin-top: 9px;
+  }
+
+  .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #ccc; cursor: pointer; transition: background 0.2s; flex-shrink: 0;
+  }
+  .dot.active { background: var(--text); }
+
+  /* Project info — two columns: title/tags left, desc right */
+  .project-info {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
+    align-items: start;
+  }
+
+  .project-info-left { min-width: 0; }
+  .project-info-right { min-width: 0; }
+
+  .project-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .project-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+
+  .tag {
+    font-size: 0.58rem;
+    border: 1px solid #bbb;
+    border-radius: 20px;
+    padding: 2px 8px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .project-desc {
+    font-size: 0.71rem;
+    line-height: 1.85;
+    color: #444;
+  }
+
+  .project-desc a { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
+
+  .site-footer {
+    margin-top: 60px;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-family: 'Noto Serif KR', serif;
+  }
+
+  /* ══════════════ INFO PAGE ══════════════ */
+  .info-header h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: 28px;
+  }
+
+  .info-photo {
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    border-radius: 2px;
+    margin-bottom: 28px;
+    background: #d8d4cc;
+  }
+
+  .info-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .info-bio {
+    font-size: 0.74rem;
+    line-height: 1.9;
+    color: #333;
+    max-width: 520px;
+    margin-bottom: 14px;
+  }
+
+  .info-bio a { color: var(--text); }
+
+  .info-links {
+    font-size: 0.72rem;
+    line-height: 2.2;
+    color: #333;
+    margin-bottom: 48px;
+  }
+
+  .info-links a { color: var(--text); text-decoration: none; }
+  .info-links a:hover { text-decoration: underline; }
+
+  .cv-section { margin-bottom: 40px; }
+
+  .cv-section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .cv-entry { margin-bottom: 24px; }
+  .cv-year { font-size: 0.67rem; color: var(--muted); margin-bottom: 3px; font-variant-numeric: tabular-nums; }
+
+  .cv-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+    line-height: 1.4;
+  }
+
+  .cv-title a { color: var(--text); text-decoration: none; }
+  .cv-title a:hover { text-decoration: underline; }
+  .cv-subtitle { font-size: 0.67rem; color: var(--muted); margin-bottom: 6px; }
+  .cv-body { font-size: 0.7rem; line-height: 1.85; color: #444; max-width: 520px; }
+
+  /* ══════════════ MISC PAGE ══════════════ */
+  .misc-header {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+
+  .misc-grid { columns: 2; column-gap: 10px; }
+
+  .misc-item {
+    break-inside: avoid;
+    margin-bottom: 10px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: #d8d4cc;
+  }
+
+  .misc-item img, .misc-item video { width: 100%; display: block; object-fit: cover; }
+
+  .misc-placeholder {
+    width: 100%; aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.62rem; color: rgba(255,255,255,0.4); letter-spacing: 0.06em;
+  }
+
+  .misc-placeholder.tall { aspect-ratio: 9/14; }
+
+  /* ══════════════ RESPONSIVE ══════════════ */
+
+  /* ── TABLET (≤ 960px) ── */
+  @media (max-width: 960px) {
+    :root { --sidebar-w: 280px; }
+    .main { padding: 28px 32px 80px 32px; }
+    .hero { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── SMALL TABLET (≤ 768px) ── */
+  @media (max-width: 768px) {
+    :root { --sidebar-w: 200px; }
+    html { font-size: 14px; }
+    .sidebar { padding: 24px 20px; }
+    .sidebar-footer { display: none; }
+    .hero { grid-template-columns: 1fr; gap: 12px; }
+    .project-info { grid-template-columns: 1fr; gap: 8px; }
+    .main { padding: 24px 24px 60px 24px; }
+    .misc-grid { columns: 2; }
+  }
+
+  /* ── MOBILE (≤ 600px) ── */
+  @media (max-width: 600px) {
+    body { flex-direction: column; }
+
+    .sidebar {
+      position: static;
+      width: 100%; height: auto;
+      flex-direction: row;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .sidebar-logo { font-size: 0.95rem; margin-bottom: 0; margin-right: auto; }
+    .sidebar-role { display: none; }
+    .sidebar-footer { display: none; }
+    .sidebar-nav { flex-direction: row; gap: 16px; }
+    .sidebar-nav a { font-size: 0.9rem; }
+
+    .main { margin-left: 0; padding: 24px 20px 60px; }
+
+    .hero { grid-template-columns: 1fr; gap: 12px; margin-bottom: 28px; }
+    .hero-greeting { font-size: 1.2rem; }
+
+    .project-info { grid-template-columns: 1fr; gap: 8px; }
+    .slider-wrap { aspect-ratio: 16/9; }
+    .slider-btn { opacity: 0.75; }
+    .project { margin-bottom: 44px; }
+
+    .misc-grid { columns: 1; }
+    .info-photo { max-width: 100%; aspect-ratio: 4/3; }
+    .site-footer { margin-top: 40px; }
+  }
+
+  /* ── VERY SMALL (≤ 380px) ── */
+  @media (max-width: 380px) {
+    html { font-size: 13px; }
+    .main { padding: 20px 16px 50px; }
+    .sidebar { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a class="sidebar-logo" onclick="navigate('index')">So Jung Yoon</a>
+  <!-- <p class="sidebar-role">Brand &amp; Product Designer</p> -->
+  <p class="sidebar-role">Graphic Designer</p>
+  <ul class="sidebar-nav">
+    <li><a onclick="navigate('info')" id="nav-info">info</a></li>
+    <!-- <li><a onclick="navigate('misc')" id="nav-misc">misc</a></li> -->
+  </ul>
+  <div class="sidebar-footer">
+    [New York, USA] ⇆ [Seoul, Korea]<br>
+    <a href="mailto:sojungyoon.works@gmail.com">sojungyoon.works@gmail.com</a> | © So Jung Yoon 2026
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ══ INDEX PAGE ══ -->
+  <div class="page active" id="page-index">
+
+    <section class="hero">
+      <p class="hero-greeting">Hello!<br>안녕하세요!</p>
+      <p class="hero-text">
+        <a href="#" onclick="navigate('info');return false;">So Jung</a> is a graphic designer based in New York City, NY. She holds a MFA degree from Rhode Island School of Design in Graphic Design, with an emphasis on brand identity and interaction design.
+        <br><br>Full portfolio upon request.
+      </p>
+    </section>
+
+    <div class="section-label">Selected Work</div>
+
+    <!-- PROJECT 1 -->
+    <article class="project">
+      <div class="slider-wrap">
+        <div class="slides">
+          <div class="slide"><img src="common/t/t_1.png" alt="Project slide 1"></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/t/t_2.mp4"></video></div>
+          <div class="slide"><img src="common/t/t_3.png" alt="Project slide 3"></div>
+          <div class="slide"><img src="common/t/t_4.png" alt="Project slide 4"></div>
+          <div class="slide"><img src="common/t/t_5.png" alt="Project slide 5"></div>
+          <div class="slide"><img src="common/t/t_6.png" alt="Project slide 6"></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/t/t_7.mp4"></video></div>
+          <div class="slide"><img src="common/t/t_8.png" alt="Project slide 8"></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/t/t_9.mp4"></video></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/t/t_10.mp4"></video></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/t/t_11.mp4"></video></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/t/t_13.mp4"></video></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/t/t_12.mp4"></video></div>
+          <div class="slide"><img src="common/t/t_14.png" alt="Project slide 14"></div>
+          <div class="slide"><img src="common/t/t_15.png" alt="Project slide 15"></div>
+        </div>
+        <button class="slider-btn prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+      <div class="slider-dots"></div>
+      <div class="project-info">
+        <div class="project-info-left">
+          <h2 class="project-title">Expiration Date</h2>
+          <div class="project-tags">
+            <span class="tag">Brand Identity</span>
+            <span class="tag">Exhibition Design</span>
+          </div>
+        </div>
+        <div class="project-info-right">
+          <p class="project-desc">Every three years, each department at RISD gets to curate and design a triennial exhibition. In an era dominated by visual communication and constant reproduction, Expiration Date considers the harmonious relationship between graphic design and temporality. <a href="https://expirationdate.risd.gd/" target="_blank">View website here</a></p>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 2 -->
+    <article class="project">
+      <div class="slider-wrap">
+        <div class="slides">
+          <!-- <div class="slide"><video autoplay muted loop playsinline src="common/sh/sh_1.mp4"></video></div> -->
+          <div class="slide"><img src="common/sh/sh_2.png" alt="Project slide 2"></div>
+          <div class="slide"><img src="common/sh/sh_3.png" alt="Project slide 3"></div>
+          <div class="slide"><img src="common/sh/sh_4.png" alt="Project slide 4"></div>
+          <div class="slide"><img src="common/sh/sh_5.png" alt="Project slide 5"></div>
+          <div class="slide"><img src="common/sh/sh_6.png" alt="Project slide 6"></div>
+          <div class="slide"><img src="common/sh/sh_7.png" alt="Project slide 7"></div>
+          <div class="slide"><img src="common/sh/sh_8.png" alt="Project slide 8"></div>
+           <!-- <div class="slide"><video autoplay muted loop playsinline src="common/sh/sh_9.mp4"></video></div> -->
+        </div>
+        <button class="slider-btn prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+      <div class="slider-dots"></div>
+      <div class="project-info">
+        <div class="project-info-left">
+          <h2 class="project-title">Shibam</h2>
+          <div class="project-tags">
+            <span class="tag">Brand Identity</span>
+          </div>
+        </div>
+        <div class="project-info-right">
+          <p class="project-desc">Hypothetical branding concept of Shibam, Yemen — a UNESCO World Heritage Site celebrated for its ancient mudbrick tower architecture.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 3 -->
+<article class="project">
+      <div class="slider-wrap">
+        <div class="slides">
+          <div class="slide"><video autoplay muted loop playsinline src="common/ss/ss_1.mp4"></video></div>          
+          <div class="slide"><video autoplay muted loop playsinline src="common/ss/ss_2.mp4"></video></div> 
+        </div>
+        <button class="slider-btn prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+      <div class="slider-dots"></div>
+      <div class="project-info">
+        <div class="project-info-left">
+          <h2 class="project-title">Shader Studio</h2>
+          <div class="project-tags">
+            <span class="tag">Creative Coding</span>
+            <span class="tag">Vibe coding</span>
+          </div>
+        </div>
+        <div class="project-info-right">
+          <p class="project-desc">Shader Studio is a browser-based tool that applies real-time animated shaders to your text and images. Customize colors, blur, and speed, then export as a GIF or PNG. <a href="shader-studio/index.html" target="_blank">View project here</a></p>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 4 -->
+  <article class="project">
+      <div class="slider-wrap">
+        <div class="slides">
+          <div class="slide"><video autoplay muted loop playsinline src="common/b/b_1.mp4"></video></div>
+          <div class="slide"><img src="common/b/b_2.png" alt="Project slide 2"></div>
+          <div class="slide"><img src="common/b/b_3.png" alt="Project slide 3"></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/b/b_4.mp4"></video></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/b/b_5.mp4"></video></div>
+          <div class="slide"><img src="common/b/b_6.png" alt="Project slide 6"></div>
+          <div class="slide"><img src="common/b/b_7.png" alt="Project slide 7"></div>
+          <div class="slide"><img src="common/b/b_8.png" alt="Project slide 8"></div>
+          <div class="slide"><img src="common/b/b_9.png" alt="Project slide 9"></div>
+          <div class="slide"><img src="common/b/b_10.png" alt="Project slide 10"></div>
+        </div>
+        <button class="slider-btn prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+      <div class="slider-dots"></div>
+      <div class="project-info">
+        <div class="project-info-left">
+          <h2 class="project-title">¹For Reference Only</h2>
+          <div class="project-tags">
+            <span class="tag">Brand Identity</span>
+            <span class="tag">Exhibition Design</span>
+          </div>
+        </div>
+        <div class="project-info-right">
+          <p class="project-desc">A curation of 49 works from current and previous students of the RISD Graphic Design Graduate Program at the Sol Koffler Gallery in Providence, RI. ¹For Reference Only invited visitors to consider how design is encountered, remembered, and recontextualized over time, asking whether reference itself is a form of life or a kind of slow erasure. <a href="https://mfabiennial2025.risd.gd/" target="_blank">View project website here</a></p>
+        </div>
+      </div>
+    </article>  
+
+    <!-- PROJECT 5 -->
+    <article class="project">
+      <div class="slider-wrap">
+        <div class="slides">
+          <div class="slide"><video autoplay muted loop playsinline src="common/s/s_3.mp4"></video></div>
+          <div class="slide"><img src="common/s/s_2.png" alt="Project slide 2"></div>
+          
+        </div>
+        <button class="slider-btn prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+      <div class="slider-dots"></div>
+      <div class="project-info">
+        <div class="project-info-left">
+          <h2 class="project-title">Softness</h2>
+          <div class="project-tags">
+            <span class="tag">Art Direction</span>
+            <span class="tag">Editorial Design</span>
+          </div>
+        </div>
+        <div class="project-info-right">
+          <p class="project-desc">This publication seeks to question softness and its various dimensions which shape our sociopolitical and cultural landscapes. Softness is not about fragility, but about strength in vulnerability, compassion, and empathy. It is a quiet form of resistance, a deliberate choice to remain open and tender, to care. **V.2 is coming soon!</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 6 -->
+    <article class="project">
+      <div class="slider-wrap">
+        <div class="slides">
+          <div class="slide"><img src="common/p/p_1.png" alt="Project slide 1"></div>
+          <div class="slide"><img src="common/p/p_2.png" alt="Project slide 2"></div>
+          <div class="slide"><img src="common/p/p_3.png" alt="Project slide 3"></div>
+          <div class="slide"><img src="common/p/p_4.png" alt="Project slide 4"></div>
+          <div class="slide"><img src="common/p/p_5.png" alt="Project slide 5"></div>
+          <!-- <div class="slide"><img src="common/p/p_6.png" alt="Project slide 6"></div>
+          <div class="slide"><img src="common/p/p_7.png" alt="Project slide 7"></div> -->
+        </div>
+        <button class="slider-btn prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+      <div class="slider-dots"></div>
+      <div class="project-info">
+        <div class="project-info-left">
+          <h2 class="project-title">Is this a [Pe·rim·e·ter] or an (Em·brace)?</h2>
+          <div class="project-tags">
+            <span class="tag">Editorial Design</span>
+            <!-- <span class="tag">Tag Two</span> -->
+          </div>
+        </div>
+        <div class="project-info-right">
+          <p class="project-desc">The book itself functions as a portal with excerpts drawn from diverse fields, voices, cultures, times, and places that come together as fragments. At the same time, it contains a portal within—expressed through its visual and structural design—as a metaphor for layered entry points, thresholds, and the nonlinear pathways through knowledge and experience.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 7 -->
+    <!-- <article class="project">
+      <div class="slider-wrap">
+        <div class="slides">
+          <div class="slide placeholder">IMAGE 01</div>
+          <div class="slide placeholder">IMAGE 02</div>
+          <div class="slide placeholder">IMAGE 03</div>
+          <div class="slide placeholder">IMAGE 04</div>
+          <div class="slide placeholder">IMAGE 05</div>
+          <div class="slide placeholder">IMAGE 06</div>
+          <div class="slide placeholder">IMAGE 07</div>
+          <div class="slide placeholder">IMAGE 08</div>
+          <div class="slide placeholder">IMAGE 09</div>
+          <div class="slide placeholder">IMAGE 10</div>
+        </div>
+        <button class="slider-btn prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+      <div class="slider-dots"></div>
+      <div class="project-info">
+        <div class="project-info-left">
+          <h2 class="project-title">Project Title Seven</h2>
+          <div class="project-tags">
+            <span class="tag">Tag One</span>
+            <span class="tag">Tag Two</span>
+          </div>
+        </div>
+        <div class="project-info-right">
+          <p class="project-desc">Description of the project goes here. <a href="#">View project here</a></p>
+        </div>
+      </div>
+    </article> -->
+
+    <footer class="site-footer">Designed & Coded with love from New York City</footer>
+  </div><!-- /page-index -->
+
+
+  <!-- ══ INFO PAGE ══ -->
+  <div class="page" id="page-info">
+    <div class="info-header">
+      <h1>Hello / 안녕하세요!</h1>
+      <div class="info-photo">
+        <img src="common/info/sojung_profile.JPG" alt="Portrait">
+      </div>
+      <p class="info-bio">
+        So Jung Yoon is a graphic designer based in New York City, NY. She holds a MFA degree from Rhode Island School of Design in Graphic Design, with an emphasis on brand identity and spacial interaction design. She has worked at museums, national institution, and interned at marketing agency previously. Currently, she is open to work.
+      </p>
+      <p class="info-bio">Please reach out for full resume.</p>
+      <div class="info-links">
+        / <a href="https://www.linkedin.com/in/so-jung-yoon" target="_blank">LinkedIn</a><br>
+        / <a href="mailto:sojungyoon.works@gmail.com">sojungyoon.works@gmail.com</a>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-label">Work Experience</div>
+      <div class="cv-entry">
+        <p class="cv-year">2025 June — 2025 December</p>
+        <p class="cv-title">Graphic Design Intern @ <a href="https://factory360.com/work/" target="_blank">Factory 360</a></p>
+                <p class="cv-subtitle">New York, NY, USA</p>
+      </div>  
+        <div class="cv-entry">
+        <p class="cv-year">2024 December — 2025 January</p>
+        <p class="cv-title">Exhibition Designer @ Gallery Nothingisreal</p>
+                <p class="cv-subtitle">Seoul, Korea</p>
+  
+      </div>  
+            <div class="cv-entry">
+        <p class="cv-year">2024</p>
+        <p class="cv-title">Instructor @ Rhode Island School of Design</p>
+        <p class="cv-subtitle">Providence, RI, USA</p>
+        <p class="cv-body">Designed and taught 2024 Winter Session, full-credit course. Students explored archives as a medium for artistic work and graphic design through the study of diverse methodologies and practices.</p>
+      </div>          
+      <div class="cv-entry">
+        <p class="cv-year">2023 — 2025</p>
+        <p class="cv-title">Teaching Assistant @ Rhode Island School of Design</p>
+        <p class="cv-subtitle">Providence, RI, USA</p>
+        <p class="cv-body">Assisted professors with in-class individual and group critiques. Helped students with concept ideation, layout techniques, and fundamental typography skills.<br>
+            <br>Identity Design with Richard Rose | 2025 Spring
+            <br>Design Studio III with Emily Rye | 2024 Fall
+            <br>Design for Publishing with Ernesto Aparicio | 2024 Spring
+            <br>2024 Collegiate Teaching: Preparation+Reflection with Nancy Friese | 2024 Spring
+            <br>Design Studio I with Elizatbeth Goodspeed | 2023 Spring
+</p>
+
+      </div>  
+      <div class="cv-entry">
+        <p class="cv-year">2020</p>
+        <p class="cv-title">Editorial Designer @ Songpa Foundation for Arts and Culture</p>
+                        <p class="cv-subtitle">Seoul, Korea</p>
+      </div>
+      <div class="cv-entry">
+        <p class="cv-year">2020</p>
+        <p class="cv-title">Marketers SeM 11 Design Team @ Seoul Museum of Art (SeMA)</p>
+                        <p class="cv-subtitle">Seoul, Korea</p>
+      </div>
+
+
+    <div class="cv-section">
+      <div class="cv-section-label">Education</div>
+      <div class="cv-entry">
+        <p class="cv-year">2022 — 2025</p>
+        <p class="cv-title">MFA, Graphic Design at Rhode Island School of Design (RISD)</p>
+        <p class="cv-subtitle">Providence, RI, USA</p>
+        <!-- <p class="cv-body">Graduated with Distinction. Emphasis in brand identity development and visual interaction (UI/UX).</p> -->
+      </div>
+<div class="cv-entry">
+        <p class="cv-year">2020</p>
+        <p class="cv-title">Exchange Student, Motion Design at California Institute of the Arts (CalArts)</p>
+        <p class="cv-subtitle">Santa Clarita, CA, USA</p>
+      </div>
+      <div class="cv-entry">
+        <p class="cv-year">2017 — 2022</p>
+        <p class="cv-title">BFA, Communication Design at Hongik University</p>
+        <p class="cv-subtitle">South Korea</p>
+        <p class="cv-body">Multidisciplinary major in Architecture & Spatial Arts</p>
+      </div>
+    </div>
+
+    <!-- <div class="cv-section">
+      <div class="cv-section-label">Exhibitions</div>
+      <div class="cv-entry">
+        <p class="cv-year">2024</p>
+        <p class="cv-title">Student Gallery at Your School</p>
+        <p class="cv-subtitle">Your City, State</p>
+        <p class="cv-body">Project A (Pattern Design), Project B (Motion Design), Project C (Visual Identity)</p>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-label">Awards</div>
+      <div class="cv-entry">
+        <p class="cv-year">2023</p>
+        <p class="cv-title"><a href="#">Award Name from Organization</a></p>
+        <p class="cv-body">Project Name (Gold), Project Name (Silver), Project Name (Merit)</p>
+      </div>
+      <div class="cv-entry">
+        <p class="cv-year">2023</p>
+        <p class="cv-title">Award Name from Organization</p>
+        <p class="cv-body">Shortlisted. Project Name</p>
+      </div>
+    </div>-->
+        <footer class="site-footer">Designed&Coded by So Jung from New York City</footer>
+  </div><!-- /page-info -->
+
+
+  <!-- ══ MISC PAGE ══ -->
+  <div class="page" id="page-misc">
+    <p class="misc-header">Miscellaneous.</p>
+    <div class="misc-grid">
+      <div class="misc-item"><div class="misc-placeholder" style="background:#c8c2b8">VIDEO / IMAGE 01</div></div>
+      <div class="misc-item"><div class="misc-placeholder tall" style="background:#b8c2c0">VIDEO / IMAGE 02</div></div>
+      <div class="misc-item"><div class="misc-placeholder" style="background:#c2b8c0">VIDEO / IMAGE 03</div></div>
+      <div class="misc-item"><div class="misc-placeholder" style="background:#bec5b5">VIDEO / IMAGE 04</div></div>
+      <div class="misc-item"><div class="misc-placeholder tall" style="background:#c5bdb5">VIDEO / IMAGE 05</div></div>
+      <div class="misc-item"><div class="misc-placeholder" style="background:#b5c2be">VIDEO / IMAGE 06</div></div>
+      <div class="misc-item"><div class="misc-placeholder" style="background:#c0bdc5">VIDEO / IMAGE 07</div></div>
+      <div class="misc-item"><div class="misc-placeholder" style="background:#c5c0b5">VIDEO / IMAGE 08</div></div>
+      <div class="misc-item"><div class="misc-placeholder" style="background:#c5c0b5">VIDEO / IMAGE 09</div></div>
+      </div>
+              <footer class="site-footer">Designed&Coded with love from New York City</footer>
+      </div><!-- /page-misc -->
+
+      </main>
+</body>
 </html>
