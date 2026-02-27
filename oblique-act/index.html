@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oblique Act</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f2ed;
+            --mid: #8a8680;
+            --accent: #c8b89a;
+            --line: rgba(10,10,10,0.12);
+        }
+
+        html, body {
+            height: 100%;
+            background-color: var(--white);
+            color: var(--black);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+        }
+
+        /* ── GRID ── */
+        .site {
+            display: grid;
+            grid-template-rows: 56px 1fr 56px;
+            height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--mid);
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: 'Outfit', sans-serif;
+            transition: color 0.2s;
+            padding: 0;
+        }
+
+        .nav-link:hover {
+            color: var(--black);
+        }
+
+        /* ── MAIN ── */
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            place-items: center;
+            padding: 32px;
+            position: relative;
+        }
+
+
+
+        .content-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            position: relative;
+            z-index: 1;
+            max-width: 880px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Index number - removed */
+
+        /* The sentence */
+        #sentenceOutput2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(28px, 4.5vw, 62px);
+            line-height: 1.12;
+            letter-spacing: -0.02em;
+            color: var(--black);
+            min-height: 2.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-wrap: balance;
+            transition: opacity 0.4s ease, filter 0.4s ease;
+        }
+
+        #sentenceOutput2.blurring {
+            opacity: 0;
+            filter: blur(14px);
+        }
+
+
+        /* CTA Button */
+        .cta-area {
+            margin-top: 52px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            font-family: 'Outfit', sans-serif;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--white);
+            background: var(--black);
+            border: none;
+            padding: 14px 36px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.25s;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent);
+            transform: translateX(-100%);
+            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+            z-index: 0;
+        }
+
+        .btn-primary:hover::after {
+            transform: translateX(0);
+        }
+
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary:hover span {
+            color: var(--black);
+        }
+
+        .btn-secondary {
+            font-family: 'Outfit', sans-serif;
+            font-size: 9px;
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--mid);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            color: var(--black);
+            border-bottom-color: var(--black);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-left {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--mid);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        #live-time {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            color: var(--mid);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* ── ABOUT OVERLAY ── */
+        .about-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            color: var(--white);
+            z-index: 100;
+        }
+
+        .about-overlay.open {
+            display: grid;
+            grid-template-rows: 56px 1fr 56px;
+        }
+
+        .about-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            border-bottom: 1px solid rgba(245,242,237,0.1);
+        }
+
+        .about-header-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(245,242,237,0.4);
+        }
+
+        .about-close {
+            font-family: 'Outfit', sans-serif;
+            font-size: 9px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            background: none;
+            border: none;
+            color: rgba(245,242,237,0.4);
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0;
+        }
+
+        .about-close:hover {
+            color: var(--white);
+        }
+
+        .about-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
+            overflow: hidden;
+            padding: 64px 72px;
+            gap: 40px;
+        }
+
+        .about-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .about-label {
+            font-size: 9px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(245,242,237,0.3);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .about-left h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(52px, 7vw, 96px);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .about-left h1 em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .about-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 600px;
+        }
+
+        .about-right p {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+            color: rgba(245,242,237,0.6);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .about-right p strong {
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        .about-rule {
+            width: 32px;
+            height: 1px;
+            background: rgba(245,242,237,0.2);
+        }
+
+        .about-footer {
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            border-top: 1px solid rgba(245,242,237,0.1);
+        }
+
+        .about-footer-note {
+            font-family: 'Outfit', sans-serif;
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(245,242,237,0.2);
+        }
+
+        /* ── PRINT AREA ── */
+        #printArea {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printArea { 
+                opacity: 1;
+                z-index: 9999;
+            }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea {
+                position: fixed;
+                inset: 0;
+                padding: 60px 72px;
+                background: white;
+            }
+            #printTime {
+                font-family: 'Outfit', sans-serif;
+                font-size: 8pt;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: #bbb;
+                position: absolute;
+                top: 60px;
+                left: 72px;
+            }
+            #printImage {
+                display: none !important;
+            }
+            #printAction {
+                font-family: 'Playfair Display', serif;
+                font-size: 34pt;
+                line-height: 1.15;
+                letter-spacing: -0.02em;
+                color: #0a0a0a;
+                text-align: left;
+                position: absolute;
+                top: 50%;
+                left: 72px;
+                transform: translateY(-50%);
+                max-width: 72%;
+                text-wrap: balance;
+            }
+            #printBottom {
+                position: absolute;
+                bottom: 60px;
+                left: 72px;
+                max-width: 65%;
+            }
+            #printSentence {
+                font-family: 'Outfit', sans-serif;
+                font-size: 10pt;
+                line-height: 1.4;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: #888;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="site">
+    <!-- HEADER -->
+    <header>
+        <div class="logo">Oblique Act</div>
+        <div class="header-right">
+            <button class="nav-link" id="aboutBtn">About</button>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+        <div class="content-block">
+            <div id="sentenceOutput2"></div>
+            <div class="cta-area">
+                <button class="btn-primary" onclick="printDocument()">
+                    <span>Take Action Now</span>
+                </button>
+                <button class="btn-secondary" onclick="restartGenerating()">Shuffle</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-left">Oblique Act &mdash; v1.0</div>
+        <div id="live-time"></div>
+    </footer>
+</div>
+
+<!-- ABOUT OVERLAY -->
+<div class="about-overlay" id="aboutOverlay">
+    <div class="about-header">
+        <div class="about-header-logo">Oblique Act</div>
+        <button class="about-close" id="aboutClose">Close ×</button>
+    </div>
+    <div class="about-body">
+        <div class="about-left">
+            <div class="about-label">About the Project</div>
+            <h1>Oblique<br><em>Act</em></h1>
+        </div>
+        <div class="about-right">
+            <div class="about-rule"></div>
+            <p>
+                Inspired by Brian Eno and Peter Schmidt's <em>Oblique Strategies</em> — a deck of cards designed to break creative deadlock through indirect prompts — Oblique Act takes that spirit somewhere more physical.
+            </p>
+            <p>
+                Where Oblique Strategies asks you to <em>think differently</em>, Oblique Act asks you to <em>move</em>. Each generated sentence isolates a verb — deny, allow, let go, turn down — and when you print, you receive a small bodily instruction tied to that action. Not a metaphor. Something you can do right now, in the room you're in.
+            </p>
+            <p>
+                <strong>The prompt is the thought. The printout is the act.</strong>
+            </p>
+        </div>
+    </div>
+    <div class="about-footer">
+        <div class="about-footer-note">Oblique Act &mdash; v1.0</div>
+    </div>
+</div>
+
+<!-- PRINT AREA -->
+<div id="printArea">
+    <div id="printTime"></div>
+    <div id="printAction"></div>
+    <div id="printBottom">
+        <div id="printSentence"></div>
+    </div>
+</div>
+
+<script>
+    // ── DATA ──
+    var sentenceInterval = null;
+    var currentSentence = '';
+    var currentVerb = '';
+
+    var one = "Are you ready to ";
+    var twoOptions = ["deny","dis","allow","forget","hold","ignore","keep","leave out","refuse","say no to","stop","push away","let go of","turn down","drop"];
+    var threeOptions = ["your","people's","other's"];
+    var fourOptions = ["thought","plan","feeling","idea","view","guess","point","belief","reason","opinion","meaning","aim","choice","dream","hope","message","sense","understanding"];
+
+    var actionMap = {
+        "deny":       ["Stand up and turn your back to the room.", "Say no out loud to no one.", "Close every open tab.", "Put your phone face down and don't touch it."],
+        "dis":        ["Cross something out on the nearest piece of paper.", "Delete the last thing you typed.", "Rearrange one object on your desk."],
+        "allow":      ["Open a window.", "Let the next sound you hear finish completely.", "Sit with your hands open in your lap.", "Stop what you were planning to do next."],
+        "forget":     ["Close your eyes for 30 seconds.", "Go to a different room and back.", "Leave something unfinished on purpose.", "Walk outside and don't take your phone."],
+        "hold":       ["Hold your breath for 10 seconds.", "Hold the nearest object in both hands for one minute.", "Don't move for 60 seconds."],
+        "ignore":     ["Do laundry by hand.", "Unclench your jaw. Then your hands. Then your shoulders.", "Punch your pillow.", "Put on headphones and play something loud."],
+        "keep":       ["Write one thing down and put it in your pocket.", "Take a photo of where you are right now.", "Stay exactly where you are for five more minutes."],
+        "leave out":  ["Remove one thing from your bag.", "Delete a draft you've been saving.", "Cook something and leave out one ingredient."],
+        "refuse":     ["Stand up and walk away from your screen.", "Say the word 'no' slowly, three times.", "Don't respond to the last message you received. Not yet."],
+        "say no to":  ["Cancel one thing on your calendar.", "Turn off a notification. Any one.", "Stand up and shake your head."],
+        "stop":       ["Stop what you're doing and stand still for one full minute.", "Close this tab.", "Put down whatever is in your hands."],
+        "push away":  ["Move your chair back from the desk.", "Push something to the edge of the table.", "Stand up and dance for one song."],
+        "let go of":  ["Stand up and leave the room.", "Stop thinking and start jumping.", "Write something down and then tear it up.", "Go outside and leave your phone behind."],
+        "turn down":  ["Lower the volume on whatever you're listening to.", "Dim your screen to the lowest setting.", "Decline the next invitation you receive."],
+        "drop":       ["Drop your shoulders. Then do it again — you didn't drop them.", "Stand up in the corner of the room for 1 minute.", "Go outside and find a yellow flower.", "Put everything you're holding on the floor."]
+    };
+
+    function getAction(verb) {
+        var actions = actionMap[verb] || ["Stand up.", "Take a walk.", "Do something with your hands."];
+        return actions[Math.floor(Math.random() * actions.length)];
+    }
+
+    var imageUrls = [
+        './common/ObliqueAct-03.png','./common/ObliqueAct-04.png',
+        './common/ObliqueAct-05.png','./common/ObliqueAct-06.png',
+        './common/ObliqueAct-07.png','./common/ObliqueAct-08.png',
+        './common/ObliqueAct-09.png','./common/ObliqueAct-10.png',
+        './common/ObliqueAct-11.png','./common/ObliqueAct-12.png',
+        './common/ObliqueAct_40.png',
+    ];
+
+    // ── TIME ──
+    function getFormattedTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2,'0');
+        const isPM = hours >= 12;
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes}${isPM ? 'pm' : 'am'}`;
+    }
+
+    function updateLiveTime() {
+        document.getElementById('live-time').textContent = getFormattedTime();
+    }
+
+    setInterval(updateLiveTime, 1000);
+    updateLiveTime();
+
+    // ── SENTENCE ──
+    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+    function scrambleWord(el, target, duration) {
+        return new Promise(function(resolve) {
+            const steps = Math.ceil(duration / 40);
+            let step = 0;
+            const tick = setInterval(function() {
+                step++;
+                const progress = step / steps;
+                const revealed = Math.floor(progress * target.length);
+                let display = target.slice(0, revealed);
+                for (let i = revealed; i < target.length; i++) {
+                    display += CHARS[Math.floor(Math.random() * CHARS.length)];
+                }
+                el.textContent = display;
+                if (step >= steps) {
+                    el.textContent = target;
+                    clearInterval(tick);
+                    resolve();
+                }
+            }, 40);
+        });
+    }
+
+    async function scrambleSentence(newSentence) {
+        const container = document.getElementById('sentenceOutput2');
+        const newWords = newSentence.split(' ');
+
+        // Wrap existing text in spans
+        const currentText = container.textContent || newSentence;
+        container.innerHTML = '';
+        const currentWords = currentText.split(' ');
+
+        // Create spans for all words in new sentence
+        newWords.forEach(function(w, i) {
+            const span = document.createElement('span');
+            span.style.marginRight = '0.28em';
+            span.style.display = 'inline-block';
+            span.textContent = currentWords[i] !== undefined ? currentWords[i] : w;
+            container.appendChild(span);
+        });
+
+        const spans = container.querySelectorAll('span');
+        for (let i = 0; i < newWords.length; i++) {
+            await scrambleWord(spans[i], newWords[i], 200);
+        }
+    }
+
+    function randSentence() {
+        var two   = twoOptions[Math.floor(Math.random() * twoOptions.length)];
+        var three = threeOptions[Math.floor(Math.random() * threeOptions.length)];
+        var four  = fourOptions[Math.floor(Math.random() * fourOptions.length)];
+        currentVerb = two;
+        return one + two + " " + three + " " + four + "?";
+    }
+
+    var isTransitioning = false;
+
+    function generateSentence() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        var el = document.getElementById('sentenceOutput2');
+        el.classList.add('blurring');
+        setTimeout(function() {
+            currentSentence = randSentence();
+            el.textContent = currentSentence;
+            el.classList.remove('blurring');
+            setTimeout(function() {
+                isTransitioning = false;
+            }, 400); // wait for blur-in to finish before allowing next
+        }, 400);
+    }
+
+    function startSentenceGeneration() {
+        if (!sentenceInterval) {
+            generateSentence();
+            sentenceInterval = setInterval(generateSentence, 4000);
+        }
+    }
+
+    function stopGenerating() {
+        clearInterval(sentenceInterval);
+        sentenceInterval = null;
+    }
+
+    var scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+    function scrambleTo(newSentence, callback) {
+        var el = document.getElementById('sentenceOutput2');
+        var display = newSentence.split('');
+        var totalDuration = 900;
+        var startTime = null;
+
+        // seed with random chars of same length
+        el.textContent = display.map(function(c) {
+            return c === ' ' ? ' ' : scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+        }).join('');
+
+        function frame(ts) {
+            if (!startTime) startTime = ts;
+            var elapsed = ts - startTime;
+            var progress = elapsed / totalDuration;
+
+            var result = display.map(function(c, i) {
+                if (c === ' ') return ' ';
+                var resolveAt = i / display.length;
+                if (progress >= resolveAt) return c;
+                return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+            });
+
+            el.textContent = result.join('');
+
+            if (elapsed < totalDuration) {
+                requestAnimationFrame(frame);
+            } else {
+                el.textContent = newSentence;
+                if (callback) callback();
+            }
+        }
+
+        requestAnimationFrame(frame);
+    }
+
+    function restartGenerating() {
+        stopGenerating();
+        isTransitioning = false;
+        currentSentence = randSentence();
+        scrambleSentence(currentSentence).then(function() {
+            sentenceInterval = setInterval(generateSentence, 2400);
+        });
+    }
+
+    // ── PRINT ──
+    function printDocument() {
+        document.getElementById("printTime").textContent = "It's " + getFormattedTime() + ",";
+        document.getElementById("printAction").textContent = getAction(currentVerb);
+        document.getElementById("printSentence").textContent = currentSentence;
+        window.print();
+    }
+
+    // ── ABOUT ──
+    document.getElementById('aboutBtn').addEventListener('click', function() {
+        document.getElementById('aboutOverlay').classList.add('open');
+    });
+    document.getElementById('aboutClose').addEventListener('click', function() {
+        document.getElementById('aboutOverlay').classList.remove('open');
+    });
+
+    // ── INIT ──
+    startSentenceGeneration();
+</script>
+
+</body>
+</html>

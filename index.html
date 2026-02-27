@@ -489,7 +489,7 @@
     background: #d8d4cc;
   }
 
-  .misc-item img, .misc-item video { width: 100%; display: block; object-fit: cover; }
+  .misc-item img, .misc-item video { width: 100%; display: block; height: auto; object-fit: contain; }
 
   .misc-placeholder {
     width: 100%; aspect-ratio: 16/9;
@@ -577,7 +577,7 @@
   <p class="sidebar-role">Graphic Designer</p>
   <ul class="sidebar-nav">
     <li><a onclick="navigate('info')" id="nav-info">info</a></li>
-    <!-- <li><a onclick="navigate('misc')" id="nav-misc">misc</a></li> -->
+    <li><a onclick="navigate('misc')" id="nav-misc">misc</a></li>
   </ul>
   <div class="sidebar-footer">
     [New York, USA] ⇆ [Seoul, Korea]<br>
@@ -774,6 +774,36 @@
     </article>
 
     <!-- PROJECT 6 -->
+      <article class="project">
+      <div class="slider-wrap">
+        <div class="slides">
+          <div class="slide"><video autoplay muted loop playsinline src="common/oa/oa_1.mp4"></video></div>
+          <div class="slide"><video autoplay muted loop playsinline src="common/oa/oa_2.mp4"></video></div>
+                    <div class="slide"><video autoplay muted loop playsinline src="common/oa/oa_3.mp4"></video></div>
+        </div>
+        <button class="slider-btn prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+      <div class="slider-dots"></div>
+      <div class="project-info">
+        <div class="project-info-left">
+          <h2 class="project-title">Oblique Act</h2>
+          <div class="project-tags">
+            <span class="tag">Creative Coding</span>
+          </div>
+        </div>
+        <div class="project-info-right">
+          <p class="project-desc">A tool that generates a random question prompt and pairs it with a physical action instruction — print it, and do it. This action prompt tool inspired by Brian Eno's Oblique Strategies — but instead of redirecting your thinking, it redirects your body. <a href="oblique-act/index.html" target="_blank">View project here</a></p>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- PROJECT 7 -->
     <article class="project">
       <div class="slider-wrap">
         <div class="slides">
@@ -861,7 +891,8 @@
       <p class="info-bio">Please reach out for full resume.</p>
       <div class="info-links">
         / <a href="https://www.linkedin.com/in/so-jung-yoon" target="_blank">LinkedIn</a><br>
-        / <a href="mailto:sojungyoon.works@gmail.com">sojungyoon.works@gmail.com</a>
+        / <a href="https://www.instagram.com/sojungyoon/" target="_blank">Instagram</a><br>
+        / <a href="mailto:sojungyoon.works@gmail.com">sojungyoon.works@gmail.com</a> 
       </div>
     </div>
 
@@ -907,7 +938,7 @@
         <p class="cv-title">Marketers SeM 11 Design Team @ Seoul Museum of Art (SeMA)</p>
                         <p class="cv-subtitle">Seoul, Korea</p>
       </div>
-
+    </div>
 
     <div class="cv-section">
       <div class="cv-section-label">Education</div>
@@ -953,19 +984,27 @@
         <p class="cv-body">Shortlisted. Project Name</p>
       </div>
     </div>-->
-        <footer class="site-footer">Designed&Coded by So Jung from New York City</footer>
+        <footer class="site-footer">Designed & Coded by So Jung from New York City</footer>
   </div><!-- /page-info -->
 
 
   <!-- ══ MISC PAGE ══ -->
   <div class="page" id="page-misc">
-    <p class="misc-header">Miscellaneous.</p>
+    <p class="misc-header">miscellaneous seeds</p>
     <div class="misc-grid">
-      <div class="misc-item"><div class="misc-placeholder" style="background:#c8c2b8">VIDEO / IMAGE 01</div></div>
-      <div class="misc-item"><div class="misc-placeholder tall" style="background:#b8c2c0">VIDEO / IMAGE 02</div></div>
-      <div class="misc-item"><div class="misc-placeholder" style="background:#c2b8c0">VIDEO / IMAGE 03</div></div>
-      <div class="misc-item"><div class="misc-placeholder" style="background:#bec5b5">VIDEO / IMAGE 04</div></div>
-      <div class="misc-item"><div class="misc-placeholder tall" style="background:#c5bdb5">VIDEO / IMAGE 05</div></div>
-      <div class="misc-item"><div class="misc-placeholder" style="background:#b5c2be">VIDEO / IMAGE 06</div></div>
-      <div class="misc-item"><div class="misc-placeholder" style="background:#c0bdc5">VIDEO / IMAGE 07</div></div>
-      <div class="misc-item"><div class="misc-placeholder" style="background:#c5c0b5">VIDEO / IMAGE 08
+      <div class="misc-item"><img src="common/misc/globe-1.png" alt="Globe light sculpture"></div>
+      <div class="misc-item"><video src="common/misc/cutout_variabletype.mov" autoplay muted loop playsinline></video></div>
+      <div class="misc-item"><img src="common/misc/spreadsheet-compostion.png" alt="Spreadsheet study"></div>
+         <div class="misc-item"><video src="common/misc/inflatablehome.mp4" autoplay muted loop playsinline></video></div>
+            <div class="misc-item"><img src="common/misc/weirdgarden.jpg" alt="weird garden"></div>
+      <div class="misc-item"><video src="common/misc/final_redaction.mp4" autoplay muted loop playsinline></video></div>
+              <div class="misc-item"><img src="common/misc/color-study-4.png" alt="Color study notebooks"></div>
+         <div class="misc-item"><img src="common/misc/g-pencil-case-2.png" alt="G letter object"></div>
+
+    </div>
+    <footer class="site-footer">Designed & Coded by So Jung from New York City</footer>
+  </div><!-- /page-misc -->
+
+</main><!-- /main -->
+</body>
+</html>
