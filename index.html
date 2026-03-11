@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>So Yoon — Portfolio</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2G7S42QHZT"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2G7S42QHZT');
+</script>
+
 <script>
   function navigate(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -14,6 +24,12 @@
     if (navEl) navEl.classList.add('active');
     window.scrollTo(0, 0);
     if (page === 'index') initSliders();
+
+    gtag('event', 'page_view', {
+  page_title: page,
+  page_location: window.location.href + '#' + page
+});
+
   }
 
   function initSliders() {
@@ -624,7 +640,7 @@
           </div>
         </div>
         <div class="project-info-right">
-          <p class="project-desc">Shader Studio is a browser-based tool that applies real-time animated shaders to your text and images. Customize colors, blur, and speed, then export as a GIF or PNG. <a href="shader-studio/index.html" target="_blank">View project here</a></p>
+          <p class="project-desc">Shader Studio is a browser-based tool that applies real-time animated shaders to your text and images. Customize colors, blur, and speed, then export as a GIF or PNG. <a href="shader-studio/index.html" target="_blank" onclick="gtag('event','click_project',{event_category:'portfolio'})">View project here</a></p>
         </div>
       </div>
     </article>
@@ -666,7 +682,7 @@
           </div>
         </div>
         <div class="project-info-right">
-          <p class="project-desc">Every three years, each department at RISD gets to curate and design a triennial exhibition. In an era dominated by visual communication and constant reproduction, Expiration Date considers the harmonious relationship between graphic design and temporality. <a href="https://expirationdate.risd.gd/" target="_blank">View website here</a></p>
+          <p class="project-desc">Every three years, each department at RISD gets to curate and design a triennial exhibition. In an era dominated by visual communication and constant reproduction, Expiration Date considers the harmonious relationship between graphic design and temporality. <a href="https://expirationdate.risd.gd/" target="_blank" onclick="gtag('event','click_project',{event_category:'portfolio'})">View website here</a></p>
         </div>
       </div>
     </article>
@@ -738,7 +754,7 @@
           </div>
         </div>
         <div class="project-info-right">
-          <p class="project-desc">A curation of 49 works from current and previous students of the RISD Graphic Design Graduate Program at the Sol Koffler Gallery in Providence, RI. ¹For Reference Only invited visitors to consider how design is encountered, remembered, and recontextualized over time, asking whether reference itself is a form of life or a kind of slow erasure. <a href="https://mfabiennial2025.risd.gd/" target="_blank">View website here</a></p>
+          <p class="project-desc">A curation of 49 works from current and previous students of the RISD Graphic Design Graduate Program at the Sol Koffler Gallery in Providence, RI. ¹For Reference Only invited visitors to consider how design is encountered, remembered, and recontextualized over time, asking whether reference itself is a form of life or a kind of slow erasure. <a href="https://mfabiennial2025.risd.gd/" target="_blank" onclick="gtag('event','click_project',{event_category:'portfolio'})">View website here</a></p>
         </div>
       </div>
     </article>  
@@ -797,7 +813,7 @@
           </div>
         </div>
         <div class="project-info-right">
-          <p class="project-desc">A tool that generates a random question prompt and pairs it with a physical action instruction — print it, and do it. This action prompt tool inspired by Brian Eno's Oblique Strategies — but instead of redirecting your thinking, it redirects your body. <a href="oblique-act/index.html" target="_blank">View project here</a></p>
+          <p class="project-desc">A tool that generates a random question prompt and pairs it with a physical action instruction — print it, and do it. This action prompt tool inspired by Brian Eno's Oblique Strategies — but instead of redirecting your thinking, it redirects your body. <a href="oblique-act/index.html" target="_blank" onclick="gtag('event','click_project',{event_category:'portfolio'})">View project here</a></p>
         </div>
       </div>
     </article>
