@@ -384,16 +384,18 @@
             line-height: 1.8;
         }
 
-        /* State: home — left shows only korean bio (no thumbnails), right shows english */
-        body.home-state .bio-korean-left { display: block; }
-        body.home-state .projects { display: none; }
-        body.home-state .right .detail { display: none; }
-        body.home-state .right .home-panel { display: block; }
+        /* ── Desktop only: home state layout ── */
+        @media (min-width: 769px) {
+            body.home-state .bio-korean-left { display: block; }
+            body.home-state .projects { display: none; }
+            body.home-state .right .detail { display: none; }
+            body.home-state .right .home-panel { display: block; }
 
-        body:not(.home-state) .bio-korean-left { display: none; }
-        body:not(.home-state) .projects { display: grid; }
-        body:not(.home-state) .right .home-panel { display: none; }
-        body:not(.home-state) .right .detail { display: block; }
+            body:not(.home-state) .bio-korean-left { display: none; }
+            body:not(.home-state) .projects { display: grid; }
+            body:not(.home-state) .right .home-panel { display: none; }
+            body:not(.home-state) .right .detail { display: block; }
+        }
 
         /* ── Password gate: Apple style ── */
         .project-summary[data-project="bre"] {
@@ -926,123 +928,112 @@
         }
         .home-footer-center a:hover { opacity: 0.5; }
 
+        /* Mobile bio — hidden by default, shown only on mobile */
+        .mobile-bio { display: none; }
+
         /* ── Mobile layout ── */
         @media (max-width: 768px) {
-            #misc-random { display: none !important; }
-            html, body {
-                overflow-x: hidden !important;
-                max-width: 100vw;
-            }
+
+            /* ── Base resets ── */
+            html, body { overflow-x: hidden; max-width: 100vw; }
+            body { overflow-y: auto; height: auto; }
             img, video { max-width: 100%; }
-            .head {
-                grid-template-columns: 1fr auto;
-                padding: 16px 5% 12px;
-            }
+            #misc-random { display: none; }
+            .v-line { display: none; }
+            .scroll-hint { display: none; }
+            .home-footer-bar { display: none; }
+            .right.locked { filter: none; }
+
+            /* ── Header ── */
+            .head { grid-template-columns: 1fr auto; padding: 16px 5% 12px; }
             .head-center { display: none; }
             .head-right { display: none; }
-            /* Mobile nav toggle */
             .mobile-nav-toggle {
-                display: flex;
-                align-items: center;
-                font-size: 0.72rem;
-                cursor: pointer;
-                color: #000;
-                background: none;
-                border: none;
-                font-family: 'Helvetica Neue', sans-serif;
-                letter-spacing: 0.04em;
+                display: flex; align-items: center;
+                font-size: 0.72rem; cursor: pointer; color: #000;
+                background: none; border: none;
+                font-family: 'Helvetica Neue', sans-serif; letter-spacing: 0.04em;
             }
             .mobile-nav-drawer {
-                position: fixed;
-                top: 0; left: 0; right: 0;
-                background: #fff;
-                z-index: 200;
+                position: fixed; top: 0; left: 0; right: 0;
+                background: #fff; z-index: 200;
                 padding: 60px 5% 40px;
-                display: none;
-                flex-direction: column;
-                gap: 20px;
+                display: none; flex-direction: column; gap: 20px;
                 border-bottom: 0.5px solid #eee;
             }
             .mobile-nav-drawer.open { display: flex; }
-            .mobile-nav-drawer a {
-                font-size: 1rem;
-                color: #000;
-                text-decoration: none;
-                letter-spacing: 0.02em;
-            }
-            .mobile-nav-drawer-close {
-                position: absolute;
-                top: 20px; right: 24px;
-                background: none;
-                border: none;
-                font-size: 1.2rem;
-                cursor: pointer;
-            }
-            .all {
-                grid-template-columns: 1fr;
-                height: auto;
-                overflow: visible;
-            }
-            body { overflow-y: auto; overflow-x: hidden; height: auto; max-width: 100%; }
+            .mobile-nav-drawer a { font-size: 1rem; color: #000; text-decoration: none; letter-spacing: 0.02em; }
+            .mobile-nav-drawer-close { position: absolute; top: 20px; right: 24px; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+
+            /* ── Layout ── */
             .page { height: auto; overflow: visible; max-width: 100%; }
-            .left, .right {
-                height: auto;
-                overflow-y: visible;
-                overflow-x: hidden;
-                padding: 16px 5% 40px;
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-            .right { border-top: 0.5px solid #eee; }
-            /* Mobile: hide right panel, show inline detail instead */
-            body:not(.home-state) .right { display: none; }
-            .mobile-inline-detail {
-                margin-top: 10px;
-                padding-top: 14px;
-                border-top: 0.5px solid #eee;
-            }
-            .mobile-inline-detail .detail-title {
+            .all { grid-template-columns: 1fr; height: auto; overflow: visible; }
+            .left { height: auto; overflow-y: visible; overflow-x: hidden; padding: 16px 5% 40px; max-width: 100%; box-sizing: border-box; }
+            .right { display: none; }
+
+            /* ── Home state on mobile ── */
+            body.home-state .mobile-bio { display: block; }
+            body.home-state .projects { display: none; }
+            body.home-state .right { display: none; }
+
+            /* ── Non-home state on mobile ── */
+            body:not(.home-state) .mobile-bio { display: none; }
+            body:not(.home-state) .projects { display: grid; }
+
+            /* Always hide desktop bio elements on mobile */
+            .bio-korean-left { display: none; }
+            .bio-english-right { display: none; }
+            .home-panel { display: none; }
+            #more-btn-en, #more-btn-kr { display: none; }
+
+            /* ── Mobile bio ── */
+            .mobile-bio {
+                display: none;
+                padding: 16px 5% 20px;
                 font-size: 0.72rem;
-                font-weight: 400;
-                margin-bottom: 6px;
+                line-height: 1.9;
+                color: #222;
+                border-bottom: 0.5px solid #eee;
             }
-            .mobile-inline-detail .detail-tags {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 5px;
-                margin-bottom: 12px;
+
+            /* ── Project list — uniform spacing ── */
+            .projects { gap: 0; }
+            .project-summary {
+                padding-bottom: 28px;
+                border-bottom: 0.5px solid #eee;
             }
-            .mobile-inline-detail .detail-desc {
-                grid-template-columns: 1fr;
-                gap: 10px;
-                margin-bottom: 14px;
+            .project-summary + .project-summary,
+            .mobile-inline-detail + .project-summary {
+                padding-top: 28px;
+                border-top: none;
+            }
+            .mobile-inline-detail {
+                border-top: none;
+                padding-bottom: 28px;
+                border-bottom: 0.5px solid #eee;
             }
             .mobile-inline-detail .detail-media,
             .mobile-inline-detail .detail-extra-images .img-wrap {
-                aspect-ratio: 2500 / 1406;
-                background: #000;
-                overflow: hidden;
-                margin-bottom: 8px;
+                aspect-ratio: 2500 / 1406; background: #000; overflow: hidden; margin-bottom: 8px;
             }
             .mobile-inline-detail .detail-media img,
             .mobile-inline-detail .detail-extra-images .img-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
             .mobile-inline-detail .detail-media video,
             .mobile-inline-detail .detail-extra-images .img-wrap video { width:100%; height:100%; object-fit:contain; display:block; }
             .mobile-inline-detail .detail-extra-images { display:grid; gap:8px; }
-            .mobile-inline-detail .detail-note { grid-template-columns:1fr; gap:10px; margin-top:12px; }
-            .v-line { display: none; }
+            .mobile-inline-detail .detail-note { display:block; margin-top:12px; }
+
+            /* ── Info overlay ── */
+            .info-overlay-inner { grid-template-columns: 1fr; padding: 24px 5% 60px; }
+            .info-left-col, .info-right-col { display: block; }
             .detail-desc { grid-template-columns: 1fr; gap: 12px; }
-            .info-overlay-inner { grid-template-columns: 1fr; gap: 32px; }
-            .home-footer-bar { display: none !important; }
-            body.home-state .projects { display: grid; }
-            body.home-state .bio-korean-left { display: none; }
-            body:not(.home-state) .bio-korean-left { display: none; }
-            .scroll-hint { display: none; }
-            /* Mobile: thumbnail blur off for performance */
-            body:not(.home-state) .project-summary:not(.active) .thumb-wrap {
-                filter: none;
-                opacity: 1;
-            }
+            .detail-note { grid-template-columns: 1fr; }
+
+            /* ── Videos ── */
+            .lazy-video { opacity: 1; }
+
+            /* ── Thumbnail blur off ── */
+            body:not(.home-state) .project-summary:not(.active) .thumb-wrap { filter: none; opacity: 1; }
         }
         /* Detail note — shown after last image */
         .detail-note {
@@ -1106,6 +1097,12 @@
             <a href="#branding" class="mobile-nav-link">Branding</a>
             <a href="#index" class="mobile-nav-link">Index</a>
             <a href="#" id="mobile-home-link">So Jung Yoon / 윤소정</a>
+        </div>
+
+        <!-- Mobile bio: shown below header on mobile home state only -->
+        <div class="mobile-bio" id="mobile-bio">
+            So Jung Yoon is a graphic designer based in New York City, NY. She holds a MFA degree from Rhode Island School of Design (RISD) in Graphic Design, with an emphasis on brand identity and spacial interaction design. She has worked at museums, national institution, and marketing agency.
+            <br><br><button class="more-btn" id="more-btn-mobile">More ↗</button>
         </div>
         <div class="all">
             <div class="left">
@@ -1267,15 +1264,15 @@ Role: Graphic Design Intern</div>
         <!-- Topbar: language toggle left, close right -->
         <div class="info-overlay-topbar">
             <div class="info-lang-toggle">
-                <button class="info-lang-btn active" id="lang-kr">한국어</button>
+                <button class="info-lang-btn" id="lang-kr">한국어</button>
                 <span style="color:#bbb;font-size:0.72rem;">·</span>
-                <button class="info-lang-btn" id="lang-en">English</button>
+                <button class="info-lang-btn active" id="lang-en">English</button>
             </div>
             <button class="info-overlay-close" id="info-overlay-close">&#x2715;</button>
         </div>
 
         <!-- Korean version -->
-        <div class="info-overlay-inner" id="info-content-kr">
+        <div class="info-overlay-inner" id="info-content-kr" style="display:none;">
             <div class="info-left-col">
                 <div class="info-photo">
                     <img src="common/info/sojung_profile.JPG" alt="Portrait of So Jung Yoon">
@@ -1352,7 +1349,7 @@ Role: Graphic Design Intern</div>
         </div>
 
         <!-- English version -->
-        <div class="info-overlay-inner" id="info-content-en" style="display:none;">
+        <div class="info-overlay-inner" id="info-content-en">
             <div class="info-left-col">
                 <div class="info-photo">
                     <img src="common/info/sojung_profile.JPG" alt="Portrait of So Jung Yoon">
@@ -1764,6 +1761,8 @@ Role: Graphic Design Intern</div>
             categoryLinks.forEach(l => l.classList.remove('active'));
             projectSummaries.forEach(s => s.style.display = '');
             document.querySelectorAll('.mobile-inline-detail').forEach(el => el.remove());
+            document.querySelectorAll('.mobile-summary-link').forEach(el => el.remove());
+            document.querySelector('.right').classList.remove('locked');
             document.querySelector('.left').scrollTop = 0;
             document.querySelector('.right').scrollTop = 0;
         }
@@ -1867,8 +1866,9 @@ Role: Graphic Design Intern</div>
 
             document.querySelector('.left').scrollTop = 0;
             document.querySelectorAll('.mobile-inline-detail').forEach(el => el.remove());
+            document.querySelectorAll('.mobile-summary-link').forEach(el => el.remove());
 
-            if (visible[0]) renderProject(visible[0].dataset.project);
+            if (visible[0] && window.innerWidth > 768) renderProject(visible[0].dataset.project);
 
             categoryLinks.forEach(link => {
                 link.classList.toggle('active', link.getAttribute('href').substring(1) === category);
@@ -1896,53 +1896,25 @@ Role: Graphic Design Intern</div>
             // Remove any existing inline detail
             document.querySelectorAll('.mobile-inline-detail').forEach(el => el.remove());
 
+            // Block BRE if not unlocked
+            if (id === 'bre' && !breUnlocked) return;
+
             const data = projectData[id];
             if (!data) return;
 
             const block = document.createElement('div');
             block.className = 'mobile-inline-detail';
 
-            // Title + tags
-            const titleEl = document.createElement('div');
-            titleEl.className = 'detail-title';
-            titleEl.textContent = data.title;
-            block.appendChild(titleEl);
-
-            const tagsEl = document.createElement('div');
-            tagsEl.className = 'detail-tags';
-            data.tags.split(',').forEach(t => {
-                const s = document.createElement('span');
-                s.className = 'tag-pill';
-                s.textContent = t.trim();
-                tagsEl.appendChild(s);
-            });
-            block.appendChild(tagsEl);
-
-            // Description
-            const descEl = document.createElement('div');
-            descEl.className = 'detail-desc';
-            const kr = document.createElement('div'); kr.className = 'korean'; kr.textContent = data.korean;
-            const en = document.createElement('div'); en.className = 'english'; en.textContent = data.english;
-            descEl.appendChild(kr); descEl.appendChild(en);
-            block.appendChild(descEl);
-
-            // Link
-            if (data.link) {
-                const linksEl = document.createElement('div');
-                linksEl.className = 'detail-links';
-                linksEl.innerHTML = `<a href="${data.link}" target="_blank">${data.linkLabel || 'View project here'}</a>`;
-                block.appendChild(linksEl);
-            }
-
             // Primary media
             const mediaEl = document.createElement('div');
             mediaEl.className = 'detail-media';
-            const isVid = data.isVideo || (data.image && data.image.endsWith('.mp4'));
+            const isVid = data.isVideo || (data.image && (data.image.endsWith('.mp4') || data.image.endsWith('.mov')));
             if (isVid) {
                 const v = document.createElement('video');
                 v.src = data.image; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
-                v.play().catch(() => {});
                 mediaEl.appendChild(v);
+                v.load();
+                v.play().catch(() => {});
             } else {
                 const img = document.createElement('img'); img.src = data.image; img.alt = data.alt;
                 mediaEl.appendChild(img);
@@ -1955,7 +1927,7 @@ Role: Graphic Design Intern</div>
                 extraEl.className = 'detail-extra-images';
                 data.extraImages.forEach(ei => {
                     const wrap = document.createElement('div'); wrap.className = 'img-wrap';
-                    const isEiVid = ei.isVideo || (ei.src && ei.src.endsWith('.mp4') || (ei.src && ei.src.endsWith('.mov')));
+                    const isEiVid = ei.isVideo || (ei.src && (ei.src.endsWith('.mp4') || ei.src.endsWith('.mov')));
                     if (isEiVid) {
                         const v = document.createElement('video');
                         v.src = ei.src; v.muted = true; v.loop = true; v.playsInline = true;
@@ -1970,17 +1942,19 @@ Role: Graphic Design Intern</div>
             }
 
             // Detail note
-            if (data.detailNoteKorean || data.detailNoteEnglish) {
+            if (data.detailNoteEnglish) {
                 const noteEl = document.createElement('div');
                 noteEl.className = 'detail-note';
-                const nkr = document.createElement('div'); nkr.className = 'note-kr'; nkr.textContent = data.detailNoteKorean || '';
-                const nen = document.createElement('div'); nen.className = 'note-en'; nen.textContent = data.detailNoteEnglish || '';
-                noteEl.appendChild(nkr); noteEl.appendChild(nen);
+                const nen = document.createElement('div'); nen.className = 'note-en'; nen.textContent = data.detailNoteEnglish;
+                noteEl.appendChild(nen);
                 block.appendChild(noteEl);
             }
 
             // Insert after the clicked summary
             summary.insertAdjacentElement('afterend', block);
+
+            // Autoplay all videos in the block
+            block.querySelectorAll('video').forEach(v => { v.load(); v.play().catch(() => {}); });
 
             // Scroll to it
             setTimeout(() => block.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
@@ -1990,13 +1964,39 @@ Role: Graphic Design Intern</div>
             summary.addEventListener('click', () => {
                 const id = summary.dataset.project;
                 if (isMobile()) {
-                    // Toggle: clicking same project closes it
                     if (id === _currentProjectId) {
                         document.querySelectorAll('.mobile-inline-detail').forEach(el => el.remove());
+                        // Also remove injected link tag if any
+                        summary.querySelectorAll('.mobile-summary-link').forEach(el => el.remove());
                         _currentProjectId = null;
                         return;
                     }
+                    // Remove any existing inline details and injected links
+                    document.querySelectorAll('.mobile-inline-detail').forEach(el => el.remove());
+                    document.querySelectorAll('.mobile-summary-link').forEach(el => el.remove());
+
                     _currentProjectId = id;
+
+                    // If BRE locked, don't show detail
+                    if (id === 'bre' && !breUnlocked) return;
+
+                    const data = projectData[id];
+                    // Inject link pill right after .tags inside this summary
+                    if (data && data.link) {
+                        const tagsDiv = summary.querySelector('.tags');
+                        if (tagsDiv) {
+                            const linkPill = document.createElement('a');
+                            linkPill.href = data.link;
+                            linkPill.target = '_blank';
+                            linkPill.className = 'tag-pill mobile-summary-link';
+                            linkPill.style.textDecoration = 'none';
+                            linkPill.style.color = '#000';
+                            linkPill.textContent = (data.linkLabel || 'View project here') + ' ↗';
+                            linkPill.addEventListener('click', e => e.stopPropagation());
+                            tagsDiv.appendChild(linkPill);
+                        }
+                    }
+
                     renderMobileInline(id, summary);
                 } else {
                     if (id === _currentProjectId) return;
@@ -2139,6 +2139,14 @@ Role: Graphic Design Intern</div>
         document.querySelectorAll('.lazy-video').forEach(v => {
             if (v.closest('.left')) leftObserver.observe(v);
         });
+
+        // On mobile, force all lazy videos to load immediately (no IntersectionObserver needed)
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('.lazy-video').forEach(v => {
+                if (v.dataset.src) { v.src = v.dataset.src; v.load(); v.play().catch(() => {}); }
+                v.style.opacity = '1';
+            });
+        }
         // ── Lightbox ──
         const lightbox      = document.getElementById('lightbox');
         const lbMedia       = document.getElementById('lightbox-media');
@@ -2272,20 +2280,22 @@ Role: Graphic Design Intern</div>
         const langEnBtn = document.getElementById('lang-en');
 
         function showLang(lang) {
+            const isMob = window.innerWidth <= 768;
+            const showVal = isMob ? 'block' : 'grid';
             if (lang === 'kr') {
-                infoKr.style.display = '';
+                infoKr.style.display = showVal;
                 infoEn.style.display = 'none';
                 langKrBtn.classList.add('active');
                 langEnBtn.classList.remove('active');
             } else {
                 infoKr.style.display = 'none';
-                infoEn.style.display = '';
+                infoEn.style.display = showVal;
                 langKrBtn.classList.remove('active');
                 langEnBtn.classList.add('active');
             }
         }
         function openInfo(lang) {
-            showLang(lang || 'kr');
+            showLang(lang || 'en');
             infoOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2296,6 +2306,8 @@ Role: Graphic Design Intern</div>
         document.getElementById('info-overlay-close').addEventListener('click', closeInfo);
         document.getElementById('more-btn-kr').addEventListener('click', () => openInfo('kr'));
         document.getElementById('more-btn-en').addEventListener('click', () => openInfo('en'));
+        const moreBtnMobile = document.getElementById('more-btn-mobile');
+        if (moreBtnMobile) moreBtnMobile.addEventListener('click', () => { openInfo('en'); });
         langKrBtn.addEventListener('click', () => showLang('kr'));
         langEnBtn.addEventListener('click', () => showLang('en'));
         infoOverlay.addEventListener('click', e => { if (e.target === infoOverlay) closeInfo(); });
@@ -2466,6 +2478,7 @@ Role: Graphic Design Intern</div>
         const miscEl = document.getElementById('misc-random');
 
         function showRandomMisc() {
+            if (window.innerWidth <= 768) return; // no misc on mobile
             const item = miscItems[Math.floor(Math.random() * miscItems.length)];
             miscEl.innerHTML = '';
             // Reset to default vertical size first
