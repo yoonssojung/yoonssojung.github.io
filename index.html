@@ -177,7 +177,7 @@
             user-select: none;
         }
         .right {
-            transition: filter 0.4s ease;
+            transition: none;
         }
 
         /* Projects list */
@@ -277,7 +277,7 @@
             width: 100%;
             aspect-ratio: 2500 / 1406;
             overflow: hidden;
-            margin-bottom: 8px;
+            margin-bottom: 0;
             background: #000;
         }
         .detail-media img {
@@ -308,15 +308,17 @@
 
         /* Extra project images in detail */
         .detail-extra-images {
-            display: grid;
-            gap: 8px;
-            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 24px;
         }
         .detail-extra-images .img-wrap {
             width: 100%;
             aspect-ratio: 2500 / 1406;
             overflow: hidden;
             background: #000;
+            margin-top: 8px;
         }
         .detail-extra-images .img-wrap img {
             width: 100%;
@@ -329,6 +331,15 @@
             height: 100%;
             object-fit: contain;
             display: block;
+        }
+
+        .media-caption {
+            font-size: 0.65rem;
+            color: #888;
+            line-height: 1.7;
+            margin-top: 4px;
+            margin-bottom: 0;
+            white-space: pre-line;
         }
 
         .detail-desc {
@@ -1458,9 +1469,10 @@ Role: Graphic Design Intern</div>
                 image: 'common/ss/ss_2.mp4',
                 alt: 'Shader Studio',
                 isVideo: true,
+                caption: '텍스트와 이미지에 셰이더를 실시간으로 적용한다.\nShaders apply to text and image in real time.',
                 extraImages: [
-                    { src: 'common/ss/ss_1.mp4', alt: 'Shader Studio 2', isVideo: true },
-                    { src: 'common/ss/ss_3.png', alt: 'Shader Studio 3' }
+                    { src: 'common/ss/ss_1.mp4', alt: 'Shader Studio 2', isVideo: true, caption: '색상, 블러, 속도를 사용자가 직접 조절하며 원하는 질감을 만들어낸다.\nColor, blur, and speed are fully adjustable — dial in exactly the texture you want.' },
+                    { src: 'common/ss/ss_3.png', alt: 'Shader Studio 3', caption: '모바일에서도 동일하게 작동한다.\nWorks on mobile too — create anywhere, instantly.' }
                 ],
                 korean: 'Shader Studio는 텍스트와 이미지에 실시간 애니메이션 셰이더를 적용하는 브라우저 기반 도구다. 색상, 블러, 속도를 사용자 정의한 다음 GIF 또는 PNG로 내보낼 수 있다.',
                 english: 'Shader Studio is a browser-based tool that applies real-time animated shaders to your text and images. Customize colors, blur, and speed, then export as a GIF or PNG.',
@@ -1576,9 +1588,10 @@ Role: Graphic Design Intern</div>
                 image: 'common/oa/oa_1.mp4',
                 alt: 'Oblique Act',
                 isVideo: true,
+                caption: '카드를 뒤집는 행위를 화면에서 재현 — 종이 카드 덱의 물성을 모션으로 구현한다.\nFlipping a card, made visual — the physicality of a paper deck translated into motion.',
                 extraImages: [
-                    { src: 'common/oa/oa_2.mp4', alt: 'Oblique Act 2', isVideo: true },
-                    { src: 'common/oa/oa_3.mp4', alt: 'Oblique Act 3', isVideo: true }
+                    { src: 'common/oa/oa_2.mp4', alt: 'Oblique Act 2', isVideo: true, caption: 'Oblique Strategies의 우연성에서 착안 — Take Action Now 버튼을 누를 때마다 글자들이 랜덤하게 뒤섞이면서 다른 지시로 탈바꿈한다.\nInspired by the chance-based logic of Oblique Strategies — each press of Take Action Now scrambles the letters and reshuffles them into a new instruction.' },
+                    { src: 'common/oa/oa_3.mp4', alt: 'Oblique Act 3', isVideo: true, caption: '출력된 종이가 행동의 물체가 되어 작업의 도구가 된다.\nPrinted out, it crosses the screen — and becomes a real object of action.' }
                 ],
                 korean: '무작위 질문 프롬프트를 생성하고 물리적 행동 지시와 짝을 이루는 도구 — 인쇄하고 실행한다. 브라이언 이노의 Oblique Strategies에서 영감을 받았지만 — 사고가 아닌 몸을 리디렉션한다.',
                 english: "A tool that generates a random question prompt and pairs it with a physical action instruction — print it, and do it. Inspired by Brian Eno's Oblique Strategies — but instead of redirecting your thinking, it redirects your body.",
@@ -1672,6 +1685,13 @@ Role: Graphic Design Intern</div>
             // Extra media (images or videos)
             detailExtra.innerHTML = '';
             if (data.extraImages && data.extraImages.length) {
+                // Primary media caption (shown before extra images)
+                if (data.caption) {
+                    const cap = document.createElement('div');
+                    cap.className = 'media-caption';
+                    cap.textContent = data.caption;
+                    detailExtra.appendChild(cap);
+                }
                 data.extraImages.forEach(ei => {
                     const wrap = document.createElement('div');
                     wrap.className = 'img-wrap';
@@ -1698,6 +1718,12 @@ Role: Graphic Design Intern</div>
                         wrap.appendChild(img);
                     }
                     detailExtra.appendChild(wrap);
+                    if (ei.caption) {
+                        const cap = document.createElement('div');
+                        cap.className = 'media-caption';
+                        cap.textContent = ei.caption;
+                        detailExtra.appendChild(cap);
+                    }
                 });
             }
 
@@ -1724,8 +1750,10 @@ Role: Graphic Design Intern</div>
             // Blur right panel if BRE is selected and still locked
             if (id === 'bre' && !breUnlocked) {
                 rightPanel.classList.add('locked');
+                rightPanel.style.filter = '';
             } else {
                 rightPanel.classList.remove('locked');
+                rightPanel.style.filter = 'none';
             }
 
             // Scroll right panel to top
@@ -1763,6 +1791,7 @@ Role: Graphic Design Intern</div>
             document.querySelectorAll('.mobile-inline-detail').forEach(el => el.remove());
             document.querySelectorAll('.mobile-summary-link').forEach(el => el.remove());
             document.querySelector('.right').classList.remove('locked');
+            document.querySelector('.right').style.filter = 'none';
             document.querySelector('.left').scrollTop = 0;
             document.querySelector('.right').scrollTop = 0;
         }
@@ -1921,6 +1950,14 @@ Role: Graphic Design Intern</div>
             }
             block.appendChild(mediaEl);
 
+            // Primary media caption
+            if (data.caption) {
+                const cap = document.createElement('div');
+                cap.className = 'media-caption';
+                cap.textContent = data.caption;
+                block.appendChild(cap);
+            }
+
             // Extra images
             if (data.extraImages && data.extraImages.length) {
                 const extraEl = document.createElement('div');
@@ -1937,6 +1974,12 @@ Role: Graphic Design Intern</div>
                         wrap.appendChild(img);
                     }
                     extraEl.appendChild(wrap);
+                    if (ei.caption) {
+                        const cap = document.createElement('div');
+                        cap.className = 'media-caption';
+                        cap.textContent = ei.caption;
+                        extraEl.appendChild(cap);
+                    }
                 });
                 block.appendChild(extraEl);
             }
@@ -1961,7 +2004,10 @@ Role: Graphic Design Intern</div>
         }
 
         projectSummaries.forEach(summary => {
-            summary.addEventListener('click', () => {
+            summary.addEventListener('click', (e) => {
+                // Don't handle clicks on links inside the summary
+                if (e.target.classList.contains('mobile-summary-link') || e.target.closest('.mobile-summary-link')) return;
+
                 const id = summary.dataset.project;
                 if (isMobile()) {
                     if (id === _currentProjectId) {
@@ -1992,7 +2038,10 @@ Role: Graphic Design Intern</div>
                             linkPill.style.textDecoration = 'none';
                             linkPill.style.color = '#000';
                             linkPill.textContent = (data.linkLabel || 'View project here') + ' ↗';
-                            linkPill.addEventListener('click', e => e.stopPropagation());
+                            linkPill.addEventListener('click', e => {
+                                e.stopPropagation();
+                                // allow default link navigation
+                            });
                             tagsDiv.appendChild(linkPill);
                         }
                     }
