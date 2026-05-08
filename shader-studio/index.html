@@ -225,9 +225,9 @@
         flex-shrink: 0;
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 0 14px;
-        height: 46px;
+        gap: 8px;
+        padding: 0 12px;
+        height: 44px;
         border-bottom: 1px solid var(--border);
         background: var(--bg);
         overflow: hidden;
@@ -235,37 +235,39 @@
 
       .m-logo {
         font-family: var(--display);
-        font-size: 11px;
+        font-size: 9px;
         font-weight: 800;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         white-space: nowrap;
         flex-shrink: 0;
       }
 
-      .m-sep { width: 1px; height: 16px; background: var(--border-hi); flex-shrink: 0; }
+      .m-sep { width: 1px; height: 14px; background: var(--border-hi); flex-shrink: 0; }
 
       /* Speed inline in topbar */
       .m-speed-row {
         display: flex;
         align-items: center;
-        gap: 6px;
-        flex-shrink: 0;
+        gap: 5px;
+        flex: 1;
+        min-width: 0;
       }
       .m-speed-row .lbl { font-size: 9px; }
-      #m-speed-display { font-size: 10px; color: var(--accent); min-width: 20px; }
-      #m-speed-slider { width: 60px; }
+      #m-speed-display { font-size: 10px; color: var(--accent); min-width: 18px; }
+      #m-speed-slider { flex: 1; min-width: 30px; max-width: 120px; }
 
       /* Colour swatches in topbar */
       .m-swatches {
         display: flex;
         align-items: center;
         gap: 4px;
+        flex-shrink: 0;
         margin-left: auto;
       }
       .m-swatch-wrap {
         position: relative;
-        width: 20px; height: 20px;
+        width: 16px; height: 16px;
         border-radius: 50%;
         border: 1px solid var(--border-hi);
         overflow: hidden;
@@ -722,8 +724,6 @@
       <input id="m-speed-slider" type="range" min="0.1" max="2.2" step="0.1" value="0.5">
       <span id="m-speed-display">0.5</span>
     </div>
-
-    <div class="m-sep"></div>
 
     <!-- Colour swatches -->
     <div class="m-swatches">
