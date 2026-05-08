@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shader Studio</title>
   <script src="p5.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
@@ -197,6 +198,357 @@
       border-radius: 2px;
       transition: width 0.2s ease;
     }
+
+    /* ══════════════════════════════════════════════════════════════
+       MOBILE LAYOUT  —  max-width: 768px
+       Desktop markup is untouched. Mobile-only elements are hidden
+       on desktop; desktop-only elements are hidden on mobile.
+    ══════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+
+      /* Hide the desktop app shell entirely */
+      .app { display: none !important; }
+
+      /* ── Mobile shell ── */
+      .m-app {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh;
+        background: var(--bg);
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      /* ── Mobile top bar ── */
+      .m-topbar {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 14px;
+        height: 46px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+        overflow: hidden;
+      }
+
+      .m-logo {
+        font-family: var(--display);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .m-sep { width: 1px; height: 16px; background: var(--border-hi); flex-shrink: 0; }
+
+      /* Speed inline in topbar */
+      .m-speed-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .m-speed-row .lbl { font-size: 9px; }
+      #m-speed-display { font-size: 10px; color: var(--accent); min-width: 20px; }
+      #m-speed-slider { width: 60px; }
+
+      /* Colour swatches in topbar */
+      .m-swatches {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: auto;
+      }
+      .m-swatch-wrap {
+        position: relative;
+        width: 20px; height: 20px;
+        border-radius: 50%;
+        border: 1px solid var(--border-hi);
+        overflow: hidden;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .m-swatch-dot {
+        position: absolute; inset: 0;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      .m-swatch-wrap input[type="color"] {
+        position: absolute; inset: -4px;
+        width: calc(100% + 8px); height: calc(100% + 8px);
+        opacity: 0; cursor: pointer; border: none;
+      }
+
+      /* ── Canvas area ── */
+      .m-canvas-wrap {
+        flex: 1;
+        background: #000;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+      }
+      .m-canvas-wrap canvas {
+        display: block;
+        transform-origin: center center;
+      }
+
+      /* ── Bottom panel ── */
+      .m-panel {
+        position: relative; z-index: 1;
+        flex-shrink: 0;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Tab bar */
+      .m-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+        position: relative; z-index: 2;
+      }
+      .m-tab {
+        flex: 1;
+        padding: 9px 0;
+        text-align: center;
+        font-family: var(--display);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: color .12s, border-color .12s;
+        background: transparent;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+      }
+      .m-tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+
+      /* Fixed-height pane — same size for both tabs, no scrolling needed */
+      .m-pane {
+        display: none;
+        overflow: hidden;
+        height: 220px;
+        flex-shrink: 0;
+        padding: 10px 14px;
+        position: relative; z-index: 2;
+      }
+      .m-pane.active { display: block; }
+
+      /* Compact grid inside panes — everything visible at once */
+      .m-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 12px;
+        height: 100%;
+        align-content: start;
+      }
+      .m-grid-full { grid-column: 1 / -1; }
+
+      .m-mini-label {
+        font-size: 9px; color: var(--muted);
+        letter-spacing: 0.07em; text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+      .m-mini-input,
+      .m-mini-select {
+        background: var(--input-bg); border: 1px solid var(--border);
+        color: var(--text); font-family: var(--mono); font-size: 12px;
+        padding: 6px 8px; border-radius: 3px; outline: none; width: 100%;
+        -webkit-appearance: none; transition: border-color .12s;
+      }
+      .m-mini-input:focus, .m-mini-select:focus { border-color: var(--border-hi); }
+
+      /* Compact slider — label + value inline, range below */
+      .m-mini-slider { display: flex; flex-direction: column; gap: 3px; }
+      .m-mini-slider-head { display: flex; justify-content: space-between; }
+      .m-mini-slider-head label { font-size: 9px; color: var(--muted); letter-spacing: 0.07em; text-transform: uppercase; }
+      .m-mini-slider-val { font-size: 10px; color: var(--accent); }
+
+      /* File upload button compact */
+      .m-mini-file {
+        display: flex; align-items: center; gap: 6px;
+        padding: 7px 8px; background: var(--input-bg);
+        border: 1px solid var(--border); border-radius: 3px;
+        font-size: 11px; color: var(--muted); cursor: pointer;
+        position: relative; width: 100%; z-index: 2;
+      }
+      .m-mini-file input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 3; }
+      #m-file-name { font-size: 9px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; }
+
+      .m-mini-btn {
+        width: 100%; padding: 7px 8px; border-radius: 3px; cursor: pointer;
+        font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+        border: 1px solid var(--border-hi); background: transparent;
+        color: var(--text); transition: background .12s;
+      }
+
+      /* ── Export bar — dark, matches UI ── */
+      .m-export-bar {
+        flex-shrink: 0;
+        border-top: 1px solid var(--border-hi);
+        background: var(--bg);
+      }
+      .m-export-meta {
+        display: flex; align-items: center; justify-content: center;
+        gap: 8px; padding: 9px 14px 8px;
+        border-bottom: 1px solid var(--border);
+      }
+      .m-export-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--accent); flex-shrink: 0;
+        animation: m-pulse 1.8s infinite;
+      }
+      @keyframes m-pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+      .m-stat-tap {
+        display: flex; align-items: center; gap: 3px;
+        cursor: pointer; padding: 2px 6px;
+        border-radius: 3px; border: 1px solid transparent;
+        transition: border-color .12s, background .12s;
+      }
+      .m-stat-tap:hover, .m-stat-tap.m-editing {
+        border-color: var(--border-hi); background: rgba(255,255,255,0.04);
+      }
+      .m-stat-val { font-size: 11px; color: var(--accent); font-family: var(--mono); }
+      .m-stat-unit { font-size: 10px; color: var(--muted); font-family: var(--mono); }
+      .m-stat-sep { font-size: 10px; color: var(--border-hi); }
+      .m-tap-input {
+        background: transparent; border: none; outline: none;
+        font-family: var(--mono); font-size: 11px; color: var(--accent);
+        width: 30px; text-align: center; -webkit-appearance: none;
+      }
+      .m-export-btns { display: grid; grid-template-columns: 1fr 1px 1fr; }
+      .m-export-btn {
+        display: flex; flex-direction: column; align-items: center;
+        gap: 4px; padding: 11px 0; cursor: pointer;
+        background: none; border: none;
+      }
+      .m-export-btn-icon { font-size: 20px; color: var(--text); }
+      .m-export-btn-name {
+        font-family: var(--mono); font-size: 12px; font-weight: 500;
+        letter-spacing: 0.06em; color: var(--accent);
+      }
+      .m-export-btn-lbl {
+        font-family: var(--display); font-size: 9px; font-weight: 800;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--muted);
+      }
+      .m-export-divider { background: var(--border); }
+      .m-export-status-row {
+        display: flex; align-items: center; justify-content: center;
+        gap: 8px; flex-wrap: wrap; padding: 4px 14px 8px; min-height: 18px;
+      }
+      #m-anim-status { font-size: 10px; color: var(--muted); }
+      #m-anim-preview-link { display: none; font-size: 10px; color: #6af; cursor: pointer; text-decoration: underline; }
+      #m-anim-restart-btn {
+        display: none; padding: 3px 8px;
+        font-family: var(--mono); font-size: 10px;
+        background: transparent; border: 1px solid var(--border-hi);
+        color: var(--text); border-radius: 3px; cursor: pointer;
+      }
+      #m-anim-progress-wrap {
+        display: none; height: 2px; background: var(--border);
+        margin: 0 14px 2px;
+      }
+      #m-anim-progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 0.2s ease; }
+
+      /* Sections inside mobile panel */
+      .m-section { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+      .m-section:last-child { border-bottom: none; }
+
+      .m-section-title {
+        font-family: var(--display);
+        font-size: 9px; font-weight: 800;
+        letter-spacing: 0.18em; text-transform: uppercase;
+        color: var(--muted); margin-bottom: 10px;
+      }
+
+      /* Mobile field */
+      .m-field { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+      .m-field:last-child { margin-bottom: 0; }
+      .m-field > label { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+
+      .m-field input[type="text"],
+      .m-field select {
+        background: var(--input-bg); border: 1px solid var(--border);
+        color: var(--text); font-family: var(--mono); font-size: 13px;
+        padding: 8px 10px; border-radius: 3px; outline: none; width: 100%;
+        transition: border-color .12s;
+        -webkit-appearance: none;
+      }
+      .m-field input:focus, .m-field select:focus { border-color: var(--border-hi); }
+
+      .m-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+      .m-row2 .m-field { margin-bottom: 0; }
+
+      /* Mobile slider */
+      .m-slider-field { margin-bottom: 8px; }
+      .m-slider-field:last-child { margin-bottom: 0; }
+      .m-slider-head { display: flex; justify-content: space-between; margin-bottom: 5px; }
+      .m-slider-head label { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+      .m-slider-val { font-size: 11px; color: var(--accent); }
+
+      /* Mobile file upload */
+      .m-file-btn {
+        display: flex; align-items: center; gap: 7px;
+        padding: 10px 10px; background: var(--input-bg);
+        border: 1px solid var(--border); border-radius: 3px;
+        font-size: 12px; color: var(--muted); cursor: pointer;
+        position: relative; transition: border-color .12s;
+        width: 100%;
+      }
+      .m-file-btn:hover { border-color: var(--border-hi); color: var(--text); }
+      .m-file-btn input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+      #m-file-name { font-size: 10px; color: var(--muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+      /* Mobile buttons */
+      .m-btn {
+        width: 100%; padding: 10px; border-radius: 3px; cursor: pointer;
+        font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+        border: 1px solid var(--border-hi); background: transparent;
+        color: var(--text); transition: background .12s;
+      }
+      .m-btn-primary { background: var(--accent); border-color: var(--accent); color: #0a0a0a; font-weight: 500; }
+      .m-btn-primary:active { background: #fff; }
+
+      /* Mobile export status */
+      #m-anim-status { font-size: 10px; color: var(--muted); margin-top: 6px; min-height: 14px; }
+      #m-anim-preview-link { display: none; font-size: 11px; color: #6af; margin-top: 5px; cursor: pointer; }
+      #m-anim-restart-btn { display: none; margin-top: 6px; }
+      #m-anim-progress-wrap {
+        display: none; height: 3px; background: var(--border);
+        border-radius: 2px; margin-top: 8px; overflow: hidden;
+      }
+      #m-anim-progress-bar {
+        height: 100%; width: 0%;
+        background: var(--accent); border-radius: 2px;
+        transition: width 0.2s ease;
+      }
+      .m-clear-row {
+        display: flex; gap: 8px; margin-top: 8px;
+      }
+      .m-clear-row .m-btn { font-size: 11px; padding: 8px; }
+    }
+
+    /* Hide mobile shell on desktop */
+    @media (min-width: 769px) {
+      .m-app { display: none !important; }
+    }
   </style>
   <link rel="icon" type="image/png" href="data:image/png;base64,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">
   <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAM+ElEQVR4nMWbW6htyVWGv1E1196nD30hYCc+ttAgvuQt+KIvIgERCfaTipcICpIEDYIo+pBACET0wQuCJD4YhEDaCxiCEoKJGDSESCPxoROQhhgkbRK7+9z2Za1ZNXyoqlmjatZce59zdtLzUGve9lqr/n/8469RNdeBN3nTF5/XN/P75XvxJfr5Z5XgaJuvx7Nn676879+/q338rny4fvnJAeAO9CYBPRntufzOF260zzf6YfqV0+sBn7vr84iMK4j4wOdupO838iH6VafEEfCtSBcSOgJW94+oJjiIDvnwZx4Lw2O9ef8y6j045NHAW+D9teuSUIj4w08/Ehb3qOAf/CcaFaICouAGTUqj7jc3c1MFtOxzi4Nm7un73/VIo8kjEfD6S2iIEHMLCkg0gDvQC3jtiOj6XIDbY0tC3zpC9L0vPDQJDyWbb34xSd478D61yewlynZez75r5V5/fXR/4Bs2JaKDICw+FB3ysU9eC9u1FfD1f0lRDwFCTC2afYxk2WcluDhQQ6+Q/OE6aoNoqzORd7mNz/WXf+5aargWAf/1OTQa8DFCDOk8WkKUNv8bL6AFvdryzaHMXSt5dSv5E6WqIBOhP/8LV5JwJQEvfwZtgHcqCJmMRgUudiZo2soHMvgSebgi310X8VGTJRX0Z959lITpKgJCMFZlPyoDEMkt5L0Df3REMIbYbwtgBibXgzPXwxj8cv/IdvTuS58yeV+iHjbOY00JLR5QmsQ2FRh5gLQkxD7yWwqw8peWjJDMUV/41U0VbBLwpb9N0p8zwDmm49lcWxFh0mLlBUMFjIbBgfHFDtSo6lxdk+Y9+lO/NiRhSMAXPpnzvoAfgJ3Nvbk7D1YFPra+0CjBgs8ERDp5b6XABvgtcqJDf+K9KxKGHpAApL56Bc1v03ysfm0HQvUDJ2nI3rkIzmXwrjND1p+wDH+D4S3IJrBUG3TyX6WL1DQ7poDPfnwd/TnAPLfnYU7X5u5vmhSBNvLDVDDRb8D3ubwxS2xmj6N1hbbpj72/YX+lgDnkvkrtc1GBKji/VoGaj7QqcAJ+ZyqmPg2sjpS12W0CGUyjm9HARr+rIzoVNAr41Edr9OdBO9goz3DIbQ55P5t9eV8k+UBpS4WIUUBnfMcAj6bOzSyy/F2vHKOCH/mthflGASGk7y8pG7N3qcup7HI1qmZv2lAFDvxJRPwgFRoF9DnfgVkBXK8NtAoYRN7OIHsFvPgn6MrZTXRthIftkNq+2x8O6T4+5GbTYAC+z+/ZAJ49HLYmT9YDrvYDfcfvaqOAOeR6xeXoxbwv0Y+pf87lstfX8lfjESXk9/hbip9iyolSHJXRYBkCuwjPHuYpNw+HqV08WY0InfP3UY92pBFWBDhJgArwhQhX5eyK2mKeEpc5gpo9lQghm6EHv+tUsBBgo+8r2MOUIn7wsJ+6aBsStoa8kfRtqW0JKPm/1PYxdbwhIxNhlRDKPqb+xKKGWDO8vNd7ZbfLbupjmwIhFw8F8MGQsJ9M9Lv8t3WCrR+OATcLLxPARz+c8t8WM9bIigIKkJDPfU6ZEFKEg6edJRqfE0kLKbvbM0xTHREgO3+W+2GC/S63CS53lYiR/I+Z3hbwvNcf+pBOS/5b8AMiRkpwIYFK0c0YTBG1TJMzCc4l7LdOZphywQGp47OvgEu7OKnRP0xHwA9kvxn1QQrMcwucYyQYRTiz9zk43ufRYqqjSTHKQsLu6Rl/Mic/gASmgL84Se38NJ338g9G8keBrw1vRUIhIIQqUwxwe9wTsiKiKMHVNcLDISm5DKEhkzB5eObWHnb5iw8+gT47Te3BrXS+yN9vy76fPm9Eer03BMyFgOWlgrZqaAixRHRqcIaE3QSX+9T2h/pdp8/O3Do9pJPLE7j/BNy7DXdvw9mtGv0+8qtcp416E+ke8Pp4SYHCQDFme7yAL9c31LF4hHRqmBIRZ+dwdgH7fXr/c289Swd3b8NrT8H/PZ2IKLnfu/0o0ldEeDUDtET0CjDYV/N16Q6sOhaSRqlSRoysiJMdvH4H3rgHMPMcwH+/Fb7+tkREkb2N+BBw7oB2Hetn2oMpcIPrA78+Wpz73m0f/MSfvplfn2j7vfe0JOjy0l0zB+VvmilxPrdlcRkGyxxjf4Dzi6SCr74Cz33red59+sP8oH8bb5Hb3JYdO5mYcHgcDsEhiEieQJY9+YzuqBev9GJu/q5NAW2B9vP9BXS/QkQFq1rL4mX5LE+YLvfJB964B69+G179n4nndvC18C0Avt89zTPyBLflhFMmTsQbIhw+w3d53xKSgYolZU2AdK+NCdrIF2A2qg1orWBtpO2zg2UmecjgL+D+A3jtTiLgLXIbgNf0jFfjPQAuZeYpucUTsksk4JmoRHgk05FU4Rbw+Z+OVdKQIfW4UUAPchTlBngHuol6B/78MkX/7v0kf/YTT7gdAOe6546ec6oegJnInhNusatKUEOCZCK0qqGmiSXFEmDOzURtKYQsyFEubwJX2qdFZi1hn9cFLi4TAQ/O4N79pIJn5IQTSYD3GjjTPff0Ek+6FlFmIgcCp0zs8OzweHFMWpXgRapPqE2PDFzG6bJKgQbwFvi4lnvoJB/MAsr+kMb8i8sk/wdn8OAcdjpxKhMTNeIXzJzrgRP2+NzBiBKIBCInTMwSqhIkq0FrSjhLRlGG0hKC5DqmS4Et4DbiC3jj7L3sZ7NCtD/ARSbg/CKp4HIPT8vETrwBGjlo4JKZcw5MGRCAihJVCaLM6tkRmcRnFRQiIg7Bq6spIWuzdOVYqwYmgL94EfmlF9BjBtcMaSbqMbYPRZblsTlHPxNwcQmXlxhjS3EDCCgzgT0ze2YuiuNrS0IkEsUTVAnikhIWIoSALgpo/MGkgSXlB17/oLQLIiO5D8zOEhAizfrhXKI/1zlAaTEIt6S6elmQVJSAciCy18COwETAydwsGimZCFGiOiIeL4onZiJiotWkQu8NztQT0C2JrYB3ku+dvpe+VUDJ//2+LpAWI5skdVLypCJqzfVZAoesBq/5b0w5qwKqShRPRPGalBBFiQgOxamk2mEZFQwBxhPWBMRt2Y8i3z9DKNPeZWV4Tu1wSD2fcE1hUzqhxvCK80+a8tstw1omQBUVn9celUm0KgOHE8XjiJkIa462iHI9AX/zj8i7fjz5QAGsXc6Por8yP6MAuyx+imcS35a3JgUsAbNGZonMBA7qcBKScdU3LCmRCEnvL4qIok3BZImI+bvf/sbvS0OA9YEm+vE4Ab38m6dDee9z5CcEL5I7J4aCSkLUSJCsBI04CTgVJJNQWFAFRGsZLjQkKIITrSQYIqL5XmcJ+PTnkZt+NBYiy7hd/9nyNEdyUUH2A82eoEkJs6bUmDVwoKgj38vX09/me+W9GvK12t5x5w8WBoYPR3vTs5Ffih4z0elHgeVp8oyp4WstX6qzQkHyABaHDyYdPJEZwRGreSmDdCh1jKLi8CiayfYKKoKSmt0aBQD8079VFTzu43FVljHam/HYjsU2BZIKYh0VsgpCjnQ6D9UnqNcXJSyRT/cbX9HIj975o4aBzR9IhF4BYZz/IZPR/5JkDiX60hjfFvjyGgsJ2cnT8JgMbSam2Z5UJZQPUnXNQoCayPt83kd/qACAf31prYKH/YmMK8CXocxtEpA6nMDXIbGoIB8XNaDMy3FRh/WLet6oiMg77/7ZioEhAQBf/koi4VF/JFXAFsdfxuJlwaIfBcywtozrSQ3hSJs7kEHLuTbE/OTdPx8uDG0SAPAfLyOP8jO5Ev1S8FTn72dkBrzaFKijgm1hqRhbRSRVGNU0pCg/fe9jmyuj1/qh5NADNo6jwq6Lel+F2Vq83YoV0oJXJUia8QUVnCRfEFVEIoGU/mGJaXoCk3whHsV3VAEAX3sl+8HIEEuRFOq9Pt/7UtQ6QFsG1aGsKEB1rYK4RH2QEo0qkpX+7L2/PLoufiUBAK98A7nOj6VR1jnfRN08R1h9izb/etDRkqGxSYtqmm1q/OL9vzr+UOC6BAB845vGD+zEKG5F36qg5H2rgAq9a8o2EbTmWEmI9b4qv3L/E1eCh2t4gN3+9zup5888lX8+b8CnxQa3in5b/GDaVv9aH0hT324tIIMWScAFCOpAlN948NfXAl62ayvAbnfuJTXYtYJV3oMBbff2AUavBOsFavYjL8jmaM5/88HfPRT4RyYA4PwCKf9pqqnypDU76UhIwNdbgsvyWsCPQI/I+O2zv39o8PCQKdBv85ywOETtULeYnwxWZIHtQTC92sjXCU5Lisv7D539wyMBL9tjEVC2QJRA5ElOVVZEZLhi6r+uy7ocqFnoMIseXW3gUD5y/tnHAl62GyGgbPe5FBS+T55siBgb3xUjgVUALMD/+OKfbwR42W6UgLJ9R+/XiT7wvHtWR7XAeCuQ0+vHL790o4D77f8BxI11q4n1lsYAAAAASUVORK5CYII=">
@@ -349,5 +701,631 @@
 </div>
 
 <script src="script.js"></script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MOBILE SHELL — only rendered/active on ≤768px via CSS.
+     All IDs are prefixed with "m-" so they never clash with desktop.
+     Mobile JS bridges these "m-" controls to the same shared
+     variables (userText, speedValue, colorValues …) that script.js
+     already exposes globally.
+════════════════════════════════════════════════════════════════ -->
+<div class="m-app">
+
+  <!-- ── Mobile top bar ── -->
+  <header class="m-topbar">
+    <span class="m-logo">Shader Studio</span>
+    <div class="m-sep"></div>
+
+    <!-- Speed -->
+    <div class="m-speed-row">
+      <span class="lbl">Speed</span>
+      <input id="m-speed-slider" type="range" min="0.1" max="2.2" step="0.1" value="0.5">
+      <span id="m-speed-display">0.5</span>
+    </div>
+
+    <div class="m-sep"></div>
+
+    <!-- Colour swatches -->
+    <div class="m-swatches">
+      <div class="m-swatch-wrap"><div class="m-swatch-dot" id="m-dot1" style="background:#ff6600;"></div><input type="color" id="m-color1" value="#ff6600"></div>
+      <div class="m-swatch-wrap"><div class="m-swatch-dot" id="m-dot2" style="background:#008000;"></div><input type="color" id="m-color2" value="#008000"></div>
+      <div class="m-swatch-wrap"><div class="m-swatch-dot" id="m-dot3" style="background:#000000;"></div><input type="color" id="m-color3" value="#000000"></div>
+      <div class="m-swatch-wrap"><div class="m-swatch-dot" id="m-dot4" style="background:#9900ff;"></div><input type="color" id="m-color4" value="#9900ff"></div>
+      <div class="m-swatch-wrap"><div class="m-swatch-dot" id="m-dot5" style="background:#ccff00;"></div><input type="color" id="m-color5" value="#ccff00"></div>
+      <div class="m-swatch-wrap"><div class="m-swatch-dot" id="m-dot6" style="background:#cccccc;"></div><input type="color" id="m-color6" value="#cccccc"></div>
+    </div>
+  </header>
+
+  <!-- ── Canvas ── -->
+  <main class="m-canvas-wrap" id="m-canvas-wrap"></main>
+
+  <!-- ── Bottom panel ── -->
+  <div class="m-panel">
+
+    <!-- Tab bar: 2 tabs only -->
+    <div class="m-tabs">
+      <button class="m-tab active" data-tab="m-pane-text">Text</button>
+      <button class="m-tab"        data-tab="m-pane-image">Image</button>
+    </div>
+
+    <!-- ── Tab: Text + Typography ── -->
+    <div class="m-pane active" id="m-pane-text">
+      <div class="m-grid">
+
+        <!-- Text input — full width -->
+        <div class="m-grid-full">
+          <div class="m-mini-label">Text</div>
+          <div style="display:flex; gap:6px;">
+            <input id="m-text-input" class="m-mini-input" type="text" placeholder="Type something…" style="flex:1;">
+            <button id="m-clear-btn" class="m-mini-btn" style="flex-shrink:0; width:auto; padding:6px 10px;">↺</button>
+          </div>
+        </div>
+
+        <!-- Font + Weight -->
+        <div>
+          <div class="m-mini-label">Font</div>
+          <select id="m-font-select" class="m-mini-select">
+            <option value="Arial">Arial</option>
+            <option value="Helvetica">Helvetica</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Verdana">Verdana</option>
+          </select>
+        </div>
+        <div>
+          <div class="m-mini-label">Weight</div>
+          <select id="m-weight-select" class="m-mini-select">
+            <option value="normal">Normal</option>
+            <option value="bold">Bold</option>
+          </select>
+        </div>
+
+        <!-- Font Size slider — full width -->
+        <div class="m-grid-full m-mini-slider">
+          <div class="m-mini-slider-head">
+            <label>Font Size</label>
+            <span class="m-mini-slider-val" id="m-font-size-display">auto</span>
+          </div>
+          <input id="m-font-size-range" type="range" min="0" max="300" step="1" value="0">
+        </div>
+
+        <!-- Line Height + V Offset sliders side by side -->
+        <div class="m-mini-slider">
+          <div class="m-mini-slider-head">
+            <label>Line H</label>
+            <span class="m-mini-slider-val" id="m-line-height-display">1.2</span>
+          </div>
+          <input id="m-line-height-range" type="range" min="0.5" max="3.0" step="0.1" value="1.2">
+        </div>
+        <div class="m-mini-slider">
+          <div class="m-mini-slider-head">
+            <label>V Offset</label>
+            <span class="m-mini-slider-val" id="m-voffset-display-type">0</span>
+          </div>
+          <input id="m-voffset-range-type" type="range" min="-280" max="280" step="1" value="0">
+        </div>
+
+        <!-- Blur slider — full width -->
+        <div class="m-grid-full m-mini-slider">
+          <div class="m-mini-slider-head">
+            <label>Blur</label>
+            <span class="m-mini-slider-val" id="m-blur-display">8</span>
+          </div>
+          <input id="m-blur-range" type="range" min="0" max="30" step="1" value="8">
+        </div>
+
+      </div>
+    </div><!-- /#m-pane-text -->
+
+    <!-- ── Tab: Image ── -->
+    <div class="m-pane" id="m-pane-image">
+      <div class="m-grid">
+
+        <!-- Upload + filename — full width -->
+        <div class="m-grid-full">
+          <div class="m-mini-label">Image</div>
+          <label class="m-mini-file">
+            <span>↑ Upload image</span>
+            <input id="m-image-input" type="file" accept="image/png,image/jpeg">
+          </label>
+          <div id="m-file-name">No file selected</div>
+        </div>
+
+        <!-- Clear button — full width -->
+        <div class="m-grid-full">
+          <button id="m-clear-img-btn" class="m-mini-btn">↺ Clear image</button>
+        </div>
+
+        <!-- V Offset slider — full width -->
+        <div class="m-grid-full m-mini-slider">
+          <div class="m-mini-slider-head">
+            <label>V Offset</label>
+            <span class="m-mini-slider-val" id="m-voffset-display">0</span>
+          </div>
+          <input id="m-voffset-range" type="range" min="-280" max="280" step="1" value="0">
+        </div>
+
+        <!-- Blur slider — full width -->
+        <div class="m-grid-full m-mini-slider">
+          <div class="m-mini-slider-head">
+            <label>Blur</label>
+            <span class="m-mini-slider-val" id="m-blur-display-img">8</span>
+          </div>
+          <input id="m-blur-range-img" type="range" min="0" max="30" step="1" value="8">
+        </div>
+
+      </div>
+    </div><!-- /#m-pane-image -->
+
+    <!-- ── Always-visible Export bar at the very bottom ── -->
+    <div class="m-export-bar">
+      <div class="m-export-meta">
+        <div class="m-export-dot"></div>
+        <div class="m-stat-tap" id="m-dur-tap">
+          <span class="m-stat-val" id="m-dur-val">2.0</span>
+          <span class="m-stat-unit">s</span>
+        </div>
+        <span class="m-stat-sep">·</span>
+        <div class="m-stat-tap" id="m-fps-tap">
+          <span class="m-stat-val" id="m-fps-val">15</span>
+          <span class="m-stat-unit">fps</span>
+        </div>
+      </div>
+      <div class="m-export-btns">
+        <button id="m-export-gif-btn" class="m-export-btn">
+          <span class="m-export-btn-name">GIF</span>
+        </button>
+        <div class="m-export-divider"></div>
+        <button id="m-export-png-btn" class="m-export-btn">
+          <span class="m-export-btn-name">PNG</span>
+        </button>
+      </div>
+      <div id="m-anim-progress-wrap"><div id="m-anim-progress-bar"></div></div>
+      <div class="m-export-status-row">
+        <span id="m-anim-status"></span>
+        <a id="m-anim-preview-link">Preview / Save GIF</a>
+        <button id="m-anim-restart-btn" style="display:none;">New Export</button>
+      </div>
+    </div>
+
+  </div><!-- /.m-panel -->
+</div><!-- /.m-app -->
+
+<script>
+// =============================================================================
+// MOBILE BRIDGE — wires m-* controls to the same shared state as script.js
+// Only activates on mobile (≤768px). If on desktop, p5 setup() already used
+// #canvas-wrap so we skip mobile init entirely.
+// =============================================================================
+(function () {
+  function isMobile() { return window.innerWidth <= 768; }
+  if (!isMobile()) return;
+
+  // ---------------------------------------------------------------------------
+  // Wait until p5 has finished setup() before mounting the mobile canvas.
+  // p5 setup() runs on DOMContentLoaded; this script runs after it.
+  // ---------------------------------------------------------------------------
+  function initMobile() {
+    // ── Tab switching ──────────────────────────────────────────────────────
+    var tabs  = document.querySelectorAll(".m-tab");
+    var panes = document.querySelectorAll(".m-pane");
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        tabs.forEach(function (t) { t.classList.remove("active"); });
+        panes.forEach(function (p) { p.classList.remove("active"); });
+        tab.classList.add("active");
+        var target = document.getElementById(tab.dataset.tab);
+        if (target) target.classList.add("active");
+      });
+    });
+
+    // ── Sync initial swatch colours from the shared colorValues state ──────
+    // colorValues is populated (with random colours) by script.js in setup()
+    // At this point setup() has already run, so we can read and mirror them.
+    if (typeof colorValues !== "undefined" && typeof rgbToHex !== "undefined") {
+      for (var i = 1; i <= 6; i++) {
+        var cv  = colorValues["color" + i];
+        var hex = rgbToHex(cv[0], cv[1], cv[2]);
+        var inp = document.getElementById("m-color" + i);
+        var dot = document.getElementById("m-dot" + i);
+        if (inp) inp.value = hex;
+        if (dot) dot.style.background = hex;
+      }
+    }
+
+    // ── Speed ──────────────────────────────────────────────────────────────
+    var mSpeedSlider  = document.getElementById("m-speed-slider");
+    var mSpeedDisplay = document.getElementById("m-speed-display");
+    if (mSpeedSlider) {
+      // Sync initial value
+      if (typeof speedValue !== "undefined") {
+        mSpeedSlider.value = speedValue;
+        if (mSpeedDisplay) mSpeedDisplay.textContent = speedValue.toFixed(1);
+      }
+      mSpeedSlider.addEventListener("input", function () {
+        speedValue = parseFloat(this.value);
+        if (mSpeedDisplay) mSpeedDisplay.textContent = speedValue.toFixed(1);
+        // Keep desktop slider in sync too
+        var ds = document.getElementById("speed-slider");
+        if (ds) ds.value = this.value;
+        var dd = document.getElementById("speed-display");
+        if (dd) dd.textContent = speedValue.toFixed(1);
+      });
+    }
+
+    // ── Colours ────────────────────────────────────────────────────────────
+    for (var ci = 1; ci <= 6; ci++) {
+      (function (idx) {
+        var el  = document.getElementById("m-color" + idx);
+        var dot = document.getElementById("m-dot" + idx);
+        if (!el) return;
+        el.addEventListener("input", function () {
+          if (typeof hexToRGB !== "undefined") {
+            var rgb = hexToRGB(this.value);
+            if (rgb) colorValues["color" + idx] = [rgb.r / 255, rgb.g / 255, rgb.b / 255];
+          }
+          if (dot) dot.style.background = this.value;
+          // Mirror to desktop swatch
+          var dEl  = document.getElementById("color" + idx);
+          var dDot = document.getElementById("dot" + idx);
+          if (dEl) dEl.value = this.value;
+          if (dDot) dDot.style.background = this.value;
+        });
+      })(ci);
+    }
+
+    // ── Text input ──────────────────────────────────────────────────────────
+    var mTextEl = document.getElementById("m-text-input");
+    if (mTextEl) {
+      mTextEl.addEventListener("input", function () {
+        userText   = this.value;
+        usingImage = false;
+        if (typeof renderText !== "undefined") renderText();
+        if (typeof paintToShader !== "undefined") paintToShader();
+        // Mirror to desktop input
+        var dt = document.getElementById("text-input");
+        if (dt) dt.value = this.value;
+      });
+    }
+
+    // ── Clear (text) ────────────────────────────────────────────────────────
+    var mClearBtn = document.getElementById("m-clear-btn");
+    if (mClearBtn) {
+      mClearBtn.addEventListener("click", function () {
+        usingImage    = false;
+        lastImageFile = null;
+        userText      = "";
+        if (mTextEl) mTextEl.value = "";
+        var dt = document.getElementById("text-input");
+        if (dt) dt.value = "";
+        var mFn = document.getElementById("m-file-name");
+        if (mFn) mFn.textContent = "No file selected";
+        var mImg = document.getElementById("m-image-input");
+        if (mImg) mImg.value = "";
+        if (typeof textGraphics !== "undefined") textGraphics.background(255);
+        if (typeof paintToShader !== "undefined") paintToShader();
+      });
+    }
+
+    // ── Image upload ──────────────────────────────────────────────────────
+    var mImgEl = document.getElementById("m-image-input");
+    if (mImgEl) {
+      mImgEl.addEventListener("change", function () {
+        if (this.files && this.files[0]) {
+          var f   = this.files[0];
+          var mFn = document.getElementById("m-file-name");
+          if (mFn) mFn.textContent = f.name;
+          if (typeof loadImageIntoBuffer !== "undefined") loadImageIntoBuffer(f);
+          // Mirror filename to desktop
+          var dFn = document.getElementById("file-name");
+          if (dFn) dFn.textContent = f.name;
+        }
+      });
+    }
+
+    // ── Clear image ──────────────────────────────────────────────────────
+    var mClearImgBtn = document.getElementById("m-clear-img-btn");
+    if (mClearImgBtn) {
+      mClearImgBtn.addEventListener("click", function () {
+        usingImage    = false;
+        lastImageFile = null;
+        var mFn = document.getElementById("m-file-name");
+        if (mFn) mFn.textContent = "No file selected";
+        var mImg = document.getElementById("m-image-input");
+        if (mImg) mImg.value = "";
+        if (typeof textGraphics !== "undefined") textGraphics.background(255);
+        if (typeof paintToShader !== "undefined") paintToShader();
+      });
+    }
+
+    // ── Blur (text tab + image tab both control the same blurAmount) ──────
+    function wireBlur(rangeId, displayId) {
+      var el   = document.getElementById(rangeId);
+      var disp = document.getElementById(displayId);
+      if (!el) return;
+      el.addEventListener("input", function () {
+        blurAmount = parseInt(this.value) || 0;
+        if (disp) disp.textContent = blurAmount;
+        if (typeof updateSource !== "undefined") updateSource();
+        // Sync desktop
+        var db = document.getElementById("blur-range");
+        var dd = document.getElementById("blur-display");
+        if (db) db.value = this.value;
+        if (dd) dd.textContent = blurAmount;
+        // Keep the two mobile blur sliders in sync
+        ["m-blur-range", "m-blur-range-img"].forEach(function(id) {
+          if (id !== rangeId) {
+            var o = document.getElementById(id);
+            if (o) o.value = blurAmount;
+          }
+        });
+        var otherDisp = document.getElementById(displayId === "m-blur-display" ? "m-blur-display-img" : "m-blur-display");
+        if (otherDisp) otherDisp.textContent = blurAmount;
+      });
+    }
+    wireBlur("m-blur-range",     "m-blur-display");
+    wireBlur("m-blur-range-img", "m-blur-display-img");
+
+    // ── V Offset (image tab) ──────────────────────────────────────────────
+    function wireVOffset(rangeId, displayId) {
+      var el   = document.getElementById(rangeId);
+      var disp = document.getElementById(displayId);
+      if (!el) return;
+      el.addEventListener("input", function () {
+        verticalOffset = parseInt(this.value) || 0;
+        if (disp) disp.textContent = verticalOffset;
+        if (typeof updateSource !== "undefined") updateSource();
+        // Sync desktop + other mobile voffset
+        var dv = document.getElementById("voffset-range");
+        if (dv) dv.value = this.value;
+        var dvd = document.getElementById("voffset-display");
+        if (dvd) dvd.textContent = verticalOffset;
+        // Keep the two mobile voffset sliders in sync with each other
+        var others = ["m-voffset-range", "m-voffset-range-type"].filter(function(id){ return id !== rangeId; });
+        others.forEach(function(id) {
+          var o = document.getElementById(id);
+          if (o) o.value = verticalOffset;
+        });
+        var od = document.getElementById(displayId === "m-voffset-display" ? "m-voffset-display-type" : "m-voffset-display");
+        if (od) od.textContent = verticalOffset;
+      });
+    }
+    wireVOffset("m-voffset-range",      "m-voffset-display");
+    wireVOffset("m-voffset-range-type", "m-voffset-display-type");
+
+    // ── Font select ──────────────────────────────────────────────────────
+    var mFontEl = document.getElementById("m-font-select");
+    if (mFontEl) {
+      mFontEl.addEventListener("change", function () {
+        fontFamily = this.value;
+        if (typeof updateSource !== "undefined") updateSource();
+        var df = document.getElementById("font-select");
+        if (df) df.value = this.value;
+      });
+    }
+
+    // ── Font weight ──────────────────────────────────────────────────────
+    var mWeightEl = document.getElementById("m-weight-select");
+    if (mWeightEl) {
+      mWeightEl.addEventListener("change", function () {
+        fontWeight = this.value;
+        if (typeof updateSource !== "undefined") updateSource();
+        var dw = document.getElementById("weight-select");
+        if (dw) dw.value = this.value;
+      });
+    }
+
+    // ── Font size ──────────────────────────────────────────────────────
+    var mFsEl   = document.getElementById("m-font-size-range");
+    var mFsDisp = document.getElementById("m-font-size-display");
+    if (mFsEl) {
+      mFsEl.addEventListener("input", function () {
+        manualFontSize = parseInt(this.value) || 0;
+        if (mFsDisp) mFsDisp.textContent = manualFontSize === 0 ? "auto" : manualFontSize;
+        if (typeof updateSource !== "undefined") updateSource();
+        var df = document.getElementById("font-size-range");
+        if (df) df.value = this.value;
+        var dd = document.getElementById("font-size-display");
+        if (dd) dd.textContent = manualFontSize === 0 ? "auto" : manualFontSize;
+      });
+    }
+
+    // ── Line height ──────────────────────────────────────────────────────
+    var mLhEl   = document.getElementById("m-line-height-range");
+    var mLhDisp = document.getElementById("m-line-height-display");
+    if (mLhEl) {
+      mLhEl.addEventListener("input", function () {
+        manualLeading = parseFloat(this.value);
+        if (mLhDisp) mLhDisp.textContent = manualLeading.toFixed(1);
+        if (typeof updateSource !== "undefined") updateSource();
+        var dl = document.getElementById("line-height-range");
+        if (dl) dl.value = this.value;
+        var dd = document.getElementById("line-height-display");
+        if (dd) dd.textContent = manualLeading.toFixed(1);
+      });
+    }
+
+    // ── PNG Export ────────────────────────────────────────────────────────
+    var mPngBtn = document.getElementById("m-export-png-btn");
+    if (mPngBtn) {
+      mPngBtn.addEventListener("click", function () {
+        if (typeof exportPNG !== "undefined") exportPNG();
+      });
+    }
+
+    // ── GIF Export ────────────────────────────────────────────────────────
+    // Mobile export status helpers (mirror desktop helpers to m- IDs)
+    function mSetStatus(msg) {
+      var el = document.getElementById("m-anim-status");
+      if (el) el.textContent = msg;
+      // Also update desktop element so shared GIF state stays synced
+      if (typeof setStatus !== "undefined") setStatus(msg);
+    }
+    function mSetProgressBar(pct) {
+      var bar  = document.getElementById("m-anim-progress-bar");
+      var wrap = document.getElementById("m-anim-progress-wrap");
+      if (!wrap || !bar) return;
+      if (pct < 0) { wrap.style.display = "none"; return; }
+      wrap.style.display = "block";
+      bar.style.width = Math.min(100, pct) + "%";
+    }
+    function mShowPreviewLink(show) {
+      var el = document.getElementById("m-anim-preview-link");
+      if (el) el.style.display = show ? "inline" : "none";
+    }
+    function mShowRestartBtn(show) {
+      var el = document.getElementById("m-anim-restart-btn");
+      if (el) el.style.display = show ? "inline-block" : "none";
+    }
+
+    // Patch the shared setStatus / setProgressBar / showPreviewLink / showRestartBtn
+    // to also update the mobile equivalents whenever they're called from script.js
+    var _origSetStatus       = window.setStatus;
+    var _origSetProgressBar  = window.setProgressBar;
+    var _origShowPreviewLink = window.showPreviewLink;
+    var _origShowRestartBtn  = window.showRestartBtn;
+
+    window.setStatus = function(msg) {
+      if (_origSetStatus) _origSetStatus(msg);
+      var el = document.getElementById("m-anim-status");
+      if (el) el.textContent = msg;
+    };
+    window.setProgressBar = function(pct) {
+      if (_origSetProgressBar) _origSetProgressBar(pct);
+      mSetProgressBar(pct);
+    };
+    window.showPreviewLink = function(show) {
+      if (_origShowPreviewLink) _origShowPreviewLink(show);
+      mShowPreviewLink(show);
+    };
+    window.showRestartBtn = function(show) {
+      if (_origShowRestartBtn) _origShowRestartBtn(show);
+      mShowRestartBtn(show);
+    };
+
+    // ── Tap-to-edit duration and fps ─────────────────────────────────────────
+    function makeTapEditable(tapId, valId, isFloat) {
+      var tapEl = document.getElementById(tapId);
+      var valEl = document.getElementById(valId);
+      if (!tapEl || !valEl) return;
+      tapEl.addEventListener("click", function () {
+        if (tapEl.classList.contains("m-editing")) return;
+        tapEl.classList.add("m-editing");
+        var inp = document.createElement("input");
+        inp.className = "m-tap-input";
+        inp.type = "number";
+        inp.value = valEl.textContent;
+        inp.step = isFloat ? "0.1" : "1";
+        inp.min = isFloat ? "0.2" : "1";
+        if (!isFloat) inp.max = "60";
+        valEl.replaceWith(inp);
+        inp.focus(); inp.select();
+        function commit() {
+          tapEl.classList.remove("m-editing");
+          var newSpan = document.createElement("span");
+          newSpan.className = "m-stat-val";
+          newSpan.id = valId;
+          var v = parseFloat(inp.value) || (isFloat ? 2 : 15);
+          newSpan.textContent = isFloat ? v.toFixed(1) : Math.round(v);
+          inp.replaceWith(newSpan);
+        }
+        inp.addEventListener("blur", commit);
+        inp.addEventListener("keydown", function(e) { if (e.key === "Enter") inp.blur(); });
+      });
+    }
+    makeTapEditable("m-dur-tap", "m-dur-val", true);
+    makeTapEditable("m-fps-tap", "m-fps-val", false);
+
+    function getMDur() {
+      var el = document.getElementById("m-dur-val");
+      return el ? parseFloat(el.textContent) || 2 : 2;
+    }
+    function getMFps() {
+      var el = document.getElementById("m-fps-val");
+      return el ? parseInt(el.textContent) || 15 : 15;
+    }
+
+    var mGifBtn = document.getElementById("m-export-gif-btn");
+    if (mGifBtn) {
+      mGifBtn.addEventListener("click", function () {
+        if (typeof capturing !== "undefined" && capturing) return;
+        if (typeof startCapture !== "undefined") startCapture(getMDur(), getMFps(), mGifBtn);
+      });
+    }
+
+    var mRestartBtn = document.getElementById("m-anim-restart-btn");
+    if (mRestartBtn) {
+      mRestartBtn.addEventListener("click", function () {
+        if (typeof resetExportUI !== "undefined") resetExportUI();
+        mSetStatus("");
+        mSetProgressBar(-1);
+        mShowPreviewLink(false);
+        mShowRestartBtn(false);
+      });
+    }
+
+    var mPreviewLink = document.getElementById("m-anim-preview-link");
+    if (mPreviewLink) {
+      mPreviewLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (typeof lastGifUrl !== "undefined" && lastGifUrl) {
+          if (typeof openGifPreview !== "undefined") openGifPreview(lastGifUrl);
+        }
+      });
+    }
+  } // end initMobile()
+
+  // Run after p5 setup() has completed (p5 fires setup on DOMContentLoaded;
+  // our script block runs synchronously after, so a short timeout is safe).
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(initMobile, 200); });
+  } else {
+    setTimeout(initMobile, 200);
+  }
+
+  // ── Mobile canvas redirect ──────────────────────────────────────────────────
+  // On mobile, p5's setup() uses #canvas-wrap for sizing. We patch getWrapSize
+  // and fitCanvasToWrap BEFORE p5 runs so the canvas lives in #m-canvas-wrap.
+  // This patch runs synchronously (before p5 setup fires).
+  function patchForMobile() {
+    // Override getWrapSize to return m-canvas-wrap dimensions
+    window.getWrapSize = function() {
+      var wrap = document.getElementById("m-canvas-wrap");
+      if (wrap && wrap.clientWidth > 0 && wrap.clientHeight > 0)
+        return { w: wrap.clientWidth, h: wrap.clientHeight };
+      return { w: window.innerWidth, h: window.innerHeight * 0.45 };
+    };
+
+    // Override fitCanvasToWrap to scale against m-canvas-wrap
+    window.fitCanvasToWrap = function() {
+      var wrap = document.getElementById("m-canvas-wrap");
+      var cnv  = document.querySelector("#m-canvas-wrap canvas");
+      if (!wrap || !cnv || typeof CANVAS_W === "undefined" || CANVAS_W === 0) return;
+      var scale = Math.min(wrap.clientWidth / CANVAS_W, wrap.clientHeight / CANVAS_H);
+      cnv.style.transform = "scale(" + scale + ")";
+    };
+
+    // Patch setup to append canvas into #m-canvas-wrap instead
+    var _origSetup = window.setup;
+    window.setup = function() {
+      _origSetup();
+      // Move the p5 canvas from #canvas-wrap (desktop, hidden) to #m-canvas-wrap
+      var cnv   = document.querySelector("#canvas-wrap canvas");
+      var mWrap = document.getElementById("m-canvas-wrap");
+      if (cnv && mWrap) {
+        mWrap.appendChild(cnv);
+      }
+      // Observe m-canvas-wrap for resize
+      if (window.ResizeObserver && mWrap) {
+        new ResizeObserver(window.fitCanvasToWrap).observe(mWrap);
+      }
+      window.fitCanvasToWrap();
+    };
+  }
+
+  patchForMobile();
+})();
+</script>
 </body>
 </html>
