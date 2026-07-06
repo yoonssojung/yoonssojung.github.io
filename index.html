@@ -126,14 +126,13 @@
             display: none;
             padding: 20px 2.5% 80px;
             box-sizing: border-box;
-            columns: 3;
-            column-gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            align-items: start;
         }
-        body.index-state #index-grid { display: block; }
+        body.index-state #index-grid { display: grid; }
 
         .index-item {
-            break-inside: avoid;
-            margin-bottom: 12px;
             cursor: pointer;
         }
         .index-item .index-thumb {
@@ -164,10 +163,10 @@
         .index-item:hover .index-title { opacity: 0.5; }
 
         @media (max-width: 900px) {
-            #index-grid { columns: 2; }
+            #index-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 600px) {
-            #index-grid { columns: 1; }
+            #index-grid { grid-template-columns: 1fr; }
         }
 
         /* ── Right detail blur when BRE locked ── */
@@ -407,6 +406,81 @@
             body:not(.home-state) .right .home-panel { display: none; }
             body:not(.home-state) .right .detail { display: block; }
         }
+
+        /* ── Site-wide password gate ── */
+        .site-gate {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+        }
+        .site-gate-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+        .site-gate-name {
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            color: #000;
+            margin-bottom: 4px;
+        }
+        .site-gate-label {
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.5);
+            font-weight: 400;
+            margin-bottom: 2px;
+        }
+        .site-gate-row {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            background: rgba(0,0,0,0.04);
+            border: 0.5px solid rgba(0,0,0,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .site-gate-input {
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+            font-size: 0.78rem;
+            padding: 9px 16px;
+            border: none;
+            background: transparent;
+            color: #000;
+            width: 180px;
+            outline: none;
+            letter-spacing: 0.02em;
+        }
+        .site-gate-input::placeholder { color: rgba(0,0,0,0.35); }
+        .site-gate-btn {
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 9px 16px;
+            border: none;
+            border-left: 0.5px solid rgba(0,0,0,0.15);
+            background: rgba(0,0,0,0.06);
+            color: rgba(0,0,0,0.85);
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: background 0.15s;
+        }
+        .site-gate-btn:hover { background: rgba(0,0,0,0.12); }
+        .site-gate-error {
+            font-size: 0.6rem;
+            color: rgba(200,40,30,0.9);
+            opacity: 0;
+            transition: opacity 0.2s;
+            height: 12px;
+            letter-spacing: 0.04em;
+        }
+        .site-gate-error.visible { opacity: 1; }
 
         /* ── Password gate: Apple style ── */
         .project-summary[data-project="bre"] {
@@ -1063,6 +1137,49 @@
     </style>
 </head>
 <body class="home-state">
+    <!-- Site-wide password gate -->
+    <div id="site-gate" class="site-gate">
+        <div class="site-gate-inner">
+            <div class="site-gate-name">So Jung Yoon</div>
+            <div class="site-gate-label">Enter Password</div>
+            <div class="site-gate-row">
+                <input class="site-gate-input" type="password" placeholder="enter password" id="site-pw-input"
+                    onkeydown="if(event.key==='Enter') unlockSite()" autofocus>
+                <button class="site-gate-btn" onclick="unlockSite()">enter</button>
+            </div>
+            <div class="site-gate-error" id="site-pw-error">incorrect password</div>
+        </div>
+    </div>
+    <script>
+        (function() {
+            var SITE_PASSWORD = 'soyoon2026';
+            window.__unlockSiteCheck = function() {
+                try {
+                    if (sessionStorage.getItem('site_unlocked') === 'true') {
+                        var g = document.getElementById('site-gate');
+                        if (g) g.style.display = 'none';
+                    }
+                } catch (e) {}
+            };
+            window.unlockSite = function() {
+                var input = document.getElementById('site-pw-input');
+                var error = document.getElementById('site-pw-error');
+                var gate  = document.getElementById('site-gate');
+                if (input.value === SITE_PASSWORD) {
+                    try { sessionStorage.setItem('site_unlocked', 'true'); } catch (e) {}
+                    gate.style.transition = 'opacity 0.35s ease';
+                    gate.style.opacity = '0';
+                    setTimeout(function() { gate.style.display = 'none'; }, 350);
+                } else {
+                    error.classList.add('visible');
+                    input.value = '';
+                    input.focus();
+                    setTimeout(function() { error.classList.remove('visible'); }, 2000);
+                }
+            };
+        })();
+        window.__unlockSiteCheck();
+    </script>
     <!-- Custom cursor -->
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
@@ -1087,10 +1204,11 @@
             </div>
             <div class="head-center">
                 <div class="nav">
-                    <a href="#experiential">Experiential Activations</a>
-                    <a href="#digital">Digital</a>
-                    <a href="#branding">Branding</a>
                     <a href="#index">Index</a>
+                    <a href="#digital">Digital</a>
+                    <a href="#experiential">Experiential Activation / Exhibition</a>
+                    <a href="#branding">Branding</a>
+                    <a href="#poster">Poster / Editorial</a>
                 </div>
             </div>
             <div class="head-right">
@@ -1103,10 +1221,11 @@
         <!-- Mobile nav drawer (hidden by default) -->
         <div class="mobile-nav-drawer" id="mobile-nav-drawer" style="display:none;">
             <button class="mobile-nav-drawer-close" id="mobile-nav-close">&#x2715;</button>
-            <a href="#experiential" class="mobile-nav-link">Experiential Activations</a>
-            <a href="#digital" class="mobile-nav-link">Digital</a>
-            <a href="#branding" class="mobile-nav-link">Branding</a>
             <a href="#index" class="mobile-nav-link">Index</a>
+            <a href="#digital" class="mobile-nav-link">Digital</a>
+            <a href="#experiential" class="mobile-nav-link">Experiential Activation / Exhibition</a>
+            <a href="#branding" class="mobile-nav-link">Branding</a>
+            <a href="#poster" class="mobile-nav-link">Poster / Editorial</a>
             <a href="#" id="mobile-home-link">So Jung Yoon / 윤소정</a>
         </div>
 
@@ -1128,26 +1247,6 @@
 
                 <div class="projects" id="project-list">
 
-                    <div class="project-summary" data-project="bre" data-category="experiential">
-                        <div class="thumb-wrap" style="position:relative; overflow:visible;">
-                            <img src="common/BRE/BRE_1.png" alt="Constellation Brands @ Bar & Restaurant Expo">
-                            <div class="thumb-gate" id="bre-gate">
-                                <div class="thumb-gate-inner">
-                                    <div class="thumb-gate-row">
-                                        <input class="thumb-gate-input" type="password" placeholder="enter password" id="bre-pw-input"
-                                            onkeydown="if(event.key==='Enter') unlockBre()">
-                                        <button class="thumb-gate-btn" onclick="unlockBre()">unlock</button>
-                                    </div>
-                                    <div class="thumb-gate-error" id="bre-pw-error">incorrect password</div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2>Constellation Brands @ Bar & Restaurant Expo</h2>
-                        <div class="tags">Brand Activation, Experiential Design</div>
-                        <div class="summary">Agency: Factory 360 | Client: Constellation Brands
-Role: Graphic Design Intern</div>
-                    </div>
-
                     <div class="project-summary" data-project="shader" data-category="digital">
                         <div class="thumb-wrap">
                             <video muted loop playsinline data-src="common/ss/ss_2.mp4" class="lazy-video"></video>
@@ -1155,15 +1254,6 @@ Role: Graphic Design Intern</div>
                         <h2>Shader Studio</h2>
                         <div class="tags">Creative Coding, Digital Design</div>
                         <div class="summary">A browser-based tool that applies real-time animated shaders to text and images. Customize colors, blur, and speed, then export as a GIF or PNG.</div>
-                    </div>
-
-                    <div class="project-summary" data-project="expiration" data-category="project branding experiential">
-                        <div class="thumb-wrap">
-                            <img src="common/t/t_1.png" alt="Expiration Date">
-                        </div>
-                        <h2>Expiration Date</h2>
-                        <div class="tags">Brand Identity, Exhibition Design</div>
-                        <div class="summary">Every three years, each department at RISD curates and designs a triennial exhibition. Expiration Date considers the relationship between graphic design and temporality.</div>
                     </div>
 
                     <div class="project-summary" data-project="shibam" data-category="project">
@@ -1184,23 +1274,13 @@ Role: Graphic Design Intern</div>
                         <div class="summary">A curation of 49 works from current and previous students of the RISD Graphic Design Graduate Program.</div>
                     </div>
 
-                    <div class="project-summary" data-project="modelomichelada" data-category="experiential">
+                    <div class="project-summary" data-project="expiration" data-category="project branding experiential">
                         <div class="thumb-wrap">
-                            <img src="common/totc/totc_1.png" alt="The Modelo Michelada @ Tales of the Cocktail">
+                            <img src="common/t/t_1.png" alt="Expiration Date">
                         </div>
-                        <h2>The Modelo Michelada @ Tales of the Cocktail</h2>
-                        <div class="tags">Experiential Design, Event Activation, Print Design</div>
-                        <div class="summary">Agency: Factory 360 | Client: Constellation Brands
-Role: Graphic Design Intern</div>
-                    </div>
-
-                    <div class="project-summary" data-project="softness" data-category="project">
-                        <div class="thumb-wrap">
-                            <video muted loop playsinline data-src="common/s/s_3.mp4" class="lazy-video"></video>
-                        </div>
-                        <h2>Softness</h2>
-                        <div class="tags">Art Direction, Editorial Design</div>
-                        <div class="summary">A publication questioning softness and its various dimensions. Not about fragility, but about strength in vulnerability, compassion, and empathy.</div>
+                        <h2>Expiration Date</h2>
+                        <div class="tags">Brand Identity, Exhibition Design</div>
+                        <div class="summary">Every three years, each department at RISD curates and designs a triennial exhibition. Expiration Date considers the relationship between graphic design and temporality.</div>
                     </div>
 
                     <div class="project-summary" data-project="oblique" data-category="digital">
@@ -1212,7 +1292,17 @@ Role: Graphic Design Intern</div>
                         <div class="summary">A tool that generates a random question prompt paired with a physical action instruction. Inspired by Brian Eno's Oblique Strategies — but redirecting your body, not your thinking.</div>
                     </div>
 
-                    <div class="project-summary" data-project="perimeter" data-category="project">
+                    <div class="project-summary" data-project="bre" data-category="experiential">
+                        <div class="thumb-wrap" style="position:relative; overflow:visible;">
+                            <img src="common/BRE/BRE_1.png" alt="Constellation Brands @ Bar & Restaurant Expo">
+                        </div>
+                        <h2>Constellation Brands @ Bar & Restaurant Expo</h2>
+                        <div class="tags">Brand Activation, Experiential Design</div>
+                        <div class="summary">Agency: Factory 360 | Client: Constellation Brands
+Role: Graphic Design Intern</div>
+                    </div>
+
+                    <div class="project-summary" data-project="perimeter" data-category="project poster">
                         <div class="thumb-wrap">
                             <img src="common/p/p_1.png" alt="Is this a [Pe·rim·e·ter] or an (Em·brace)?">
                         </div>
@@ -1220,6 +1310,50 @@ Role: Graphic Design Intern</div>
                         <div class="tags">Editorial Design</div>
                         <div class="summary">A book functioning as a portal — fragments drawn from diverse fields, voices, and cultures, exploring layered entry points and nonlinear pathways through knowledge.</div>
                     </div>
+
+                    <div class="project-summary" data-project="softness" data-category="poster">
+                        <div class="thumb-wrap">
+                            <video muted loop playsinline data-src="common/s/s_3.mp4" class="lazy-video"></video>
+                        </div>
+                        <h2>Softness</h2>
+                        <div class="tags">Art Direction, Editorial Design</div>
+                        <div class="summary">A publication questioning softness and its various dimensions. Not about fragility, but about strength in vulnerability, compassion, and empathy.</div>
+                    </div>
+
+                    <div class="project-summary" data-project="thth" data-category="poster">
+                        <div class="thumb-wrap">
+                            <video muted loop playsinline data-src="common/thth/thth_1.mp4" class="lazy-video"></video>
+                        </div>
+                        <h2>투 히어: Two Here</h2>
+                        <div class="tags">Curation, Design</div>
+                        <div class="summary">An exhibition organized by twelve students of the Arts Studies department at Hongik University, exploring the fluid boundary between the virtual and the real — finding infinite possibility in perpetual passage.</div>
+                    </div>
+                    <div class="project-summary" data-project="conflictincompatibility" data-category="poster">
+                        <div class="thumb-wrap">
+                            <img src="common/c/c_1.png" alt="Conflict as incompatibility">
+                        </div>
+                        <h2>Conflict as incompatibility</h2>
+                        <div class="tags">Editorial Design</div>
+                        <div class="summary">A black and white zine of collected texts about "Conflict as Incompatibility".</div>
+                    </div>
+                    <div class="project-summary" data-project="surfaceanomaly" data-category="experiential">
+                        <div class="thumb-wrap">
+                            <img src="common/nrsa/nrsa_1.png" alt="Surface Anomaly">
+                        </div>
+                        <h2>Surface Anomaly</h2>
+                        <div class="tags">Curation, Design</div>
+                        <div class="summary">Experimental poster works by RISD students responding to the concept of anomaly, exhibited at NOTHINGISREAL in Seoul, Korea.</div>
+                    </div>
+                    <div class="project-summary" data-project="modelomichelada" data-category="experiential">
+                        <div class="thumb-wrap">
+                            <img src="common/totc/totc_1.png" alt="The Modelo Michelada @ Tales of the Cocktail">
+                        </div>
+                        <h2>The Modelo Michelada @ Tales of the Cocktail</h2>
+                        <div class="tags">Experiential Design, Event Activation, Print Design</div>
+                        <div class="summary">Agency: Factory 360 | Client: Constellation Brands
+Role: Graphic Design Intern</div>
+                    </div>
+
 
                 </div>
             </div>
@@ -1441,27 +1575,6 @@ Role: Graphic Design Intern</div>
     <script>
         // ── Project data — media order from new reference HTML ──
         const projectData = {
-            bre: {
-                title: 'Constellation Brands @ Bar & Restaurant Expo',
-                tags: 'Brand Activation, Experiential Design',
-                // thumbnail: first slide
-                image: 'common/BRE/BRE_1.png',
-                alt: 'Constellation Brands @ Bar & Restaurant Expo',
-                // slides 2–6
-                extraImages: [
-                    { src: 'common/BRE/BRE_2.png', alt: 'BRE 2' },
-                    { src: 'common/BRE/BRE_3.png', alt: 'BRE 3' },
-                    { src: 'common/BRE/BRE_4.png', alt: 'BRE 4' },
-                    { src: 'common/BRE/BRE_5.png', alt: 'BRE 5' },
-                    { src: 'common/BRE/BRE_6.png', alt: 'BRE 6' }
-                ],
-                korean: '에이전시: Factory 360 | 클라이언트: Constellation Brands\n역할: 그래픽 디자인 인턴',
-                english: 'Agency: Factory 360 | Client: Constellation Brands\nRole: Graphic Design Intern',
-                detailNoteKorean: 'Corona, Modelo, Pacifico 세 브랜드를 위한 통합 경험 공간으로, 라스베이거스 컨벤션 센터 내 20\'×40\' 규모의 세 개 바 구역을 디자인했다. 각 공간은 고유한 정체성을 지니면서도 멕시칸 수입 맥주 카테고리의 강점과 다양성을 하나의 이야기로 엮어낸다.',
-                detailNoteEnglish: 'At the Bar & Restaurant Expo in Las Vegas, we created a unified presence for Corona, Modelo, and Pacifico across a 20\'×40\' footprint at the Las Vegas Convention Center, featuring three distinct bar experiences — La Playa, La Calle, and La Tierra. Each space held its own identity while collectively narrating a cohesive story about the strength and versatility of the Mexican Imports category.',
-                link: '',
-                category: 'experiential'
-            },
             shader: {
                 title: 'Shader Studio',
                 tags: 'Creative Coding, Digital Design',
@@ -1479,33 +1592,6 @@ Role: Graphic Design Intern</div>
                 link: 'shader-studio/index.html',
                 linkLabel: 'View project here',
                 category: 'digital'
-            },
-            expiration: {
-                title: 'Expiration Date',
-                tags: 'Brand Identity, Exhibition Design',
-                image: 'common/t/t_1.png',
-                alt: 'Expiration Date',
-                extraImages: [
-                    { src: 'common/t/t_2.mp4',  alt: 'Expiration Date 2',  isVideo: true },
-                    { src: 'common/t/t_3.png',  alt: 'Expiration Date 3' },
-                    { src: 'common/t/t_4.png',  alt: 'Expiration Date 4' },
-                    { src: 'common/t/t_5.png',  alt: 'Expiration Date 5' },
-                    { src: 'common/t/t_6.png',  alt: 'Expiration Date 6' },
-                    { src: 'common/t/t_7.mp4',  alt: 'Expiration Date 7',  isVideo: true },
-                    { src: 'common/t/t_8.png',  alt: 'Expiration Date 8' },
-                    { src: 'common/t/t_9.mp4',  alt: 'Expiration Date 9',  isVideo: true },
-                    { src: 'common/t/t_10.mp4', alt: 'Expiration Date 10', isVideo: true },
-                    { src: 'common/t/t_11.mp4', alt: 'Expiration Date 11', isVideo: true },
-                    { src: 'common/t/t_13.mp4', alt: 'Expiration Date 13', isVideo: true },
-                    { src: 'common/t/t_12.mp4', alt: 'Expiration Date 12', isVideo: true },
-                    { src: 'common/t/t_14.png', alt: 'Expiration Date 14' },
-                    { src: 'common/t/t_15.png', alt: 'Expiration Date 15' }
-                ],
-                korean: '3년마다 RISD의 각 학과는 트리엔날 전시회를 큐레이팅하고 디자인한다. 시각 커뮤니케이션과 끊임없는 재생산이 지배하는 시대에, Expiration Date는 그래픽 디자인과 시간성 사이의 조화로운 관계를 고찰한다.',
-                english: 'Every three years, each department at RISD gets to curate and design a triennial exhibition. In an era dominated by visual communication and constant reproduction, Expiration Date considers the harmonious relationship between graphic design and temporality.',
-                link: 'https://expirationdate.risd.gd/',
-                linkLabel: 'View website here',
-                category: 'project'
             },
             shibam: {
                 title: 'Shibam',
@@ -1543,43 +1629,37 @@ Role: Graphic Design Intern</div>
                     { src: 'common/b/b_9.png',  alt: 'For Reference Only 9' },
                     { src: 'common/b/b_10.png', alt: 'For Reference Only 10' }
                 ],
-                korean: '프로비던스, 로드아일랜드의 솔 코플러 갤러리에서 RISD 그래픽 디자인 대학원 프로그램의 현재 및 이전 학생들 49인의 작품을 큐레이션했다. ¹For Reference Only는 방문자들이 디자인을 어떻게 만나고, 기억하고, 시간이 지남에 따라 재맥락화하는지 고찰하도록 초대한다.',
+                korean: '프로비던스, 로드아일랜드의 솔 코플러 갤러리에서 RISD 그래픽 디자인 대학원 프로그램의 현재 및 이전 학생들 49인의 작품을 큐레이션하였다. ¹For Reference Only는 방문자들이 디자인을 어떻게 만나고, 기억하고, 시간이 지남에 따라 재맥락화하는지 고찰하도록 초대한다.',
                 english: 'A curation of 49 works from current and previous students of the RISD Graphic Design Graduate Program at the Sol Koffler Gallery in Providence, RI. ¹For Reference Only invited visitors to consider how design is encountered, remembered, and recontextualized over time.',
                 link: 'https://mfabiennial2025.risd.gd/',
                 linkLabel: 'View website here',
                 category: 'project'
             },
-            modelomichelada: {
-                title: 'The Modelo Michelada @ Tales of the Cocktail',
-                tags: 'Experiential Design, Event Activation, Print Design',
-                image: 'common/totc/totc_1.png',
-                alt: 'The Modelo Michelada @ Tales of the Cocktail',
+            expiration: {
+                title: 'Expiration Date',
+                tags: 'Brand Identity, Exhibition Design',
+                image: 'common/t/t_1.png',
+                alt: 'Expiration Date',
                 extraImages: [
-                    { src: 'common/totc/totc_video.mp4', alt: 'Modelo Michelada video', isVideo: true },
-                    { src: 'common/totc/totc_2.png',     alt: 'Modelo Michelada 2' }
+                    { src: 'common/t/t_2.mp4',  alt: 'Expiration Date 2',  isVideo: true },
+                    { src: 'common/t/t_3.png',  alt: 'Expiration Date 3' },
+                    { src: 'common/t/t_4.png',  alt: 'Expiration Date 4' },
+                    { src: 'common/t/t_5.png',  alt: 'Expiration Date 5' },
+                    { src: 'common/t/t_6.png',  alt: 'Expiration Date 6' },
+                    { src: 'common/t/t_7.mp4',  alt: 'Expiration Date 7',  isVideo: true },
+                    { src: 'common/t/t_8.png',  alt: 'Expiration Date 8' },
+                    { src: 'common/t/t_9.mp4',  alt: 'Expiration Date 9',  isVideo: true },
+                    { src: 'common/t/t_10.mp4', alt: 'Expiration Date 10', isVideo: true },
+                    { src: 'common/t/t_11.mp4', alt: 'Expiration Date 11', isVideo: true },
+                    { src: 'common/t/t_13.mp4', alt: 'Expiration Date 13', isVideo: true },
+                    { src: 'common/t/t_12.mp4', alt: 'Expiration Date 12', isVideo: true },
+                    { src: 'common/t/t_14.png', alt: 'Expiration Date 14' },
+                    { src: 'common/t/t_15.png', alt: 'Expiration Date 15' }
                 ],
-                korean: '에이전시: Factory 360 | 클라이언트: Constellation Brands\n역할: 그래픽 디자인 인턴',
-                english: 'Agency: Factory 360 | Client: Constellation Brands\nRole: Graphic Design Intern',
-                detailNoteKorean: 'TV 그래픽 및 테이블 텐트용 그래픽의 콘셉트 디자인을 담당했다.\n결과: 테이스팅 룸 참석자 309명 · 스피리티드 다이닝 RSVP 205건',
-                detailNoteEnglish: 'Conceptual design for TV graphics and Table Tent graphics.\nResult: Tasting Room Attendees — 309 · Spirited Dining RSVPs — 205',
-                linkLabel: 'View Full Project Here',
-                category: 'experiential'
-            },
-            softness: {
-                title: 'Softness',
-                tags: 'Art Direction, Editorial Design',
-                // first slide is video
-                image: 'common/s/s_3.mp4',
-                alt: 'Softness',
-                isVideo: true,
-                extraImages: [
-                    { src: 'common/s/s_2.png', alt: 'Softness 2' }
-                ],
-                korean: '이 출판물은 우리의 사회정치적·문화적 풍경을 형성하는 부드러움과 그 다양한 차원을 질문한다. 부드러움은 취약성이 아니라 연민과 공감에서 비롯된 강함에 관한 것이다. **V.2 출시예정',
-                english: 'This publication seeks to question softness and its various dimensions which shape our sociopolitical and cultural landscapes. Softness is not about fragility, but about strength in vulnerability, compassion, and empathy. **V.2 coming soon',
-                detailNoteKorean: 'Brooke Shary, Kimberly Duck과의 협업.',
-                detailNoteEnglish: 'In collaboration with Brooke Shary and Kimberly Duck.',
-                link: '',
+                korean: '3년마다 RISD의 각 학과는 트리엔날 전시회를 큐레이팅하고 디자인한다. 시각 커뮤니케이션과 끊임없는 재생산이 지배하는 시대에, Expiration Date는 그래픽 디자인과 시간성 사이의 조화로운 관계를 고찰한다.',
+                english: 'Every three years, each department at RISD gets to curate and design a triennial exhibition. In an era dominated by visual communication and constant reproduction, Expiration Date considers the harmonious relationship between graphic design and temporality.',
+                link: 'https://expirationdate.risd.gd/',
+                linkLabel: 'View website here',
                 category: 'project'
             },
             oblique: {
@@ -1599,11 +1679,32 @@ Role: Graphic Design Intern</div>
                 linkLabel: 'View project here',
                 category: 'digital'
             },
+            bre: {
+                title: 'Constellation Brands @ Bar & Restaurant Expo',
+                tags: 'Brand Activation, Experiential Design',
+                // thumbnail: first slide
+                image: 'common/BRE/BRE_1.png',
+                alt: 'Constellation Brands @ Bar & Restaurant Expo',
+                // slides 2–6
+                extraImages: [
+                    { src: 'common/BRE/BRE_2.png', alt: 'BRE 2' },
+                    { src: 'common/BRE/BRE_3.png', alt: 'BRE 3' },
+                    { src: 'common/BRE/BRE_4.png', alt: 'BRE 4' },
+                    { src: 'common/BRE/BRE_5.png', alt: 'BRE 5' },
+                    { src: 'common/BRE/BRE_6.png', alt: 'BRE 6' }
+                ],
+                korean: '에이전시: Factory 360 | 클라이언트: Constellation Brands\n역할: 그래픽 디자인 인턴',
+                english: 'Agency: Factory 360 | Client: Constellation Brands\nRole: Graphic Design Intern',
+                detailNoteKorean: 'Corona, Modelo, Pacifico 세 브랜드를 위한 통합 경험 공간으로, 라스베이거스 컨벤션 센터 내 20\'×40\' 규모의 세 개 바 구역을 디자인하였다. 각 공간은 고유한 정체성을 지니면서도 멕시칸 수입 맥주 카테고리의 강점과 다양성을 하나의 이야기로 엮어낸다.',
+                detailNoteEnglish: 'At the Bar & Restaurant Expo in Las Vegas, we created a unified presence for Corona, Modelo, and Pacifico across a 20\'×40\' footprint at the Las Vegas Convention Center, featuring three distinct bar experiences — La Playa, La Calle, and La Tierra. Each space held its own identity while collectively narrating a cohesive story about the strength and versatility of the Mexican Imports category.',
+                link: '',
+                category: 'experiential'
+            },
             perimeter: {
-                title: 'Is this a [Pe·rim·e·ter] or an (Em·brace)?',
+                title: 'Is this a [Pe\u00b7rim\u00b7e\u00b7ter] or an (Em\u00b7brace)?',
                 tags: 'Editorial Design',
                 image: 'common/p/p_1.png',
-                alt: 'Is this a [Pe·rim·e·ter] or an (Em·brace)?',
+                alt: 'Is this a [Pe\u00b7rim\u00b7e\u00b7ter] or an (Em\u00b7brace)?',
                 extraImages: [
                     { src: 'common/p/p_2.png', alt: 'Perimeter 2' },
                     { src: 'common/p/p_3.png', alt: 'Perimeter 3' },
@@ -1614,6 +1715,89 @@ Role: Graphic Design Intern</div>
                 english: 'The book itself functions as a portal with excerpts drawn from diverse fields, voices, cultures, times, and places that come together as fragments. It contains a portal within — as a metaphor for layered entry points, thresholds, and the nonlinear pathways through knowledge and experience.',
                 link: '',
                 category: 'project'
+            },
+            softness: {
+                title: 'Softness',
+                tags: 'Art Direction, Editorial Design',
+                // first slide is video
+                image: 'common/s/s_3.mp4',
+                alt: 'Softness',
+                isVideo: true,
+                extraImages: [
+                    { src: 'common/s/s_2.png', alt: 'Softness 2' }
+                ],
+                korean: '이 출판물은 우리의 사회정치적·문화적 풍경을 형성하는 부드러움과 그 다양한 차원을 질문한다. 부드러움은 취약성이 아니라 연민과 공감에서 비롯된 강함에 관한 것이다. **V.2 출시예정',
+                english: 'This publication seeks to question softness and its various dimensions which shape our sociopolitical and cultural landscapes. Softness is not about fragility, but about strength in vulnerability, compassion, and empathy. **V.2 coming soon',
+                detailNoteKorean: 'Brooke Shary, Kimberly Duck과의 협업.',
+                detailNoteEnglish: 'In collaboration with Brooke Shary and Kimberly Duck.',
+                link: '',
+                category: 'project'
+            },
+            thth: {
+                title: '투 히어: Two Here',
+                tags: 'Curation, Design',
+                image: 'common/thth/thth_1.mp4',
+                alt: '투 히어: Two Here',
+                isVideo: true,
+                extraImages: [
+                    { src: 'common/thth/thth_2.png', alt: 'Two Here 2' },
+                    { src: 'common/thth/thth_3.png', alt: 'Two Here 3' },
+                    { src: 'common/thth/thth_4.png', alt: 'Two Here 4' }
+                ],
+                korean: '《투 히어: Two Here》(2022.06.20–06.25)는 홍익대학교 미술대학 예술학과 학생 12인이 기획한 전시로, 2022년 제3회 창의인재 저작권 전문강좌 기획 전시로 한국저작권위원회의 주최·후원 하에 개최되었다. 김요인, 양숙현, 임영주, 전형산 외 11인이 참여작가로 함께한 이 전시는, 디지털 기술의 발전으로 가상과 현실의 경계가 흐려지는 오늘날 두 세계를 끊임없이 이행하는 인간의 감각을 회화, 조각, 설치, 디지털아트, 사운드아트, 연극을 통해 탐구하며, 고정된 안착이 아닌 이행의 과정 속에서 무한한 \'여기\'의 가능성을 발견하고자 하였다.',
+                english: 'Two Here (June 20–25, 2022) was an exhibition organized by twelve students of the Arts Studies department at Hongik University College of Fine Arts, commissioned under the 2022 3rd Creative Talent Copyright Specialist Course Exhibition by the Korea Copyright Commission. Featuring Yoin Kim, Sukhyun Yang, Youngjoo Lim, Hyungsan Jeon, and eleven other participating artists, the exhibition explored the fluid sensations of human existence caught between the virtual and the real — proposing that life is not a matter of settling in one world, but of finding infinite possibility in perpetual passage between them, through painting, sculpture, installation, digital art, sound, and theater.',
+                link: '',
+                category: 'project'
+            },
+            conflictincompatibility: {
+                title: 'Conflict as incompatibility',
+                tags: 'Editorial Design',
+                image: 'common/c/c_1.png',
+                alt: 'Conflict as incompatibility',
+                extraImages: [
+                    { src: 'common/c/c_2.png', alt: 'Conflict as incompatibility 2' },
+                    { src: 'common/c/c_3.png', alt: 'Conflict as incompatibility 3' }
+                ],
+                korean: '"양립 불가능성으로서의 갈등"에 관한 텍스트를 모은 흑백 진.',
+                english: 'A black and white zine of collected texts about "Conflict as Incompatibility".',
+                link: '',
+                category: 'poster'
+            },
+            surfaceanomaly: {
+                title: 'Surface Anomaly',
+                tags: 'Curation, Design',
+                image: 'common/nrsa/nrsa_1.png',
+                alt: 'Surface Anomaly',
+                extraImages: [
+                    { src: 'common/nrsa/nrsa_2.png', alt: 'Surface Anomaly 2' },
+                    { src: 'common/nrsa/nrsa_3.png', alt: 'Surface Anomaly 3' },
+                    { src: 'common/nrsa/nrsa_4.png', alt: 'Surface Anomaly 4' },
+                    { src: 'common/nrsa/nrsa_5.png', alt: 'Surface Anomaly 5' },
+                    { src: 'common/nrsa/nrsa_6.png', alt: 'Surface Anomaly 6' },
+                    { src: 'common/nrsa/nrsa_7.png', alt: 'Surface Anomaly 7' }
+                ],
+                korean: '이상표면은 2024년 가을학기 RISD의 Newly Formed 수업 — 그래픽 디자인의 시각으로 재료, 전략, 도구를 탐구하는 과정 — 학생들의 실험적인 포스터 작업을 선보인다. 이상이라는 개념에 응답해 작품들은 생성적이고 반복적인 폼메이킹을 통해 예측 불가능성을 포용하며, 비전통적인 타이포그래피 시스템과 색상·비율의 예상치 못한 병치, 대담한 구성적 교란을 탐구한다. 서울 낫씽이즈리얼에서 열린 이 전시는 예측 가능성에 도전하고 불규칙성을 기념하는 시각 실험들과 함께, Draw Down Books를 위한 리딩룸을 마련하여 희귀 출판물을 통해 수업의 창작적 진화를 엿볼 수 있게 하였다.',
+                english: 'Surface Anomaly showcases experimental poster works by RISD students from the fall 2024 Newly Formed course, which explores materials, strategies, and tools through the lens of graphic design. Responding to the concept of anomaly, the works embrace unpredictability through generative and iterative approaches to form-making — unconventional typographic systems, unexpected juxtapositions of color and scale, and bold compositional disruptions. Exhibited at NOTHINGISREAL in Seoul, the show brings together visual experiments that challenge assumptions and celebrate the irregular, alongside a reading room for Draw Down Books featuring rare publications that trace the course\'s evolution.',
+                detailNoteKorean: '지도교수 크리스토퍼 슬레보다, 캐슬린 슬레보다, 윤소정 공동 기획\n포스터 디자인: 크리스토퍼 슬레보다, 캐슬린 슬레보다\n그래픽 디자인: 윤소정',
+                detailNoteEnglish: 'Co-curated by instructors Christopher Sleboda and Kathleen Sleboda, with So Jung Yoon\nPoster design: Christopher Sleboda, Kathleen Sleboda\nGraphic design: So Jung Yoon',
+                link: '',
+                category: 'experiential'
+            },
+            modelomichelada: {
+                title: 'The Modelo Michelada @ Tales of the Cocktail',
+                tags: 'Experiential Design, Event Activation, Print Design',
+                image: 'common/totc/totc_1.png',
+                alt: 'The Modelo Michelada @ Tales of the Cocktail',
+                extraImages: [
+                    { src: 'common/totc/totc_video.mp4', alt: 'Modelo Michelada video', isVideo: true },
+                    { src: 'common/totc/totc_2.png',     alt: 'Modelo Michelada 2' }
+                ],
+                korean: '에이전시: Factory 360 | 클라이언트: Constellation Brands\n역할: 그래픽 디자인 인턴',
+                english: 'Agency: Factory 360 | Client: Constellation Brands\nRole: Graphic Design Intern',
+                detailNoteKorean: 'TV 그래픽 및 테이블 텐트용 그래픽의 콘셉트 디자인을 담당하였다.\n결과: 테이스팅 룸 참석자 309명 · 스피리티드 다이닝 RSVP 205건',
+                detailNoteEnglish: 'Conceptual design for TV graphics and Table Tent graphics.\nResult: Tasting Room Attendees — 309 · Spirited Dining RSVPs — 205',
+                linkLabel: 'View Full Project Here',
+                category: 'experiential'
             }
         };
 
@@ -1631,7 +1815,7 @@ Role: Graphic Design Intern</div>
         const categoryLinks    = document.querySelectorAll('.nav a');
 
         const BRE_PASSWORD = 'soyoon2026';
-        let breUnlocked = false;
+        let breUnlocked = true; // BRE is no longer individually gated — whole site is now password-protected instead
 
         // Helper: create an image placeholder (shown when img 404s)
         function makePlaceholder(text) {
@@ -1865,6 +2049,16 @@ Role: Graphic Design Intern</div>
                     _currentProjectId = id;
                     renderProject(id);
                     setTimeout(() => { _scrollPaused = false; }, 600);
+
+                    // BRE: scroll to password gate and focus input
+                    if (id === 'bre' && !breUnlocked) {
+                        setTimeout(() => {
+                            const breSummary = document.querySelector('.project-summary[data-project="bre"]');
+                            if (breSummary) breSummary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            const pwInput = document.getElementById('bre-pw-input');
+                            if (pwInput) setTimeout(() => pwInput.focus(), 400);
+                        }, 100);
+                    }
                 });
 
                 grid.appendChild(item);
@@ -2051,6 +2245,15 @@ Role: Graphic Design Intern</div>
                     if (id === _currentProjectId) return;
                     _currentProjectId = id;
                     renderProject(id);
+                    // BRE: scroll to password gate and focus input
+                    if (id === 'bre' && !breUnlocked) {
+                        setTimeout(() => {
+                            const breSummary = document.querySelector('.project-summary[data-project="bre"]');
+                            if (breSummary) breSummary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            const pwInput = document.getElementById('bre-pw-input');
+                            if (pwInput) setTimeout(() => pwInput.focus(), 400);
+                        }, 100);
+                    }
                 }
             });
         });
@@ -2303,10 +2506,7 @@ Role: Graphic Design Intern</div>
             if (el.matches('.detail-media img, .detail-media video, .detail-extra-images .img-wrap img, .detail-extra-images .img-wrap video')) {
                 lbShow(el);
             }
-            // Left thumbnails: only images (videos are playing, less useful to zoom)
-            if (el.matches('.project-summary .thumb-wrap img, .project-summary .thumb-wrap video')) {
-                lbShow(el);
-            }
+            // Left thumbnails: no zoom (zoom only on right detail panel)
         });
         // ── 5. Right panel fade transition ──
         function fadeDetail(fn) {
@@ -2470,7 +2670,6 @@ Role: Graphic Design Intern</div>
             }
 
             const mediaSelectors = [
-                '.thumb-wrap img', '.thumb-wrap video',
                 '.detail-media img', '.detail-media video',
                 '.detail-extra-images .img-wrap img',
                 '.detail-extra-images .img-wrap video'
