@@ -1137,49 +1137,6 @@
     </style>
 </head>
 <body class="home-state">
-    <!-- Site-wide password gate -->
-    <div id="site-gate" class="site-gate">
-        <div class="site-gate-inner">
-            <div class="site-gate-name">So Jung Yoon</div>
-            <div class="site-gate-label">Enter Password</div>
-            <div class="site-gate-row">
-                <input class="site-gate-input" type="password" placeholder="enter password" id="site-pw-input"
-                    onkeydown="if(event.key==='Enter') unlockSite()" autofocus>
-                <button class="site-gate-btn" onclick="unlockSite()">enter</button>
-            </div>
-            <div class="site-gate-error" id="site-pw-error">incorrect password</div>
-        </div>
-    </div>
-    <script>
-        (function() {
-            var SITE_PASSWORD = 'soyoon2026';
-            window.__unlockSiteCheck = function() {
-                try {
-                    if (sessionStorage.getItem('site_unlocked') === 'true') {
-                        var g = document.getElementById('site-gate');
-                        if (g) g.style.display = 'none';
-                    }
-                } catch (e) {}
-            };
-            window.unlockSite = function() {
-                var input = document.getElementById('site-pw-input');
-                var error = document.getElementById('site-pw-error');
-                var gate  = document.getElementById('site-gate');
-                if (input.value === SITE_PASSWORD) {
-                    try { sessionStorage.setItem('site_unlocked', 'true'); } catch (e) {}
-                    gate.style.transition = 'opacity 0.35s ease';
-                    gate.style.opacity = '0';
-                    setTimeout(function() { gate.style.display = 'none'; }, 350);
-                } else {
-                    error.classList.add('visible');
-                    input.value = '';
-                    input.focus();
-                    setTimeout(function() { error.classList.remove('visible'); }, 2000);
-                }
-            };
-        })();
-        window.__unlockSiteCheck();
-    </script>
     <!-- Custom cursor -->
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
