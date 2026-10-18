@@ -729,9 +729,11 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
         }
 
         // Three columns (two on Practice), filled left to right.
+        // Phones get a single column, so items read top to bottom in the listed order.
+        const oneColumn = window.matchMedia('(max-width: 668px)');
         function columns(extraClass) {
             const content = el('div', 'content' + (extraClass ? ' ' + extraClass : ''));
-            const n = extraClass === 'practice' ? 2 : 3;
+            const n = oneColumn.matches ? 1 : extraClass === 'practice' ? 2 : 3;
             const cols = Array.from({ length: n }, () => content.appendChild(el('div', 'column')));
             return { content, add: (node, i) => cols[i % n].appendChild(node) };
         }
@@ -1005,6 +1007,8 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
             }));
         }
         window.addEventListener('hashchange', () => show());
+        // Crossing the phone breakpoint rebuilds grids with the right number of columns.
+        oneColumn.addEventListener('change', () => { if (route.section && !route.id) draw(); });
 
         // × steps back one level: article → its section → home.
         closeBtn.addEventListener('click', () => {
