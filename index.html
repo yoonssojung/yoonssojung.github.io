@@ -11,35 +11,17 @@
   3px rule under the hovered/active word, a 3-column grid of centred thumbnails,
   a project page with a lead image, text, then the remaining images stacked, a fixed × at the
   right edge that steps back one level.
-  Name and categories in Timezone (HAL Typefaces); everything a category opens in Inter. Line-height 130%.
+  Everything — name, categories and what they open — is set in Inter. Line-height 130%.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,600;1,14..32,400&display=swap" rel="stylesheet">
 <style>
-    /* Masthead font, in order of preference:
-       1. Timezone (HAL Typefaces) — used only once the LICENSED web file is in fonts/ under
-          one of these names: Timezone.woff2 / Timezone.woff / Timezone.otf / Timezone.ttf
-       2. AUTHENTIC Sans Condensed 130 (fonts/AUTHENTICSans-Condensed-130.woff2) otherwise. */
-    @font-face {
-        font-family: 'Timezone';
-        src: url('fonts/Timezone.woff2') format('woff2'),
-             url('fonts/Timezone.woff') format('woff'),
-             url('fonts/Timezone.otf') format('opentype'),
-             url('fonts/Timezone.ttf') format('truetype');
-        font-weight: 200 900; font-style: normal; font-display: swap;
-    }
-    @font-face {
-        font-family: 'AUTHENTIC Sans Condensed';   /* one weight only: 130 (600) */
-        src: url('fonts/AUTHENTICSans-Condensed-130.woff2') format('woff2'),
-             url('fonts/AUTHENTICSans-Condensed-130.otf') format('opentype');
-        font-weight: 600; font-style: normal; font-display: swap;
-    }
     html { box-sizing: border-box; font-size: 1em; line-height: 1.3; }
     *, *:before, *:after { box-sizing: inherit; }
     html, body { margin: 0; padding: 0; color: #000; background: #fff; -webkit-font-smoothing: antialiased; }
     body, input {
-        font-family: 'Timezone', 'AUTHENTIC Sans Condensed', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+        font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-weight: 400;
         font-style: normal;
     }
@@ -60,9 +42,7 @@
     .masthead { margin: 30px 30px 24px 30px; font-size: 51px; line-height: 1.3; letter-spacing: -0.02em; }
     .masthead-line { display: block; }
     h1, nav { display: inline; margin: 0; font-size: inherit; }
-    /* Timezone weights: Regular 400, Medium 550, Bold 700 */
-    .masthead, #search-input { font-weight: 475; }   /* name and categories: halfway Regular → Medium */
-    .no-timezone .masthead, .no-timezone #search-input { font-weight: 600; font-synthesis: none; }   /* AUTHENTIC Sans Condensed: a single weight (130 = 600) */
+    .masthead, #search-input { font-weight: 400; }   /* name and categories: Inter Regular */
     h1 a, nav a { white-space: nowrap; text-decoration-thickness: 0.06em; text-underline-offset: 0.1em; text-decoration-skip-ink: none; }
     h1 a:hover, nav a:hover, h1 a.active, nav a.active { text-decoration-line: underline; }
     .nowrap { white-space: nowrap; }
@@ -524,8 +504,6 @@ Exhibited at NOTHINGISREAL in Seoul, Korea, the exhibition brings together visua
                 extraImages: [
                     { src: 'common/ene/ene-4.png', alt: 'Design Icons 4' },
                     { src: 'common/ene/ene-6.png', alt: 'Design Icons 6' },
-                    { src: 'common/ene/ene-7.jpg', alt: 'Design Icons 7' },
-                    { src: 'common/ene/ene-p-01.jpg', alt: 'Design Icons panel 1' },
                     { src: 'common/ene/ene-p-02.jpg', alt: 'Design Icons panel 2' },
                     { src: 'common/ene/ene-p-03.jpg', alt: 'Design Icons panel 3' },
                     { src: 'common/ene/ene-p-04.jpg', alt: 'Design Icons panel 4' }
@@ -607,11 +585,7 @@ At the core of the project is an exploration of what happens when archival mater
               kicker: 'HOW CAN WE TEMPORARILY INHABIT BETWEEN DISTANCE?',
               title: 'Occupying Distance, Physical & Origin',
               tags: 'Installation, 2025',
-              text: `An inflatable house is installed in Providence, RI—lightweight, translucent, and impermanent. Inside, projected images from the range of my daily movements or lived radius in Korea move across its surface: streets I walk through, nearby shops, the path to the subway, familiar signage. Though physically grounded in my current environment, the structure holds another geography within it. The installation creates a doubled space—one that exists simultaneously in two locations, forming an encounter between memory and presence.
-
-This work explores what it means to inhabit an in-between condition. The inflatable structure resists fixedness; it can be deflated, moved, reassembled. It doesn’t claim permanence or resolution, but operates as a temporary middle ground. Like a garden positioned between a house and its surrounding fence, the installation becomes a threshold—neither fully inside nor outside, but somewhere along the edge. It materializes the feeling of living across spaces, and the fluid boundaries that come with that.
-
-I’ve long been drawn to the idea of borders—not only as lines that divide, but as sites of negotiation. This installation asks whether a space can exist that holds both “here” and “there” at once. It’s not an attempt to resolve dislocation, but to make space for it—to hold overlap, contradiction, and translation as part of how we dwell.` },
+              text: `An inflatable house installed in Providence, RI, with images from daily routes in Korea projected across its surface: streets, shops, the walk to the subway. Light, translucent, and easy to deflate and move, it holds two places at once. Rather than resolving the feeling of living between them, it makes room for it.` },
             { type: 'img',   src: 'common/misc/weirdgarden.jpg', extra: ['common/misc/weirdgarden-2.jpg', 'common/misc/weirdgarden-3.jpg'],
               kicker: 'WERE THEY ALWAYS HERE, JUST WAITING FOR CARE?',
               title: 'What do unexpected colors in a garden indicate about the underlying health of the system?',
@@ -1115,13 +1089,6 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
         applyLang();
         fitMasthead();
 
-        // No licensed Timezone file in fonts/ → the masthead falls back to AUTHENTIC Sans Condensed.
-        if (document.fonts && document.fonts.load) {
-            const noTimezone = () => { document.documentElement.classList.add('no-timezone'); fitMasthead(); };
-            document.fonts.load('475 1em Timezone')
-                .then(list => { if (!list.some(f => f.family.replace(/["']/g, '') === 'Timezone' && f.status === 'loaded')) noTimezone(); })
-                .catch(noTimezone);
-        }
         show(true);
     </script>
 </body>
