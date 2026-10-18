@@ -93,6 +93,7 @@
     .item-link.no-detail:hover .underliner { box-shadow: none; }
     .img-wrap { text-align: center; margin: 0 0 10px; }   /* wide thumbnails fill the column; tall ones sit centred in it */
     .img-wrap img, .img-wrap video { max-width: 100%; max-height: 300px; }
+    .img-wrap.fill img { display: block; width: 100%; max-height: none; aspect-ratio: 16 / 9; object-fit: cover; }   /* thumbFill: fills the column at 16:9 */
     .stamp-layer { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
     .stamp { position: absolute; margin: 0; opacity: 0; transition: opacity .4s ease; }
     .stamp.on { opacity: 1; }
@@ -465,6 +466,26 @@ Exhibited at NOTHINGISREAL in Seoul, Korea, the exhibition brings together visua
                 link: '',
                 category: 'experiential'
             },
+            atlas: {
+                kicker: 'WHERE DOES OUR VISION BECOME BLURRED?',
+                title: 'Atlas, Between Capture and Perception',
+                tags: 'Editorial Design',
+                thumb: 'common/A/5.png',          // thumbnail in the Design grid
+                thumbFill: true,                  // crop the thumbnail to 16:9 so it fills the column
+                image: 'common/A/3.png',          // first image on the project page
+                alt: 'Atlas, Between Capture and Perception',
+                extraImages: [
+                    { src: 'common/A/4.png', alt: 'Atlas, Between Capture and Perception — 4' },
+                    { src: 'common/A/5.png', alt: 'Atlas, Between Capture and Perception — 5' },
+                    { src: 'common/A/6.png', alt: 'Atlas, Between Capture and Perception — 6' },
+                    { src: 'common/A/7.png', alt: 'Atlas, Between Capture and Perception — 7' },
+                    { src: 'common/A/8.png', alt: 'Atlas, Between Capture and Perception — 8' },
+                    { src: 'common/A/9.png', alt: 'Atlas, Between Capture and Perception — 9' },
+                    { src: 'common/A/2.png', alt: 'Atlas, Between Capture and Perception — 2' }
+                ],
+                english: 'A book about the gap between what a capturing device records and what we perceive. The camera takes on the role of a silent observer: it records the physical world, and the human experience within it, as texture. Look closely at its resolution, though, and it holds only the surface, devoid of content — a moment frozen in time, a fragment of a larger story. Perception, and the narratives we build, are made from that incomplete information.\n\nParentheses ( ) run through the book as a metaphor, found in objects, glyphs and nature: talking, but not saying anything.',
+                link: ''
+            },
             modelomichelada: {
                 title: 'The Modelo Michelada @ Tales of the Cocktail',
                 tags: 'Experiential Design, Event Activation, Print Design',
@@ -625,7 +646,7 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
         const SECTION_PROJECTS = {
             design:   ['bre', 'reference', 'perimeter', 'softness', 'expiration', 'shader', 'modelomichelada', 'shibam', 'apple', 'cervezafutbol', 'berwick', 'designicons'],
             // practice-NN are the placeholder pieces built from miscItems just below; any not listed here are added at the end
-            practice: ['practice-02', 'practice-05', 'practice-12', 'practice-07', 'practice-04', 'practice-06', 'conflictincompatibility', 'practice-11', 'oblique'],
+            practice: ['practice-02', 'practice-05', 'practice-12', 'practice-07', 'atlas', 'practice-04', 'practice-06', 'conflictincompatibility', 'practice-11', 'oblique'],
             curation: ['surfaceanomaly', 'thth', 'softness']
         };
         // Practice: one entry per loose piece in miscItems.
@@ -748,7 +769,7 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
             const item = el('div', 'item');
             const thumb = d.thumb || d.image;   // optional separate thumbnail
             if (thumb) {   // a project with no image yet shows text only
-                const wrap = el('div', 'img-wrap');
+                const wrap = el('div', 'img-wrap' + (d.thumbFill ? ' fill' : ''));
                 wrap.appendChild(mediaEl({ src: thumb, alt: d.alt, isVideo: d.thumb ? false : d.isVideo }));
                 item.appendChild(wrap);
             } else if (d.embed) {
