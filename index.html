@@ -20,7 +20,7 @@
     /* Masthead font, in order of preference:
        1. Timezone (HAL Typefaces) — used only once the LICENSED web file is in fonts/ under
           one of these names: Timezone.woff2 / Timezone.woff / Timezone.otf / Timezone.ttf
-       2. Young Serif (free, SIL Open Font License — see fonts/YoungSerif-OFL.txt) otherwise. */
+       2. AUTHENTIC Sans Condensed 130 (fonts/AUTHENTICSans-Condensed-130.woff2) otherwise. */
     @font-face {
         font-family: 'Timezone';
         src: url('fonts/Timezone.woff2') format('woff2'),
@@ -30,15 +30,16 @@
         font-weight: 200 900; font-style: normal; font-display: swap;
     }
     @font-face {
-        font-family: 'Young Serif';   /* one weight only */
-        src: url('fonts/YoungSerif-Regular.woff2') format('woff2');
-        font-weight: 400; font-style: normal; font-display: swap;
+        font-family: 'AUTHENTIC Sans Condensed';   /* one weight only: 130 (600) */
+        src: url('fonts/AUTHENTICSans-Condensed-130.woff2') format('woff2'),
+             url('fonts/AUTHENTICSans-Condensed-130.otf') format('opentype');
+        font-weight: 600; font-style: normal; font-display: swap;
     }
     html { box-sizing: border-box; font-size: 1em; line-height: 1.3; }
     *, *:before, *:after { box-sizing: inherit; }
     html, body { margin: 0; padding: 0; color: #000; background: #fff; -webkit-font-smoothing: antialiased; }
     body, input {
-        font-family: 'Timezone', 'Young Serif', Georgia, 'Times New Roman', serif;
+        font-family: 'Timezone', 'AUTHENTIC Sans Condensed', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
         font-weight: 400;
         font-style: normal;
     }
@@ -61,7 +62,7 @@
     h1, nav { display: inline; margin: 0; font-size: inherit; }
     /* Timezone weights: Regular 400, Medium 550, Bold 700 */
     .masthead, #search-input { font-weight: 475; }   /* name and categories: halfway Regular → Medium */
-    .no-timezone .masthead, .no-timezone #search-input { font-weight: 400; font-synthesis: none; }   /* Young Serif has a single weight */
+    .no-timezone .masthead, .no-timezone #search-input { font-weight: 600; font-synthesis: none; }   /* AUTHENTIC Sans Condensed: a single weight (130 = 600) */
     h1 a, nav a { white-space: nowrap; text-decoration-thickness: 0.06em; text-underline-offset: 0.1em; text-decoration-skip-ink: none; }
     h1 a:hover, nav a:hover, h1 a.active, nav a.active { text-decoration-line: underline; }
     .nowrap { white-space: nowrap; }
@@ -1169,7 +1170,9 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
                 const mid = (lo + hi) / 2;
                 if (fits(mid)) lo = mid; else hi = mid;
             }
-            masthead.style.fontSize = (Math.floor(lo * 100) / 100) + 'px';
+            let fin = Math.floor(lo * 100) / 100;
+            while (fin > 6 && !fits(fin)) fin -= 0.25;   // never settle on a size that wraps
+            masthead.style.fontSize = fin + 'px';
             // Tall images are capped to what is left of the screen under the top line.
             document.documentElement.style.setProperty('--head', stage.offsetTop + 'px');
         }
@@ -1186,7 +1189,7 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
         applyLang();
         fitMasthead();
 
-        // No licensed Timezone file in fonts/ → the masthead falls back to Young Serif.
+        // No licensed Timezone file in fonts/ → the masthead falls back to AUTHENTIC Sans Condensed.
         if (document.fonts && document.fonts.load) {
             const noTimezone = () => { document.documentElement.classList.add('no-timezone'); fitMasthead(); };
             document.fonts.load('475 1em Timezone')
