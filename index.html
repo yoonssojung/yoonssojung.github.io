@@ -111,19 +111,6 @@
     .item-link.no-detail:hover .underliner { box-shadow: none; }
     .img-wrap { text-align: center; margin: 0 0 10px; }   /* wide thumbnails fill the column; tall ones sit centred in it */
     .img-wrap img, .img-wrap video { max-width: 100%; max-height: 300px; }
-    /* Teaching: text only; a school's logo appears beside the cursor while its name is hovered */
-    .school-name { margin-bottom: 1.3em; }   /* one empty line after the school */
-    .school-name:has(+ .school-role) { margin-bottom: 0; }
-    .item p.school-role { margin: 0 0 1.3em; }   /* role, then one empty line */
-    .school-name span { cursor: default; }
-    .item p.course .course-link { font-size: 10.5px; margin-left: 4px; white-space: nowrap; }
-    .item p.course { margin-bottom: 14px; hyphens: manual; -webkit-hyphens: manual; }
-    .hover-image {
-        position: fixed; left: 0; top: 0; z-index: 1500; pointer-events: none;
-        width: 180px; height: auto; max-height: 180px; object-fit: contain; object-position: left top;
-        opacity: 0; transition: opacity .15s ease; will-change: transform;
-    }
-    .hover-image.on { opacity: 1; }
     .stamp-layer { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
     .stamp { position: absolute; margin: 0; opacity: 0; transition: opacity .4s ease; }
     .stamp.on { opacity: 1; }
@@ -243,7 +230,6 @@
         <span class="nowrap"><a href="#/design" data-section="design" data-en="Design">Design</a><span class="comma">,</span></span>
         <span class="nowrap"><a href="#/practice" data-section="practice" data-en="Practice">Practice</a><span class="comma">,</span></span>
         <span class="nowrap"><a href="#/curation" data-section="curation" data-en="Curation">Curation</a><span class="comma">,</span></span>
-        <span class="nowrap"><a href="#/teaching" data-section="teaching" data-en="Teaching">Teaching</a><span class="comma">,</span></span>
         <span class="nowrap"><a href="#/contact" data-section="contact" data-en="Contact">Contact</a><span class="comma">,</span></span>
         <span class="nowrap"><span class="searcher"><form id="search-form" action="#/search"><input type="text" id="search-input" placeholder="Search" autocomplete="off" aria-label="Search"></form></span><span class="comma">,</span></span>
     </nav>
@@ -697,18 +683,6 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
         ];
         // Contact — right column (Education) is the <template id="cv-en"> block near the top of this file.
 
-        // Teaching: text only. Hovering a school name shows its logo beside the cursor.
-        const TEACHING = [
-            { name: 'Hongik University, South Korea', role: 'Lecturer 외래교수', logo: 'common/teaching/hongik.png', courses: [
-                { title: 'Typography(2)',       year: '2026', tba: true },
-                { title: 'Advanced Typography', year: '2026', tba: true }
-            ]},
-            { name: 'Rhode Island School of Design, RI, USA', role: 'Instructor', logo: 'common/teaching/risd.png', courses: [
-                { code: 'DM 1850-101/ GRAPH 1850-101', title: 'Living Archive: Unlayering Narrative',
-                  year: '2024', href: 'https://jiho6693.github.io/livingarchive/', external: true }
-            ]}
-        ];
-
         // ─────────────────────────────────────────────────────────────
         //  SITE
         // ─────────────────────────────────────────────────────────────
@@ -926,52 +900,6 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
             stage.appendChild(content);
         }
 
-        function renderTeaching() {
-            const grid = columns('teaching');
-            const link = (c, text) => {
-                const a = el('a', null, text);
-                a.href = c.href;
-                if (c.external) { a.target = '_blank'; a.rel = 'noopener'; }
-                return a;
-            };
-            TEACHING.forEach((group, i) => {
-                const item = el('div', 'item');
-                const name = item.appendChild(el('h2', 'school-name'));
-                const label = name.appendChild(el('span', null, group.name));
-                if (group.logo) attachHoverImage(label, group.logo, group.name);
-                if (group.role) item.appendChild(el('p', 'school-role', group.role));   // right under the school, then an empty line
-                group.courses.forEach(c => {
-                    // year / course code / title (italic) / link, one per line
-                    const p = item.appendChild(el('p', 'course'));
-                    p.appendChild(document.createTextNode(c.year)); p.appendChild(el('br'));
-                    if (c.code) { p.appendChild(document.createTextNode(c.code)); p.appendChild(el('br')); }
-                    p.appendChild(el('em', null, c.title));
-                    p.appendChild(document.createTextNode(' '));
-                    // beside the title: 'view website', or plain 'TBA' when the site isn't up yet
-                    p.appendChild(c.tba ? el('span', null, 'TBA') : link(c, 'view website')).className = 'course-link';
-                });
-                grid.add(item, i);
-            });
-            stage.appendChild(grid.content);
-        }
-
-        // An image that appears next to the cursor while it is over `target`.
-        const hoverImage = document.body.appendChild(el('img', 'hover-image'));
-        hoverImage.alt = '';
-        function attachHoverImage(target, src, alt) {
-            new Image().src = src;   // preload, so it shows instantly
-            const place = e => {
-                const pad = 18, w = hoverImage.offsetWidth, h = hoverImage.offsetHeight;
-                let x = e.clientX + pad, y = e.clientY + pad;
-                if (x + w > window.innerWidth - 8)  x = e.clientX - pad - w;   // flip to the left near the right edge
-                if (y + h > window.innerHeight - 8) y = e.clientY - pad - h;   // flip above near the bottom
-                hoverImage.style.transform = 'translate(' + Math.max(8, x) + 'px,' + Math.max(8, y) + 'px)';
-            };
-            target.addEventListener('mouseenter', e => { hoverImage.src = src; hoverImage.alt = alt; hoverImage.classList.add('on'); place(e); });
-            target.addEventListener('mousemove', place);
-            target.addEventListener('mouseleave', () => hoverImage.classList.remove('on'));
-        }
-
         function searchProjects(q) {
             q = q.trim().toLowerCase();
             if (!q) return [];
@@ -1066,13 +994,11 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
 
         function drawContent() {
             stage.innerHTML = '';
-            hoverImage.classList.remove('on');
             const { section, id } = route;
             if (!section) return;
             if (id && projectData[id] && !projectData[id].noDetail) return renderArticle(id);
             if (SECTION_PROJECTS[section]) return renderGrid(section, SECTION_PROJECTS[section]);
             if (section === 'contact')   return renderContact();
-            if (section === 'teaching')  return renderTeaching();
             if (section === 'search')    return renderSearch();
         }
 
