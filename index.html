@@ -85,6 +85,8 @@
     .column        { width: 33.333%; display: inline-block; vertical-align: top; padding: 0 12px; }
     .column-double { width: 66.666%; display: inline-block; vertical-align: top; padding: 0 12px; }
     .item { margin-bottom: 36px; }
+    .content.practice .column { width: 50%; }   /* Practice: two columns */
+    .content.practice .img-wrap img, .content.practice .img-wrap video { max-height: 450px; }   /* columns are 1.5× wider, so thumbnails may be 1.5× taller */
     .item-link { display: block; }
     .item-link:hover .underliner { box-shadow: inset 0 -1px 0 #000; }
     .item-link.no-detail { cursor: default; }
@@ -170,7 +172,7 @@
     }
 
     @media only screen and (max-width: 668px) {
-        .column, .column-double { width: 100%; }
+        .column, .column-double, .content.practice .column { width: 100%; }
         /* Phones: images run 95% of the screen width; text and the top line share that left edge */
         .content { margin: 0 0 6px; }
         .column, .column-double { padding: 0 2.5vw; }
@@ -623,7 +625,7 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
         const SECTION_PROJECTS = {
             design:   ['bre', 'reference', 'expiration', 'shibam', 'modelomichelada', 'shader', 'apple', 'cervezafutbol', 'berwick', 'designicons'],
             // practice-NN are the placeholder pieces built from miscItems just below; any not listed here are added at the end
-            practice: ['softness', 'perimeter', 'practice-02', 'practice-06', 'practice-11', 'practice-05', 'oblique', 'practice-07', 'practice-04', 'conflictincompatibility', 'practice-12'],
+            practice: ['softness', 'perimeter', 'practice-02', 'practice-05', 'practice-12', 'practice-07', 'practice-04', 'practice-06', 'conflictincompatibility', 'practice-11', 'oblique'],
             curation: ['surfaceanomaly', 'thth', 'softness']
         };
         // Practice: one entry per loose piece in miscItems.
@@ -726,11 +728,12 @@ It also connects to an ongoing attempt to develop graphic outcomes without relyi
             return box;
         }
 
-        // Three columns, filled left to right.
+        // Three columns (two on Practice), filled left to right.
         function columns(extraClass) {
             const content = el('div', 'content' + (extraClass ? ' ' + extraClass : ''));
-            const cols = [0, 1, 2].map(() => content.appendChild(el('div', 'column')));
-            return { content, add: (node, i) => cols[i % 3].appendChild(node) };
+            const n = extraClass === 'practice' ? 2 : 3;
+            const cols = Array.from({ length: n }, () => content.appendChild(el('div', 'column')));
+            return { content, add: (node, i) => cols[i % n].appendChild(node) };
         }
 
         function projectItem(id, sectionKey) {
